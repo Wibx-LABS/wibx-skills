@@ -22,18 +22,34 @@ This repository serves as the official, company-wide source of truth for AI skil
 
 ## 📦 Core Skills
 
-| Skill Name | Description | Status |
-| :--- | :--- | :--- |
-| **Wibx Presentations** | Specialized skill for generating and refining corporate presentations. | `Active` |
+Every skill in this repository is organized into its own folder containing the `.skill` package and a `MANUAL.md`.
+
+| Skill Name | Folder | Description | Status |
+| :--- | :--- | :--- | :--- |
+| **Wibx Presentations** | [`/presentations`](./presentations) | Specialized skill for generating and refining corporate presentations. | `Active` |
 
 ## 🛠 How to Use
 
-1. **Clone the Repo**: Ensure you have the latest skills locally.
+### 🧩 Installation in Claude
+
+To install and use these skills in Claude Desktop:
+
+1. **Download the Skill**: Locate the `.skill` file in the desired skill folder.
+2. **Open Claude Settings**: In Claude Desktop, navigate to **Settings > Skills**.
+3. **Import**: Click on **"Add Skill"** and upload the `.skill` file.
+4. **Verify**: The skill should now be active and ready to use in your conversations.
+
+> [!NOTE]
+> If you are using Claude.ai (Web), you can extract the `.skill` file (it's a ZIP) and copy the contents of `SKILL.md` into your **Project Custom Instructions**.
+
+### 💻 General Usage
+
+1. **Clone the Repo**:
    ```bash
    git clone https://github.com/Wibx-LABS/wibx-skills.git
    ```
-2. **Import Skill**: Import the desired `.skill` file into your agent environment.
-3. **Initialize**: Follow the specific configuration steps required for each skill (see individual documentation where applicable).
+2. **Import Skill**: Import the desired `.skill` file into your agent environment (Forge, Bifrost, or Claude).
+3. **Manuals**: Check the `MANUAL.md` inside each skill folder for specific usage instructions and features.
 
 ## 🤝 Contributing
 
