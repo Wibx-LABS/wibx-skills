@@ -27,6 +27,7 @@ Cada skill neste repositório é organizada em sua própria pasta, contendo o pa
 | Nome da Skill | Pasta | Descrição | Status |
 | :--- | :--- | :--- | :--- |
 | **Wibx Presentations** | [`/presentations`](./presentations) | Skill especializada para gerar e refinar apresentações corporativas. | `Ativo` |
+| **Prompt Engineer** | [`/prompting`](./prompting) | Estrutura sistemática para criação e otimização de prompts de alta performance. | `Ativo` |
 
 ## 🛠 Como Usar
 
