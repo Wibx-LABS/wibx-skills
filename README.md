@@ -9,60 +9,59 @@
 /_______  /____|__ \___|_______ \_______ \/_______  /
         \/        \/           \/       \/        \/ 
   </pre>
-  <strong>The Central Hub for Wibx AI Skills</strong>
+  <strong>O Hub Central para Skills de IA da Wibx</strong>
 </p>
 
-> A comprehensive collection of specialized AI skills designed to enhance productivity, automate workflows, and standardize AI capabilities across all departments at Wiboo.
+> Uma coleção abrangente de skills de IA especializadas, projetadas para aumentar a produtividade, automatizar fluxos de trabalho e padronizar as capacidades de IA em todos os departamentos da Wiboo.
 
 ---
 
-## 🚀 Overview
+## 🚀 Visão Geral
 
-This repository serves as the official, company-wide source of truth for AI skills. Whether it's for legal, marketing, engineering, or product, every skill here is built to be modular, reusable, and easily integrated into our agent ecosystems (Forge/Bifrost).
+Este repositório serve como a fonte oficial de verdade para skills de IA em toda a empresa. Seja para o jurídico, marketing, engenharia ou produto, cada skill aqui é construída para ser modular, reutilizável e facilmente integrada em nossos ecossistemas de agentes (Forge/Bifrost).
 
-## 📦 Core Skills
+## 📦 Skills Principais
 
-Every skill in this repository is organized into its own folder containing the `.skill` package and a `MANUAL.md`.
+Cada skill neste repositório é organizada em sua própria pasta, contendo o pacote `.skill` e um arquivo `MANUAL.md`.
 
-| Skill Name | Folder | Description | Status |
+| Nome da Skill | Pasta | Descrição | Status |
 | :--- | :--- | :--- | :--- |
-| **Wibx Presentations** | [`/presentations`](./presentations) | Specialized skill for generating and refining corporate presentations. | `Active` |
+| **Wibx Presentations** | [`/presentations`](./presentations) | Skill especializada para gerar e refinar apresentações corporativas. | `Ativo` |
 
-## 🛠 How to Use
+## 🛠 Como Usar
 
-### 🧩 Installation in Claude
+### 🧩 Instalação no Claude
 
-To install and use these skills in Claude Desktop:
+Para instalar e usar estas skills no Claude Desktop:
 
-1. **Download the Skill**: Locate the `.skill` file in the desired skill folder.
-2. **Open Claude Settings**: In Claude Desktop, navigate to **Settings > Skills**.
-3. **Import**: Click on **"Add Skill"** and upload the `.skill` file.
-4. **Verify**: The skill should now be active and ready to use in your conversations.
+1. **Baixe a Skill**: Localize o arquivo `.skill` na pasta da skill desejada.
+2. **Abra as Configurações do Claude**: No Claude Desktop, navegue até **Settings > Skills**.
+3. **Importar**: Clique em **"Add Skill"** e faça o upload do arquivo `.skill`.
+4. **Verificar**: A skill agora deve estar ativa e pronta para uso em suas conversas.
 
 > [!NOTE]
-> If you are using Claude.ai (Web), you can extract the `.skill` file (it's a ZIP) and copy the contents of `SKILL.md` into your **Project Custom Instructions**.
+> Se você estiver usando o Claude.ai (Web), você pode extrair o arquivo `.skill` (é um arquivo ZIP) e copiar o conteúdo do `SKILL.md` para as **Instruções Personalizadas do seu Projeto** (Project Custom Instructions).
 
-### 💻 General Usage
+### 💻 Uso Geral
 
-1. **Clone the Repo**:
+1. **Clone o Repositório**: Certifique-se de ter as skills mais recentes localmente.
    ```bash
    git clone https://github.com/Wibx-LABS/wibx-skills.git
    ```
-2. **Import Skill**: Import the desired `.skill` file into your agent environment (Forge, Bifrost, or Claude).
-3. **Manuals**: Check the `MANUAL.md` inside each skill folder for specific usage instructions and features.
+2. **Importar Skill**: Importe o arquivo `.skill` desejado para o seu ambiente de agente (Forge, Bifrost ou Claude).
+3. **Manuais**: Verifique o arquivo `MANUAL.md` dentro de cada pasta de skill para instruções de uso e recursos específicos.
 
-## 🤝 Contributing
+## 🤝 Contribuindo
 
-We are constantly expanding our skill library! If you've created a skill that could benefit other teams:
+Estamos constantemente expandindo nossa biblioteca de skills! Se você criou uma skill que pode beneficiar outras equipes:
 
-1. Create a new branch for your skill.
-2. Add the `.skill` file to the root (or appropriate subdirectory).
-3. Update this `README.md` with the new skill's details.
-4. Submit a Pull Request for review by the Wibx Labs team.
+1. Crie uma nova branch para sua skill.
+2. Adicione o arquivo `.skill` à pasta apropriada.
+3. Atualize este `README.md` com os detalhes da nova skill.
+4. Envie um Pull Request para revisão pela equipe Wibx Labs.
 
 ---
 
 <p align="center">
-  <strong>Built and maintained by the Wibx Labs team. Internal use only.</strong>
+  <strong>Construído e mantido pela equipe Wibx Labs. Apenas para uso interno.</strong>
 </p>
-
