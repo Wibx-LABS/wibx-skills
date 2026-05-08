@@ -7,6 +7,7 @@
 This skill enables Claude to generate professional, interactive HTML slide decks using the Wibx Admin Dashboard design system (dark mode with neon green accents).
 
 **Key Features:**
+- **Company Logo Integration:** Automatically embeds the official Wibx logo (neon green icon + white wordmark) on title slides.
 - **Markdown to Slides:** Converts simple Markdown (separated by `---`) into a full presentation.
 - **Natural Language:** Designs slide structures from simple text requests.
 - **Interactive:** Includes keyboard navigation, slide transitions, and responsive layout.
@@ -20,6 +21,7 @@ This skill enables Claude to generate professional, interactive HTML slide decks
 Esta skill permite que o Claude gere apresentações de slides em HTML profissionais e interativas, utilizando o sistema de design Wibx Admin Dashboard (modo escuro com detalhes em verde neon).
 
 **Principais Recursos:**
+- **Integração do Logotipo da Empresa:** Incorpora automaticamente o logotipo oficial da Wibx (ícone verde neon + marca nominativa branca) nos slides de título.
 - **Markdown para Slides:** Converte Markdown simples (separado por `---`) em uma apresentação completa.
 - **Linguagem Natural:** Projeta estruturas de slides a partir de pedidos simples em texto.
 - **Interativo:** Inclui navegação por teclado, transições de slides e layout responsivo.
