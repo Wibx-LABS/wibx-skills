@@ -28,6 +28,7 @@ Cada skill neste repositório é organizada em sua própria pasta, contendo o pa
 | :--- | :--- | :--- | :--- |
 | **Wibx Presentations** | [`/presentations`](./presentations) | Skill especializada para gerar e refinar apresentações corporativas. | `Ativo` |
 | **Prompt Engineer** | [`/prompting`](./prompting) | Estrutura sistemática para criação e otimização de prompts de alta performance. | `Ativo` |
+| **Sexy Copy** | [`/copywriting`](./copywriting) | Copywriting persuasivo de alta performance para qualquer Claude da WIBX. | `Ativo` |
 
 ## 🛠 Como Usar
 
