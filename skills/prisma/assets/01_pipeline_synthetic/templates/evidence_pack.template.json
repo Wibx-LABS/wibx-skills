@@ -1,0 +1,99 @@
+{
+  "evidence_pack_id": "REPLACE_WITH_UUID_OR_SLUG",
+  "created_at": "REPLACE_WITH_ISO_8601",
+  "created_by": "agent|human",
+  "profile_scope": "individual",
+  "confidence_overall": 0.0,
+  "status": "draft",
+  "notes": "",
+
+  "identity_snapshot": {
+    "name": "",
+    "primary_handle": "",
+    "platforms": ["linkedin", "twitter", "medium"],
+    "headline": "",
+    "about": "",
+    "current_role": {
+      "title": "",
+      "company": "",
+      "industry": "",
+      "company_stage": "unknown"
+    },
+    "location": { "city": "", "country": "" },
+    "career_history": [
+      { "company": "", "title": "", "start_date": "YYYY-MM", "end_date": "YYYY-MM|present" }
+    ]
+  },
+
+  "content_items": [
+    {
+      "content_id": "post_001",
+      "platform": "linkedin",
+      "content_type": "post",
+      "text": "",
+      "created_at": "",
+      "url": "",
+      "metrics": { "likes": 0, "comments": 0, "shares": 0, "views": null }
+    }
+  ],
+
+  "comments_made": [
+    {
+      "comment_id": "cmt_001",
+      "platform": "",
+      "text": "",
+      "created_at": "",
+      "context": {
+        "original_post_author": "",
+        "original_post_excerpt": "",
+        "topic": ""
+      }
+    }
+  ],
+
+  "comments_received": [],
+
+  "external_assets": {
+    "website": "",
+    "blog_posts": [],
+    "podcasts_or_talks": [],
+    "projects_or_products": []
+  },
+
+  "signals": {
+    "recurring_topics": [],
+    "explicit_problems": [],
+    "explicit_solutions": [],
+    "decision_criteria_mentions": [],
+    "rejected_ideas": []
+  },
+
+  "language_markers": {
+    "frequent_terms": [],
+    "tone": [],
+    "writing_patterns": [],
+    "notable_phrases": []
+  },
+
+  "engagement_patterns": {
+    "top_performing_topics": [],
+    "low_engagement_topics": []
+  },
+
+  "coverage": {
+    "posts_count": 0,
+    "comments_made_count": 0,
+    "long_form_count": 0,
+    "total_char_count": 0
+  },
+
+  "readiness_check": {
+    "has_identity": false,
+    "has_minimum_corpus": false,
+    "has_decision_signals": false,
+    "ready_for_job_json": false,
+    "blockers": []
+  },
+
+  "audit_log": []
+}

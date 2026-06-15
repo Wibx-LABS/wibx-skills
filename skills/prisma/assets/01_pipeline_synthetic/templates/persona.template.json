@@ -1,0 +1,68 @@
+{
+  "persona_id": "REPLACE_WITH_UUID_OR_SLUG",
+  "job_id": "REPLACE_WITH_JOB_ID",
+  "evidence_pack_id": "REPLACE_WITH_EVIDENCE_PACK_ID",
+
+  "persona_name": "",
+  "role_title": "",
+  "organization_context": "",
+  "archetype": "",
+
+  "context_and_identity": {
+    "background": "",
+    "current_situation": "",
+    "core_responsibilities": "",
+    "motivations_values": ""
+  },
+
+  "cognitive_frame_jtbd": {
+    "functional_jobs": "",
+    "emotional_jobs": "",
+    "social_jobs": ""
+  },
+
+  "behavioral_decision_dynamics": {
+    "push_factors": [],
+    "pull_factors": [],
+    "anxieties_barriers": [],
+    "habits_heuristics": []
+  },
+
+  "operating_interaction_model": {
+    "mode_of_work": "",
+    "tools_environment": "",
+    "focus_areas_expertise": ""
+  },
+
+  "evidence_beliefs_triggers": {
+    "information_they_trust": "",
+    "decision_triggers": "",
+    "red_flags": ""
+  },
+
+  "communication_style": {
+    "tone": "",
+    "tactics": "",
+    "key_phrases": []
+  },
+
+  "goals_and_outcomes": [
+    {
+      "goal": "",
+      "priority": "high"
+    }
+  ],
+
+  "meta_attributes": {
+    "identity_markers": "",
+    "archetypal_energy": "",
+    "narrative_arc": "",
+    "quote": ""
+  },
+
+  "traceability": {
+    "fields_derived_from_job": [],
+    "fields_marked_decorative": [],
+    "fields_with_insufficient_evidence": []
+  }
+}

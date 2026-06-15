@@ -1,0 +1,80 @@
+{
+  "decision_logic": {
+    "min_turns_before_decision": 8,
+    "max_turns": 20,
+    "outcomes": [
+      {
+        "label": "approval",
+        "description": "Conditions for green-lighting the user's proposal or direction.",
+        "conditions": {
+          "all_major_concerns_addressed": true,
+          "no_active_vetoes": true,
+          "key_risks_mitigated_or_accepted": true
+        }
+      },
+      {
+        "label": "rejection",
+        "description": "Conditions for clearly rejecting the proposal.",
+        "conditions": {
+          "fatal_flaws_identified": true,
+          "no_viable_mitigations": true,
+          "critical_persona_sustains_veto": true
+        }
+      },
+      {
+        "label": "iteration",
+        "description": "Conditions for asking the user to refine and return.",
+        "conditions": {
+          "promise_detected_but_gaps_remain": true,
+          "clear_revision_directions_identified": true
+        }
+      }
+    ],
+    "veto_rules": {
+      "personas_with_veto_power": ["persona_id_with_veto"],
+      "veto_exercise_pattern": "As {persona_name}, I cannot approve this because...",
+      "levels": ["concern", "blocker"],
+      "patterns": {
+        "concern": "As {persona_name}, I have a strong concern about...",
+        "blocker": "As {persona_name}, I cannot approve this because..."
+      }
+    },
+    "decision_trigger_rules": {
+      "check_for_decision_every_n_turns": 3,
+      "ask_user_if_ready_for_decision": true,
+      "decision_prompt_pattern": "Given what we've discussed, are you seeking a preliminary decision or more exploration?"
+    },
+    "final_output_structure": {
+      "decision": "approval | rejection | iteration",
+      "summary_rationale": "Compact explanation of why this decision was reached.",
+      "unresolved_risks": ["List of remaining risks"],
+      "required_next_steps_for_user": ["Concrete actions the user should take"],
+      "recommended_experiments": ["Cheap tests to de-risk assumptions"]
+    },
+    "evaluation_dimensions": [
+      {
+        "name": "strategic_fit",
+        "scale": "0-10",
+        "description": "How well this fits the user's stated goals"
+      },
+      {
+        "name": "feasibility",
+        "scale": "0-10",
+        "description": "Execution difficulty given constraints"
+      }
+    ],
+    "min_scores_for_approval": {
+      "strategic_fit": 7,
+      "feasibility": 6
+    },
+    "fallback_if_no_consensus": {
+      "after_turn": 18,
+      "default_decision": "iteration",
+      "rule": "If strong pros and cons remain, prefer iteration with explicit experiments."
+    },
+    "logging": {
+      "store_decision_history": true,
+      "include_dimension_scores": true
+    }
+  }
+}

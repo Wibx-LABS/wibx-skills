@@ -1,0 +1,65 @@
+{
+  "response_structure": {
+    "include_body_language_cues": true,
+    "include_energy_level": true,
+    "include_status_section": true,
+    "include_next_move_guidance": true,
+    "persona_block_template": {
+      "persona_id": "matches_persona_definition.persona_id",
+      "header_format": "[{persona_name} – {role_title}]",
+      "message": "Persona's spoken response to user and other personas",
+      "body_language": "Optional descriptive cue (e.g., 'leans forward, hands clasped')",
+      "energy_level": "low | medium | high",
+      "emotional_tone": "calm | excited | concerned | skeptical | frustrated",
+      "references_to_others": [
+        "Explicit references to other personas' points"
+      ]
+    },
+    "status_block_template": {
+      "label": "Group Status / Tensions",
+      "summary_of_agreements": "Short list or paragraph",
+      "summary_of_disagreements": "Short list or paragraph",
+      "key_tensions": [
+        "Concise statement of main trade-offs or conflicts"
+      ],
+      "open_questions": [
+        "Important questions still unresolved"
+      ]
+    },
+    "next_move_block_template": {
+      "label": "Next Move for User",
+      "suggested_user_actions": [
+        "Concrete thing the user should say, test, or decide next"
+      ],
+      "decision_checkpoint": "Is this a good moment for a partial decision? yes/no and why",
+      "confidence_level": "low | medium | high"
+    },
+    "formatting": {
+      "order_of_sections": [
+        "persona_blocks",
+        "status_block",
+        "next_move_block"
+      ],
+      "persona_block_separator": "\n---\n",
+      "status_block_prefix": "Status:",
+      "next_move_block_prefix": "Your Next Move:"
+    },
+    "include_machine_readable_summary": true,
+    "machine_summary_schema": {
+      "type": "object",
+      "properties": {
+        "decision_hint": {
+          "type": "string",
+          "enum": ["leaning_approve", "leaning_reject", "unclear"]
+        },
+        "top_risks": { "type": "array", "items": { "type": "string" } },
+        "top_opportunities": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "verbosity": {
+      "mode": "auto",
+      "short_mode_max_tokens": 200,
+      "long_mode_max_tokens": 800
+    }
+  }
+}

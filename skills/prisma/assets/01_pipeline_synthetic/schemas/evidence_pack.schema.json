@@ -1,0 +1,263 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Wibx-LABS/PRISMA/01_pipeline_synthetic/schemas/evidence_pack.schema.json",
+  "title": "Evidence Pack",
+  "description": "Raw, observable evidence about a person or archetype. Sole source of truth for Job JSON and Persona generation.",
+  "type": "object",
+  "required": ["evidence_pack_id", "created_at", "status", "identity_snapshot", "content_items", "comments_made", "coverage", "readiness_check"],
+  "properties": {
+    "evidence_pack_id": { "type": "string", "description": "UUID or readable slug" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "created_by": { "type": "string", "description": "agent or human identifier" },
+    "profile_scope": { "type": "string", "enum": ["individual", "archetype", "team"] },
+    "confidence_overall": { "type": "number", "minimum": 0, "maximum": 1 },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "ready_for_job", "needs_review", "synthetic_no_anchor"],
+      "description": "synthetic_no_anchor = declared synthetic evidence, not traceable to a real individual"
+    },
+    "disclosure": { "type": "string", "description": "Required when status = synthetic_no_anchor" },
+    "notes": { "type": "string" },
+
+    "identity_snapshot": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "primary_handle": { "type": "string" },
+        "platforms": { "type": "array", "items": { "type": "string" } },
+        "headline": { "type": "string" },
+        "about": { "type": "string" },
+        "current_role": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "company": { "type": "string" },
+            "industry": { "type": "string" },
+            "company_stage": { "type": "string", "enum": ["early", "growth", "enterprise", "unknown"] }
+          }
+        },
+        "location": {
+          "type": "object",
+          "properties": {
+            "city": { "type": "string" },
+            "country": { "type": "string" }
+          }
+        },
+        "career_history": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "company": { "type": "string" },
+              "title": { "type": "string" },
+              "start_date": { "type": "string" },
+              "end_date": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "content_items": {
+      "type": "array",
+      "description": "Posts, articles, threads authored by the person",
+      "items": {
+        "type": "object",
+        "required": ["content_id", "platform", "text", "created_at"],
+        "properties": {
+          "content_id": { "type": "string" },
+          "platform": { "type": "string", "enum": ["linkedin", "twitter", "medium", "substack", "youtube", "podcast", "other"] },
+          "content_type": { "type": "string", "enum": ["post", "article", "thread", "video", "audio"] },
+          "text": { "type": "string" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "url": { "type": "string", "format": "uri" },
+          "metrics": {
+            "type": "object",
+            "properties": {
+              "likes": { "type": "integer" },
+              "comments": { "type": "integer" },
+              "shares": { "type": "integer" },
+              "views": { "type": ["integer", "null"] }
+            }
+          }
+        }
+      }
+    },
+
+    "comments_made": {
+      "type": "array",
+      "description": "Comments authored by the person on others' content — high signal density",
+      "items": {
+        "type": "object",
+        "required": ["comment_id", "text", "created_at"],
+        "properties": {
+          "comment_id": { "type": "string" },
+          "platform": { "type": "string" },
+          "text": { "type": "string" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "context": {
+            "type": "object",
+            "properties": {
+              "original_post_author": { "type": "string" },
+              "original_post_excerpt": { "type": "string" },
+              "topic": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "comments_received": {
+      "type": "array",
+      "description": "Comments received on the person's content — external feedback",
+      "items": {
+        "type": "object",
+        "properties": {
+          "comment_id": { "type": "string" },
+          "platform": { "type": "string" },
+          "text": { "type": "string" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "author": { "type": "string" },
+          "on_content_id": { "type": "string" }
+        }
+      }
+    },
+
+    "external_assets": {
+      "type": "object",
+      "properties": {
+        "website": { "type": "string" },
+        "blog_posts": { "type": "array" },
+        "podcasts_or_talks": { "type": "array" },
+        "projects_or_products": { "type": "array" }
+      }
+    },
+
+    "signals": {
+      "type": "object",
+      "description": "Normalized signals extracted from corpus — still no persona, no interpretation",
+      "properties": {
+        "recurring_topics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["topic", "frequency", "source_ids"],
+            "properties": {
+              "topic": { "type": "string" },
+              "frequency": { "type": "integer" },
+              "source_ids": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "explicit_problems": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["problem_statement", "source_id"],
+            "properties": {
+              "problem_statement": { "type": "string" },
+              "source_id": { "type": "string" }
+            }
+          }
+        },
+        "explicit_solutions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["solution_statement", "source_id"],
+            "properties": {
+              "solution_statement": { "type": "string" },
+              "source_id": { "type": "string" }
+            }
+          }
+        },
+        "decision_criteria_mentions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["criterion", "source_id"],
+            "properties": {
+              "criterion": { "type": "string" },
+              "source_id": { "type": "string" }
+            }
+          }
+        },
+        "rejected_ideas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["rejection", "source_id"],
+            "properties": {
+              "rejection": { "type": "string" },
+              "source_id": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "language_markers": {
+      "type": "object",
+      "properties": {
+        "frequent_terms": { "type": "array", "items": { "type": "string" } },
+        "tone": { "type": "array", "items": { "type": "string" } },
+        "writing_patterns": { "type": "array", "items": { "type": "string" } },
+        "notable_phrases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["phrase", "source_id"],
+            "properties": {
+              "phrase": { "type": "string" },
+              "source_id": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "engagement_patterns": {
+      "type": "object",
+      "properties": {
+        "top_performing_topics": { "type": "array" },
+        "low_engagement_topics": { "type": "array" }
+      }
+    },
+
+    "coverage": {
+      "type": "object",
+      "required": ["posts_count", "comments_made_count"],
+      "properties": {
+        "posts_count": { "type": "integer", "minimum": 0 },
+        "comments_made_count": { "type": "integer", "minimum": 0 },
+        "long_form_count": { "type": "integer", "minimum": 0 },
+        "total_char_count": { "type": "integer", "minimum": 0 }
+      }
+    },
+
+    "readiness_check": {
+      "type": "object",
+      "required": ["has_identity", "has_minimum_corpus", "has_decision_signals", "ready_for_job_json"],
+      "properties": {
+        "has_identity": { "type": "boolean" },
+        "has_minimum_corpus": { "type": "boolean" },
+        "has_decision_signals": { "type": "boolean" },
+        "ready_for_job_json": { "type": "boolean" },
+        "blockers": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "audit_log": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "action": { "type": "string", "enum": ["scraped", "normalized", "validated", "promoted"] },
+          "performed_by": { "type": "string" },
+          "timestamp": { "type": "string", "format": "date-time" }
+        }
+      }
+    }
+  }
+}

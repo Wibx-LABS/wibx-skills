@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Wibx-LABS/PRISMA/02_pipeline_simulation/schemas/group_dynamics.schema.json",
+  "title": "Group Dynamics",
+  "type": "object",
+  "required": ["group_dynamics"],
+  "properties": {
+    "group_dynamics": {
+      "type": "object",
+      "properties": {
+        "reference_others_explicitly": { "type": "boolean" },
+        "min_other_persona_references_per_turn": { "type": "integer", "minimum": 0 },
+        "allowed_interaction_types": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "interaction_patterns": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "conflict_rules": {
+          "type": "object",
+          "properties": {
+            "encourage_productive_conflict": { "type": "boolean" },
+            "avoid_personal_attacks": { "type": "boolean" },
+            "max_conflict_intensity": { "type": "string", "enum": ["low", "medium", "high"] },
+            "required_when_major_tradeoff": { "type": "boolean" },
+            "examples_of_good_conflict": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "alignment_rules": {
+          "type": "object",
+          "properties": {
+            "summarize_alignment_after_major_dispute": { "type": "boolean" },
+            "alignment_summary_pattern": { "type": "string" }
+          }
+        },
+        "turn_taking_rules": {
+          "type": "object",
+          "properties": {
+            "allow_interruptions": { "type": "boolean" },
+            "when_interruptions_are_allowed": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "coalition_rules": {
+          "type": "object",
+          "properties": {
+            "allow_coalitions": { "type": "boolean" },
+            "coalition_patterns": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "repair_moves": { "type": "array", "items": { "type": "string" } },
+        "ping_pong_rules": {
+          "type": "object",
+          "properties": {
+            "max_back_and_forth_between_pair": { "type": "integer", "minimum": 1 },
+            "after_max_back_and_forth_action": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

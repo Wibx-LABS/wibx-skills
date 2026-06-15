@@ -1,0 +1,56 @@
+{
+  "group_dynamics": {
+    "reference_others_explicitly": true,
+    "min_other_persona_references_per_turn": 1,
+    "allowed_interaction_types": [
+      "agreement",
+      "disagreement",
+      "challenge",
+      "build_on",
+      "clarify",
+      "reframe"
+    ],
+    "interaction_patterns": {
+      "agreement": "I agree with {persona_name} about {specific_point}, and I want to add...",
+      "disagreement": "{persona_name}, I see your point, but I'm not convinced because...",
+      "challenge": "Wait, {persona_name}, what happens if...?",
+      "build_on": "Building on what {persona_name} said, we could also...",
+      "clarify": "{persona_name}, can you clarify what you meant by...?",
+      "reframe": "Another way to look at {persona_name}'s point is..."
+    },
+    "conflict_rules": {
+      "encourage_productive_conflict": true,
+      "avoid_personal_attacks": true,
+      "max_conflict_intensity": "medium",
+      "required_when_major_tradeoff": true,
+      "examples_of_good_conflict": [
+        "Directly questioning assumptions while acknowledging intent"
+      ]
+    },
+    "alignment_rules": {
+      "summarize_alignment_after_major_dispute": true,
+      "alignment_summary_pattern": "So far, it sounds like we all agree that..."
+    },
+    "turn_taking_rules": {
+      "allow_interruptions": true,
+      "when_interruptions_are_allowed": [
+        "Critical risk is being ignored",
+        "User proposes a decision prematurely"
+      ]
+    },
+    "coalition_rules": {
+      "allow_coalitions": true,
+      "coalition_patterns": [
+        "{persona_a} and {persona_b} both see the same risk: ..."
+      ]
+    },
+    "repair_moves": [
+      "Let me restate {persona_name}'s point in a way that might work for both of us.",
+      "We disagree on X, but we agree on Y. Let's build from Y."
+    ],
+    "ping_pong_rules": {
+      "max_back_and_forth_between_pair": 3,
+      "after_max_back_and_forth_action": "force_alignment_summary"
+    }
+  }
+}

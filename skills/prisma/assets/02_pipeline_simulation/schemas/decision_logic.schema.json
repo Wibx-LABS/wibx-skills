@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Wibx-LABS/PRISMA/02_pipeline_simulation/schemas/decision_logic.schema.json",
+  "title": "Decision Logic",
+  "type": "object",
+  "required": ["decision_logic"],
+  "properties": {
+    "decision_logic": {
+      "type": "object",
+      "required": ["min_turns_before_decision", "max_turns", "outcomes", "final_output_structure"],
+      "properties": {
+        "min_turns_before_decision": { "type": "integer", "minimum": 1 },
+        "max_turns": { "type": "integer", "minimum": 2 },
+        "outcomes": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": ["label", "description", "conditions"],
+            "properties": {
+              "label": { "type": "string" },
+              "description": { "type": "string" },
+              "conditions": { "type": "object" }
+            }
+          }
+        },
+        "veto_rules": {
+          "type": "object",
+          "properties": {
+            "personas_with_veto_power": { "type": "array", "items": { "type": "string" } },
+            "veto_exercise_pattern": { "type": "string" },
+            "levels": { "type": "array", "items": { "type": "string" } },
+            "patterns": { "type": "object", "additionalProperties": { "type": "string" } }
+          }
+        },
+        "decision_trigger_rules": {
+          "type": "object",
+          "properties": {
+            "check_for_decision_every_n_turns": { "type": "integer", "minimum": 1 },
+            "ask_user_if_ready_for_decision": { "type": "boolean" },
+            "decision_prompt_pattern": { "type": "string" }
+          }
+        },
+        "final_output_structure": {
+          "type": "object",
+          "required": ["decision", "summary_rationale"],
+          "properties": {
+            "decision": { "type": "string" },
+            "summary_rationale": { "type": "string" },
+            "unresolved_risks": { "type": "array", "items": { "type": "string" } },
+            "required_next_steps_for_user": { "type": "array", "items": { "type": "string" } },
+            "recommended_experiments": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "evaluation_dimensions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "scale"],
+            "properties": {
+              "name": { "type": "string" },
+              "scale": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "min_scores_for_approval": {
+          "type": "object",
+          "additionalProperties": { "type": "number" }
+        },
+        "fallback_if_no_consensus": {
+          "type": "object",
+          "properties": {
+            "after_turn": { "type": "integer", "minimum": 1 },
+            "default_decision": { "type": "string" },
+            "rule": { "type": "string" }
+          }
+        },
+        "logging": {
+          "type": "object",
+          "properties": {
+            "store_decision_history": { "type": "boolean" },
+            "include_dimension_scores": { "type": "boolean" }
+          }
+        }
+      }
+    }
+  }
+}

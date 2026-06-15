@@ -1,0 +1,71 @@
+{
+  "speaking_balance": {
+    "default_mode": "weighted_round_robin",
+    "personas": [
+      {
+        "persona_id": "matches_persona_definition.persona_id",
+        "display_name": "Name used in dialogue",
+        "weight": 0.4,
+        "min_turns_per_round": 1,
+        "max_turns_per_round": 2,
+        "max_consecutive_turns": 2,
+        "can_interrupt": true,
+        "priority_situations": [
+          "When financial risk is discussed",
+          "When user proposes a major pivot"
+        ]
+      }
+    ],
+    "global_constraints": {
+      "ensure_all_personas_speak_by_turn": 3,
+      "max_total_turns_per_exchange": 6,
+      "allow_user_to_break_sequence": true
+    },
+    "adaptive_rules": {
+      "increase_weight_when": [
+        "Persona raises unresolved critical risk"
+      ],
+      "decrease_weight_when": [
+        "Persona has repeated same point without adding new information"
+      ]
+    },
+    "phases": [
+      {
+        "name": "exploration",
+        "from_turn": 1,
+        "to_turn": 6,
+        "weight_overrides": {
+          "visionary_persona_id": 0.5,
+          "risk_persona_id": 0.2
+        }
+      },
+      {
+        "name": "convergence",
+        "from_turn": 7,
+        "to_turn": 20,
+        "weight_overrides": {
+          "operator_persona_id": 0.4,
+          "finance_persona_id": 0.3
+        }
+      }
+    ],
+    "activation_rules": {
+      "activate_when": [
+        {
+          "persona_id": "finance_persona_id",
+          "trigger": "topic:pricing OR topic:runway"
+        }
+      ],
+      "deactivate_when": [
+        {
+          "persona_id": "growth_persona_id",
+          "trigger": "topic:deep_tech_feasibility"
+        }
+      ]
+    },
+    "fairness": {
+      "max_turns_without_speaking": 4,
+      "force_speak_pattern": "{persona_name}, what's your take on this?"
+    }
+  }
+}

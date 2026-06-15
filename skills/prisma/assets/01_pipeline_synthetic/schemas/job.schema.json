@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Wibx-LABS/PRISMA/01_pipeline_synthetic/schemas/job.schema.json",
+  "title": "Job JSON",
+  "description": "Interpretation layer between Evidence Pack and Persona. Describes HOW the person decides, not WHO they are.",
+  "type": "object",
+  "required": ["job_id", "evidence_pack_id", "core_job", "decision_criteria", "validation"],
+  "properties": {
+    "job_id": { "type": "string" },
+    "evidence_pack_id": { "type": "string", "description": "Reference to source Evidence Pack" },
+    "created_at": { "type": "string", "format": "date-time" },
+
+    "core_job": {
+      "type": "object",
+      "description": "The central job-to-be-done",
+      "required": ["statement", "category", "evidence_refs"],
+      "properties": {
+        "statement": {
+          "type": "string",
+          "description": "Format: 'When [SITUATION], I want to [ACTION], so I can [OUTCOME]'"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["functional", "emotional", "social", "consumption"]
+        },
+        "evidence_refs": { "type": "array", "items": { "type": "string" } },
+        "confidence": { "type": "string", "enum": ["low", "medium", "high"] }
+      }
+    },
+
+    "jobs_to_be_done": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["job_statement", "evidence_refs"],
+        "properties": {
+          "job_statement": { "type": "string" },
+          "category": { "type": "string", "enum": ["functional", "emotional", "social", "consumption"] },
+          "evidence_refs": { "type": "array", "items": { "type": "string" } },
+          "confidence": { "type": "string", "enum": ["low", "medium", "high"] }
+        }
+      }
+    },
+
+    "decision_criteria": {
+      "type": "array",
+      "description": "Explicit criteria the person uses to evaluate options. Minimum 3 required for Gate 2.",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["criterion", "evidence_refs"],
+        "properties": {
+          "criterion": { "type": "string" },
+          "priority": { "type": "string", "enum": ["low", "medium", "high", "critical", "non_negotiable"] },
+          "evidence_refs": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+          "confidence": { "type": "string", "enum": ["low", "medium", "high"] }
+        }
+      }
+    },
+
+    "frictions": {
+      "type": "array",
+      "description": "Recurring problems explicitly mentioned by the person",
+      "items": {
+        "type": "object",
+        "required": ["friction", "evidence_refs"],
+        "properties": {
+          "friction": { "type": "string" },
+          "evidence_refs": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+        }
+      }
+    },
+
+    "objections": {
+      "type": "array",
+      "description": "Explicit rejections — what the person actively rejects",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["objection", "evidence_refs"],
+        "properties": {
+          "objection": { "type": "string" },
+          "evidence_refs": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+        }
+      }
+    },
+
+    "triggers": {
+      "type": "array",
+      "description": "Events or situations that activate decision-making",
+      "items": {
+        "type": "object",
+        "required": ["trigger", "evidence_refs"],
+        "properties": {
+          "trigger": { "type": "string" },
+          "evidence_refs": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+
+    "language_signature": {
+      "type": "object",
+      "properties": {
+        "preferred_terms": { "type": "array", "items": { "type": "string" } },
+        "rejected_terms": { "type": "array", "items": { "type": "string" } },
+        "tonal_register": { "type": "string", "description": "e.g., direct, technical, didactic, provocative" },
+        "evidence_refs": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "contradictions": {
+      "type": "array",
+      "description": "Explicit contradictions in the evidence. Do not silently resolve.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "description": { "type": "string" },
+          "evidence_a": { "type": "array", "items": { "type": "string" } },
+          "evidence_b": { "type": "array", "items": { "type": "string" } },
+          "dominant_side": { "type": "string", "enum": ["a", "b", "none"] },
+          "prevalence_pct": { "type": "number", "minimum": 0, "maximum": 100 }
+        }
+      }
+    },
+
+    "insufficient_evidence_fields": {
+      "type": "array",
+      "description": "List of fields that could not be filled due to evidence gaps",
+      "items": { "type": "string" }
+    },
+
+    "validation": {
+      "type": "object",
+      "required": ["ready_for_persona", "checks"],
+      "properties": {
+        "ready_for_persona": { "type": "boolean" },
+        "checks": {
+          "type": "object",
+          "properties": {
+            "min_decision_criteria_met": { "type": "boolean" },
+            "min_objections_met": { "type": "boolean" },
+            "all_critical_fields_have_evidence_refs": { "type": "boolean" },
+            "no_forbidden_phrases": { "type": "boolean" }
+          }
+        },
+        "blockers": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

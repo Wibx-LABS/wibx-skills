@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Wibx-LABS/PRISMA/02_pipeline_simulation/schemas/speaking_balance.schema.json",
+  "title": "Speaking Balance",
+  "type": "object",
+  "required": ["speaking_balance"],
+  "properties": {
+    "speaking_balance": {
+      "type": "object",
+      "required": ["default_mode", "personas", "global_constraints"],
+      "properties": {
+        "default_mode": { "type": "string", "enum": ["weighted_round_robin", "free_form", "moderated"] },
+        "personas": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["persona_id", "weight", "max_consecutive_turns"],
+            "properties": {
+              "persona_id": { "type": "string" },
+              "display_name": { "type": "string" },
+              "weight": { "type": "number", "minimum": 0, "maximum": 1 },
+              "min_turns_per_round": { "type": "integer", "minimum": 0 },
+              "max_turns_per_round": { "type": "integer", "minimum": 1 },
+              "max_consecutive_turns": { "type": "integer", "minimum": 1 },
+              "can_interrupt": { "type": "boolean" },
+              "priority_situations": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "global_constraints": {
+          "type": "object",
+          "properties": {
+            "ensure_all_personas_speak_by_turn": { "type": "integer", "minimum": 1 },
+            "max_total_turns_per_exchange": { "type": "integer", "minimum": 1 },
+            "allow_user_to_break_sequence": { "type": "boolean" }
+          }
+        },
+        "adaptive_rules": {
+          "type": "object",
+          "properties": {
+            "increase_weight_when": { "type": "array" },
+            "decrease_weight_when": { "type": "array" }
+          }
+        },
+        "phases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "from_turn", "to_turn"],
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "from_turn": { "type": "integer", "minimum": 1 },
+              "to_turn": { "type": "integer", "minimum": 1 },
+              "weight_overrides": { "type": "object", "additionalProperties": { "type": "number" } }
+            }
+          }
+        },
+        "activation_rules": {
+          "type": "object",
+          "properties": {
+            "activate_when": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "persona_id": { "type": "string" },
+                  "trigger": { "type": "string" }
+                }
+              }
+            },
+            "deactivate_when": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "persona_id": { "type": "string" },
+                  "trigger": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "fairness": {
+          "type": "object",
+          "properties": {
+            "max_turns_without_speaking": { "type": "integer", "minimum": 1 },
+            "force_speak_pattern": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

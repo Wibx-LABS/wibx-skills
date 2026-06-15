@@ -1,0 +1,73 @@
+{
+  "job_id": "REPLACE_WITH_UUID_OR_SLUG",
+  "evidence_pack_id": "REPLACE_WITH_EVIDENCE_PACK_ID",
+  "created_at": "REPLACE_WITH_ISO_8601",
+
+  "core_job": {
+    "statement": "When [SITUATION], I want to [ACTION], so I can [OUTCOME]",
+    "category": "functional",
+    "evidence_refs": [],
+    "confidence": "medium"
+  },
+
+  "jobs_to_be_done": [
+    {
+      "job_statement": "",
+      "category": "functional",
+      "evidence_refs": [],
+      "confidence": "medium"
+    }
+  ],
+
+  "decision_criteria": [
+    {
+      "criterion": "",
+      "priority": "high",
+      "evidence_refs": [],
+      "confidence": "medium"
+    }
+  ],
+
+  "frictions": [
+    {
+      "friction": "",
+      "evidence_refs": []
+    }
+  ],
+
+  "objections": [
+    {
+      "objection": "",
+      "evidence_refs": []
+    }
+  ],
+
+  "triggers": [
+    {
+      "trigger": "",
+      "evidence_refs": []
+    }
+  ],
+
+  "language_signature": {
+    "preferred_terms": [],
+    "rejected_terms": [],
+    "tonal_register": "",
+    "evidence_refs": []
+  },
+
+  "contradictions": [],
+
+  "insufficient_evidence_fields": [],
+
+  "validation": {
+    "ready_for_persona": false,
+    "checks": {
+      "min_decision_criteria_met": false,
+      "min_objections_met": false,
+      "all_critical_fields_have_evidence_refs": false,
+      "no_forbidden_phrases": false
+    },
+    "blockers": []
+  }
+}

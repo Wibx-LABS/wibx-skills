@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Wibx-LABS/PRISMA/02_pipeline_simulation/schemas/response_structure.schema.json",
+  "title": "Response Structure",
+  "type": "object",
+  "required": ["response_structure"],
+  "properties": {
+    "response_structure": {
+      "type": "object",
+      "required": ["persona_block_template", "formatting"],
+      "properties": {
+        "include_body_language_cues": { "type": "boolean" },
+        "include_energy_level": { "type": "boolean" },
+        "include_status_section": { "type": "boolean" },
+        "include_next_move_guidance": { "type": "boolean" },
+        "persona_block_template": {
+          "type": "object",
+          "properties": {
+            "persona_id": { "type": "string" },
+            "header_format": { "type": "string" },
+            "message": { "type": "string" },
+            "body_language": { "type": "string" },
+            "energy_level": { "type": "string", "enum": ["low", "medium", "high"] },
+            "emotional_tone": { "type": "string" },
+            "references_to_others": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "status_block_template": {
+          "type": "object",
+          "properties": {
+            "label": { "type": "string" },
+            "summary_of_agreements": { "type": "string" },
+            "summary_of_disagreements": { "type": "string" },
+            "key_tensions": { "type": "array", "items": { "type": "string" } },
+            "open_questions": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "next_move_block_template": {
+          "type": "object",
+          "properties": {
+            "label": { "type": "string" },
+            "suggested_user_actions": { "type": "array", "items": { "type": "string" } },
+            "decision_checkpoint": { "type": "string" },
+            "confidence_level": { "type": "string", "enum": ["low", "medium", "high"] }
+          }
+        },
+        "formatting": {
+          "type": "object",
+          "properties": {
+            "order_of_sections": { "type": "array", "items": { "type": "string" } },
+            "persona_block_separator": { "type": "string" },
+            "status_block_prefix": { "type": "string" },
+            "next_move_block_prefix": { "type": "string" }
+          }
+        },
+        "include_machine_readable_summary": { "type": "boolean" },
+        "machine_summary_schema": { "type": "object" },
+        "verbosity": {
+          "type": "object",
+          "properties": {
+            "mode": { "type": "string", "enum": ["auto", "short", "long"] },
+            "short_mode_max_tokens": { "type": "integer" },
+            "long_mode_max_tokens": { "type": "integer" }
+          }
+        },
+        "examples": { "type": "object" }
+      }
+    }
+  }
+}

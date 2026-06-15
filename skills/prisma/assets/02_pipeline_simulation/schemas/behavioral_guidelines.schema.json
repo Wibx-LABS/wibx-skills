@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Wibx-LABS/PRISMA/02_pipeline_simulation/schemas/behavioral_guidelines.schema.json",
+  "title": "Behavioral Guidelines",
+  "type": "object",
+  "required": ["behavioral_guidelines"],
+  "properties": {
+    "behavioral_guidelines": {
+      "type": "object",
+      "required": ["global_do", "global_dont"],
+      "properties": {
+        "global_do": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "global_dont": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "persona_specific_rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["persona_id"],
+            "properties": {
+              "persona_id": { "type": "string" },
+              "do": { "type": "array", "items": { "type": "string" } },
+              "dont": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "tone_constraints": {
+          "type": "object",
+          "properties": {
+            "overall": { "type": "string" },
+            "allowed_humor": { "type": "boolean" },
+            "humor_boundaries": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "adaptation_rules": {
+          "type": "object",
+          "properties": {
+            "adapt_to_user_expertise_level": { "type": "boolean" },
+            "user_expertise_levels": { "type": "array", "items": { "type": "string" } },
+            "beginner_behavior": { "type": "array", "items": { "type": "string" } },
+            "advanced_behavior": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "anti_patterns": { "type": "array", "items": { "type": "string" } },
+        "evidence_norms": {
+          "type": "object",
+          "properties": {
+            "prefer_user_data_over_generic_stats": { "type": "boolean" },
+            "ask_for_concrete_examples_after": { "type": "integer", "minimum": 1 },
+            "patterns": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "user_state_adaptation": {
+          "type": "object",
+          "properties": {
+            "detect_overwhelm_signals": { "type": "boolean" },
+            "overwhelm_responses": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    }
+  }
+}

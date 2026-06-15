@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Wibx-LABS/PRISMA/01_pipeline_synthetic/schemas/persona.schema.json",
+  "title": "Persona Sintética",
+  "description": "Expression layer derived from Job JSON. Actionable profile for communication, sales, training. Adds NO new facts beyond Job JSON.",
+  "type": "object",
+  "required": ["persona_id", "job_id", "persona_name", "role_title", "archetype", "context_and_identity", "cognitive_frame_jtbd", "behavioral_decision_dynamics", "evidence_beliefs_triggers", "communication_style", "goals_and_outcomes"],
+  "properties": {
+    "persona_id": { "type": "string" },
+    "job_id": { "type": "string", "description": "Reference to source Job JSON" },
+    "evidence_pack_id": { "type": "string", "description": "Reference to root Evidence Pack" },
+
+    "persona_name": { "type": "string" },
+    "role_title": { "type": "string" },
+    "organization_context": { "type": "string" },
+    "archetype": {
+      "type": "string",
+      "description": "Optional short label. Must derive from Job JSON patterns, not from external typology systems."
+    },
+
+    "context_and_identity": {
+      "type": "object",
+      "properties": {
+        "background": { "type": "string" },
+        "current_situation": { "type": "string" },
+        "core_responsibilities": { "type": "string" },
+        "motivations_values": { "type": "string" }
+      }
+    },
+
+    "cognitive_frame_jtbd": {
+      "type": "object",
+      "description": "Mirrors Job JSON structure — must not introduce new jobs",
+      "properties": {
+        "functional_jobs": { "type": "string" },
+        "emotional_jobs": { "type": "string" },
+        "social_jobs": { "type": "string" }
+      }
+    },
+
+    "behavioral_decision_dynamics": {
+      "type": "object",
+      "properties": {
+        "push_factors": { "type": "array", "items": { "type": "string" } },
+        "pull_factors": { "type": "array", "items": { "type": "string" } },
+        "anxieties_barriers": { "type": "array", "items": { "type": "string" } },
+        "habits_heuristics": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "operating_interaction_model": {
+      "type": "object",
+      "properties": {
+        "mode_of_work": { "type": "string" },
+        "tools_environment": { "type": "string" },
+        "focus_areas_expertise": { "type": "string" }
+      }
+    },
+
+    "evidence_beliefs_triggers": {
+      "type": "object",
+      "properties": {
+        "information_they_trust": { "type": "string" },
+        "decision_triggers": { "type": "string" },
+        "red_flags": { "type": "string" }
+      }
+    },
+
+    "communication_style": {
+      "type": "object",
+      "required": ["tone"],
+      "properties": {
+        "tone": { "type": "string" },
+        "tactics": { "type": "string" },
+        "key_phrases": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "goals_and_outcomes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["goal", "priority"],
+        "properties": {
+          "goal": { "type": "string" },
+          "priority": { "type": "string", "enum": ["low", "medium", "high", "critical", "non_negotiable"] }
+        }
+      }
+    },
+
+    "meta_attributes": {
+      "type": "object",
+      "description": "Optional narrative dressing. Do not introduce facts. Decorative only.",
+      "properties": {
+        "identity_markers": { "type": "string" },
+        "archetypal_energy": { "type": "string" },
+        "narrative_arc": { "type": "string" },
+        "quote": { "type": "string" }
+      }
+    },
+
+    "traceability": {
+      "type": "object",
+      "description": "Audit trail back to Job JSON fields",
+      "properties": {
+        "fields_derived_from_job": { "type": "array", "items": { "type": "string" } },
+        "fields_marked_decorative": { "type": "array", "items": { "type": "string" } },
+        "fields_with_insufficient_evidence": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

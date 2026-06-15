@@ -18,49 +18,99 @@
 
 ## 🚀 Visão Geral
 
-Este repositório serve como a fonte oficial de verdade para skills de IA em toda a empresa. Seja para o jurídico, marketing, engenharia ou produto, cada skill aqui é construída para ser modular, reutilizável e facilmente integrada em nossos ecossistemas de agentes (Forge/Bifrost).
+Este repositório é a fonte oficial de verdade para skills de IA da empresa. Cada skill é construída para ser modular, reutilizável e facilmente integrada nos nossos ecossistemas de agentes (Forge/Bifrost), no Claude Desktop e no Claude Code.
+
+## 🗂 Estrutura do Repositório
+
+```
+wibx-skills/
+├── skills/                  # Uma pasta por skill, cada uma com um SKILL.md
+│   └── <nome-da-skill>/
+│       ├── SKILL.md         # Frontmatter (name + description) + instruções
+│       └── MANUAL.md        # (opcional) manual de uso bilíngue
+├── scripts/
+│   ├── skill_management.py  # CLI: lista e linka skills nos diretórios de agentes locais
+│   ├── package_skill.py     # Empacota uma skill num arquivo .skill distribuível
+│   ├── quick_validate.py    # Valida o frontmatter do SKILL.md
+│   └── utils.py             # Helpers compartilhados
+├── packages/                # Arquivos .skill prontos para importar (o entregável)
+│   └── <nome-da-skill>.skill
+└── README.md
+```
+
+Cada skill vive em `skills/<nome>/SKILL.md`. O frontmatter YAML (`name` + `description`) define **quando** o agente ativa a skill; o corpo é o **como** (personas, processos, exemplos).
 
 ## 📦 Skills Principais
 
-Cada skill neste repositório é organizada em sua própria pasta, contendo o pacote `.skill` e um arquivo `MANUAL.md`.
-
 | Nome da Skill | Pasta | Descrição | Status |
 | :--- | :--- | :--- | :--- |
-| **Wibx Presentations** | [`/presentations`](./presentations) | Skill especializada para gerar e refinar apresentações corporativas. | `Ativo` |
-| **Prompt Engineer** | [`/prompting`](./prompting) | Estrutura sistemática para criação e otimização de prompts de alta performance. | `Ativo` |
-| **Sexy Copy** | [`/copywriting`](./copywriting) | Copywriting persuasivo de alta performance para qualquer Claude da WIBX. | `Ativo` |
+| **Sexy Copy** | [`skills/sexy-copy`](./skills/sexy-copy) | Copywriting persuasivo de alta performance, com modo de compliance Wibx. | `Ativo` |
+| **Wibx Presentations** | [`skills/wibx-presentations`](./skills/wibx-presentations) | Gera apresentações HTML self-contained no design system da Wibx. | `Ativo` |
+| **Prompt Engineer** | [`skills/prompt-engineer`](./skills/prompt-engineer) | Estrutura sistemática para criar e otimizar prompts de alta performance. | `Ativo` |
+| **ToT-H** | [`skills/tot-h`](./skills/tot-h) | Painel de 16 personas (engenharia + produto) em Tree of Thought sob disciplina PRISMA. | `Ativo` |
+| **Skill Creator** | [`skills/skill-creator`](./skills/skill-creator) | Cria, edita, testa e mede a performance de skills. | `Ativo` |
+| **PRISMA** | [`skills/prisma`](./skills/prisma) | Constrói personas sintéticas defensáveis e simulações multi-agente. | `Ativo` |
+| **Docling Parser** | [`skills/docling-parser`](./skills/docling-parser) | Converte documentos (PDF/DOCX/PPTX/XLSX/HTML/imagens) em Markdown localmente, sem gastar tokens. | `Ativo` |
+| **Frontend Design** | [`skills/frontend-design`](./skills/frontend-design) | Cria interfaces frontend distintas e de qualidade de produção. | `Ativo` |
+| **n8n** | [`skills/n8n`](./skills/n8n) | Cria, modifica, faz deploy, testa e depura workflows do n8n. | `Ativo` |
 
 ## 🛠 Como Usar
 
-### 🧩 Instalação no Claude
+Há dois caminhos: importar o pacote `.skill` no Claude Desktop, ou linkar as skills localmente para o Claude Code / Antigravity.
 
-Para instalar e usar estas skills no Claude Desktop:
+### 🧩 Importar no Claude (Desktop)
 
-1. **Baixe a Skill**: Localize o arquivo `.skill` na pasta da skill desejada.
-2. **Abra as Configurações do Claude**: No Claude Desktop, navegue até **Settings > Skills**.
-3. **Importar**: Clique em **"Add Skill"** e faça o upload do arquivo `.skill`.
-4. **Verificar**: A skill agora deve estar ativa e pronta para uso em suas conversas.
+1. **Pegue a Skill**: o arquivo `.skill` de cada skill está em [`packages/`](./packages).
+2. **Configurações do Claude**: em **Settings > Skills**.
+3. **Importar**: clique em **"Add Skill"** e faça upload do `.skill`.
+4. **Verificar**: a skill deve aparecer ativa.
 
 > [!NOTE]
-> Se você estiver usando o Claude.ai (Web), você pode extrair o arquivo `.skill` (é um arquivo ZIP) e copiar o conteúdo do `SKILL.md` para as **Instruções Personalizadas do seu Projeto** (Project Custom Instructions).
+> No Claude.ai (Web), o `.skill` é um ZIP — extraia e copie o conteúdo do `SKILL.md` para as **Instruções Personalizadas do seu Projeto**.
 
-### 💻 Uso Geral
+### 💻 Linkar localmente (Claude Code / Antigravity)
 
-1. **Clone o Repositório**: Certifique-se de ter as skills mais recentes localmente.
-   ```bash
-   git clone https://github.com/Wibx-LABS/wibx-skills.git
-   ```
-2. **Importar Skill**: Importe o arquivo `.skill` desejado para o seu ambiente de agente (Forge, Bifrost ou Claude).
-3. **Manuais**: Verifique o arquivo `MANUAL.md` dentro de cada pasta de skill para instruções de uso e recursos específicos.
+O script `scripts/skill_management.py` cria symlinks de cada skill nos diretórios de agentes do **seu** usuário (`~/.claude/skills`, `~/.gemini/...`). Os caminhos derivam da localização do script e do seu `HOME`, então funciona para qualquer pessoa que clone o repo.
+
+```bash
+# Listar todas as skills do workspace (com descrições)
+python scripts/skill_management.py --list
+
+# Ver a descrição de uma skill específica
+python scripts/skill_management.py <nome-da-skill>
+
+# Sincronizar UMA skill
+python scripts/skill_management.py --sync <nome-da-skill>
+
+# Sincronizar TODAS as skills e limpar symlinks órfãos
+python scripts/skill_management.py --sync
+```
+
+Como o link é via symlink, **editar um `SKILL.md` aqui reflete imediatamente** nos agentes — sem passo de cópia.
+
+### 📦 Empacotar uma skill (gerar `.skill`)
+
+```bash
+# Valida o frontmatter e gera packages/<nome>.skill
+python scripts/package_skill.py skills/<nome-da-skill> packages
+```
+
+O empacotador valida o frontmatter e exclui artefatos (`__pycache__`, `*.pyc`, `*.skill`, `.DS_Store`, `.env`, e a pasta `evals/` na raiz da skill).
+
+### 🔐 Skill n8n — segredos
+
+A skill `n8n` lê `N8N_API_URL` e `N8N_API_KEY` do ambiente. **Nenhum segredo é versionado** — copie o template e preencha localmente:
+
+```bash
+cp skills/n8n/.env.example skills/n8n/.env   # .env é git-ignored
+```
 
 ## 🤝 Contribuindo
 
-Estamos constantemente expandindo nossa biblioteca de skills! Se você criou uma skill que pode beneficiar outras equipes:
-
-1. Crie uma nova branch para sua skill.
-2. Adicione o arquivo `.skill` à pasta apropriada.
-3. Atualize este `README.md` com os detalhes da nova skill.
-4. Envie um Pull Request para revisão pela equipe Wibx Labs.
+1. Crie `skills/<nova-skill>/SKILL.md` com frontmatter (`name` + `description`) e instruções.
+2. Valide: `python scripts/quick_validate.py skills/<nova-skill>`.
+3. Empacote: `python scripts/package_skill.py skills/<nova-skill> packages`.
+4. Atualize este `README.md` e abra um Pull Request para revisão da equipe Wibx Labs.
 
 ---
 
