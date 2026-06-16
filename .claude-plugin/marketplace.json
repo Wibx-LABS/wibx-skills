@@ -1,0 +1,19 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "wibx-skills",
+  "description": "Hub de skills internas de IA da Wibx Labs.",
+  "owner": {
+    "name": "Wibx Labs"
+  },
+  "plugins": [
+    {
+      "name": "wibx-skills",
+      "description": "Skills internas da Wibx: prisma, tot-h, prompt-engineer, sexy-copy, refactor, docling-parser, skill-creator, wibx-presentations, frontend-design, n8n.",
+      "author": {
+        "name": "Wibx Labs"
+      },
+      "category": "productivity",
+      "source": "."
+    }
+  ]
+}
