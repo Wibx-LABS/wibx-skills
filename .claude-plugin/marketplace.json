@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "wibx-skills",
-      "description": "Skills internas da Wibx: prisma, tot-h, prompt-engineer, sexy-copy, refactor, docling-parser, skill-creator, wibx-presentations, frontend-design, n8n.",
+      "description": "Skills internas da Wibx: prisma, tot-h, prompt-engineer, sexy-copy, refactor, docling-parser, skill-creator, wibx-presentations, frontend-design, n8n, golang-pro.",
       "author": {
         "name": "Wibx Labs"
       },
