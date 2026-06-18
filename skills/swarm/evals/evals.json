@@ -34,6 +34,30 @@
         {"text": "Re-evaluates the floor against the reduced disjoint-front count", "passed": null, "evidence": ""}
       ],
       "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "I'm on macOS with alacritty installed. Swarm this 5-service backlog (auth, billing, search, notify, cron) AND just auto-launch the workers for me in their own windows — I don't want to copy-paste 5 prompts.",
+      "expected_output": "Runs doctor first, confirms 5 disjoint fronts >= floor, prints N× cost line and waits for y. Only AFTER y: scaffolds .swarm/ (incl. prompts/ + launch.tsv), writes one prompt file per front, then runs scripts/swarm-launch.sh. Does not launch before the y. Uses the auto-launch kickoff variant (worktree already exists).",
+      "assertions": [
+        {"text": "Runs the doctor cost gate and waits for explicit y before launching anything", "passed": null, "evidence": ""},
+        {"text": "Does NOT open any window before the y confirmation", "passed": null, "evidence": ""},
+        {"text": "Writes .swarm/prompts/<front>.md per front and a .swarm/launch.tsv manifest", "passed": null, "evidence": ""},
+        {"text": "Invokes scripts/swarm-launch.sh (does not hand-roll alacritty/worktree commands)", "passed": null, "evidence": ""},
+        {"text": "Uses the auto-launch kickoff variant that says the worktree already exists (worker does not create one)", "passed": null, "evidence": ""}
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Swarm these 6 independent backlog items and launch them. (Environment: Linux, no alacritty.)",
+      "expected_output": "Runs doctor, confirms 6 fronts, scaffolds, emits the 6 kickoff prompts + manager cheat-sheet for the human to launch by hand. Recognizes auto-launch is unavailable (not macOS+alacritty) and stays emit-only instead of running swarm-launch.sh.",
+      "assertions": [
+        {"text": "Falls back to emit-only because auto-launch requires macOS + alacritty", "passed": null, "evidence": ""},
+        {"text": "Does not run scripts/swarm-launch.sh or attempt to open windows", "passed": null, "evidence": ""},
+        {"text": "Still emits one kickoff prompt per front plus the manager cheat-sheet", "passed": null, "evidence": ""}
+      ],
+      "files": []
     }
   ]
 }
