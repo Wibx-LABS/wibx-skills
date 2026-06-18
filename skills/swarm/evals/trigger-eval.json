@@ -1,0 +1,22 @@
+[
+  {"query": "swarm this backlog — i have 8 github issues each in its own microservice and want 8 separate claude instances chewing through them at once", "should_trigger": true},
+  {"query": "can you fan this out across like 6 agents? the work splits cleanly: gateway, billing, search, notifications, auth, and the cron worker", "should_trigger": true},
+  {"query": "i want to run five separate cc instances in parallel on these five independent refactors, with something keeping them from stepping on each other", "should_trigger": true},
+  {"query": "divide this roadmap into fronts for parallel agents and give me the prompts to launch each one, plus a way to track them", "should_trigger": true},
+  {"query": "we need to clear this whole infra+backend backlog fast — set up a multi-instance attack with one front per subsystem and a shared coordination file", "should_trigger": true},
+  {"query": "split these 10 tickets across separate claude code sessions so a bunch of us can launch them tonight, and act as the coordinator", "should_trigger": true},
+  {"query": "i keep over-spawning agents and blowing my budget — i have 7 unrelated modules to update, do the proper fan-out plan with a cost check first", "should_trigger": true},
+  {"query": "turn this list of independent features into a worktree-per-front swarm with a blackboard the instances sync through", "should_trigger": true},
+  {"query": "there are 4 totally separate bugs in 4 separate packages; orchestrate parallel instances and manage the progress", "should_trigger": true},
+  {"query": "set up the manager+workers thing where you carve the backlog into disjoint fronts and emit launch prompts for each", "should_trigger": true},
+  {"query": "this login test is flaky and intermittent, can you debug why it fails about 1 in 5 runs", "should_trigger": false},
+  {"query": "i have three failing test files from a refactor, fix them in parallel subagents within this session", "should_trigger": false},
+  {"query": "run these two scripts in parallel and tell me which finishes first", "should_trigger": false},
+  {"query": "what's the best way to parallelize a slow for-loop in my python data pipeline", "should_trigger": false},
+  {"query": "create a worktree for me so i can work on the payments refactor in isolation", "should_trigger": false},
+  {"query": "i have a big backlog of 20 tickets, help me prioritize them into P0/P1/P2 for next sprint", "should_trigger": false},
+  {"query": "split this 2000-line file into smaller modules with one responsibility each", "should_trigger": false},
+  {"query": "summarize all the open issues in this repo and group them by component", "should_trigger": false},
+  {"query": "can you fan out the heat better in this css grid layout, the cards are bunched on the left", "should_trigger": false},
+  {"query": "two of my services need the same change — just make the edit in both, it's tiny", "should_trigger": false}
+]
