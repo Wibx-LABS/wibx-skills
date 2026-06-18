@@ -75,3 +75,11 @@ makes parallel instances collision-free. For each front, record:
 **Feeders ship first.** A downstream front builds behind a stubbed interface until the
 feeder's contract lands on the blackboard, so nobody blocks waiting. Order the emitted
 prompts feeders-first and say so in the manager cheat-sheet.
+
+## 3. Scaffold the blackboard
+
+Create `.swarm/` at the target repo root and add `.swarm/` to `.gitignore`. Write
+`blackboard.md` with one row per front (status `todo`, owner `(unclaimed)`), create an
+empty `contracts/`, and start `log.md`. Use the exact templates and the worker protocol in
+`references/blackboard-protocol.md` — that protocol is what each instance follows to avoid
+divergence, and it is embedded by reference into every kickoff prompt.
