@@ -1,0 +1,39 @@
+{
+  "skill_name": "swarm",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I've got this backlog of 9 issues, each in a totally different service (auth-svc, billing-svc, search-svc, notify-svc, ...). I want to fan out 9 separate Claude Code instances to clear them in parallel. Set it up.",
+      "expected_output": "Runs doctor, confirms 9 disjoint fronts >= floor, prints N× cost line, scaffolds .swarm/, emits 9 kickoff prompts + manager cheat-sheet, becomes manager. Does NOT spawn agents itself.",
+      "assertions": [
+        {"text": "Runs the doctor cost gate before emitting anything", "passed": null, "evidence": ""},
+        {"text": "Prints an explicit N× session cost line and asks for confirmation", "passed": null, "evidence": ""},
+        {"text": "Creates a .swarm/ scaffold (blackboard.md, contracts/, log.md)", "passed": null, "evidence": ""},
+        {"text": "Emits one kickoff prompt per front plus a manager cheat-sheet", "passed": null, "evidence": ""},
+        {"text": "Does not call the Agent tool to launch workers itself", "passed": null, "evidence": ""}
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Can you swarm these three things for me: fix the flaky login test, bump the eslint version, and fix a typo in the footer?",
+      "expected_output": "doctor refuses: fewer than 4 independent fronts; recommends doing it inline with one agent (or dispatching-parallel-agents).",
+      "assertions": [
+        {"text": "Refuses to fan out because fronts < 4 floor", "passed": null, "evidence": ""},
+        {"text": "Recommends inline single-agent or dispatching-parallel-agents instead", "passed": null, "evidence": ""},
+        {"text": "Does not scaffold .swarm/ or emit kickoff prompts", "passed": null, "evidence": ""}
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Swarm this 6-item backlog, but two of the items both heavily edit the same payments module.",
+      "expected_output": "Independence test collapses the two overlapping items into one front; re-checks the floor on the reduced count; only proceeds if >= 4 disjoint fronts remain.",
+      "assertions": [
+        {"text": "Merges the two payments-module items into a single front", "passed": null, "evidence": ""},
+        {"text": "Re-evaluates the floor against the reduced disjoint-front count", "passed": null, "evidence": ""}
+      ],
+      "files": []
+    }
+  ]
+}
