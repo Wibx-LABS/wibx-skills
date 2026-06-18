@@ -59,6 +59,8 @@ swarm doctor
   > confirm fan-out? [y/N]
 ```
 
+On the **refuse path** (below floor), print the refusal and recommendation in place of the `confirm fan-out?` line — never ask to confirm a swarm you are refusing.
+
 ## 2. Partition
 
 A front **owns a set of paths no other front touches** — that disjoint ownership is what
@@ -84,12 +86,18 @@ empty `contracts/`, and start `log.md`. Use the exact templates and the worker p
 `references/blackboard-protocol.md` — that protocol is what each instance follows to avoid
 divergence, and it is embedded by reference into every kickoff prompt.
 
+Resolve the repo root with `git rev-parse --show-toplevel`; that absolute path is what
+fills `<repo-root>` in every emitted prompt, because workers in their own worktrees must
+reach the shared blackboard via the absolute main-repo path.
+
 ## 4. Emit
 
 Using `references/kickoff-template.md`, output one filled kickoff prompt per front
-(feeders first) and one manager cheat-sheet. Fill `<gates>` from the target repo's
-validation commands (build/test/lint) and `<language>` from its PR convention. Hand these
-to the human to launch — you do not start them.
+(feeders first) and one manager cheat-sheet. Before emitting, populate `<gates>` from the
+target repo's validation commands — check its CLAUDE.md, Makefile, package.json scripts,
+or CI config — and `<language>` from its PR/commit convention; if a value cannot be
+determined, emit it as `<TODO: ...>` so the worker resolves it explicitly instead of
+shipping unvalidated. Hand these to the human to launch — you do not start them.
 
 ## 5. Manage
 

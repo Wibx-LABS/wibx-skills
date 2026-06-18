@@ -14,8 +14,9 @@ Procedure:
 2. Claim your row (owner + status=claimed, append a CLAIM line to log.md). If already
    owned by someone else, STOP and report.
 3. Create your worktree with superpowers:using-git-worktrees on branch <branch>.
-4. <feeders only> Before building shared edges, read contracts/<dep>.md for each of:
-   <depends_on>. If missing/draft, build behind a stub — do not block.
+4. <include only if this front's depends_on is non-empty> Read contracts/<dep>.md for
+   each upstream front in <depends_on> before building the edges that consume them.
+   If a contract is missing or still draft, build behind a stub — do not block.
 5. Per item: superpowers brainstorming → writing-plans → (code) test-driven-development →
    verification-before-completion. Publish your own contracts/<front-name>.md early.
 6. Validate with this repo's gates before each PR: <gates>. Append every status change to
@@ -39,4 +40,6 @@ Loop:
 - Reconcile blackboard rows from log.md. Do not edit other fronts' rows' content beyond
   status reconciliation.
 Cost reminder: <N> instances are running ≈ <N>× a session. Stop idle instances.
+- Advise the human to hold a downstream front until its feeder's contract reaches
+  `status: stable` — you can recommend the ordering but cannot prevent a launch.
 ```
