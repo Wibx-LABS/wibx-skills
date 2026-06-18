@@ -26,3 +26,35 @@ blackboard, with git-worktree isolation and a manager role.
 4. **Emit** one kickoff prompt per front + a manager cheat-sheet (see
    `references/kickoff-template.md`).
 5. Become the **manager**: track the blackboard, chase feeders, escalate. No code.
+
+## 1. Cost gate (`doctor`) — run first, every time
+
+Each instance you are about to recommend is a separately-billed full session. The whole
+point of this gate is that fanning out is the expensive path, so it must be deliberate,
+never reflexive. Work through it out loud before emitting anything:
+
+1. **Detect candidate fronts** from the backlog (group items by the files/dirs/decisions
+   they touch).
+2. **Independence test:** for every pair of fronts, ask "do they edit the same package,
+   dir, or file, or does one need the other's output mid-flight?" If yes, **merge them**.
+   Repeat until fronts are pairwise disjoint. Shared state is the thing that makes parallel
+   instances fight each other — eliminate it by collapsing, not by hoping.
+3. **Hard floor:** if fewer than **4** disjoint fronts remain, **stop and refuse**. Tell the
+   user this is below the swarm floor and recommend either doing it inline with one agent, or
+   `superpowers:dispatching-parallel-agents` for independent subtasks within one session.
+   Below ~4 fronts the fixed overhead of N cold instances (each re-deriving context) costs
+   more than it saves.
+4. **State the cost line** explicitly: `N instances ≈ N× a full session ⚠`.
+5. **Require an explicit `y`.** Print the doctor summary and wait. No confirmation ⇒ emit
+   nothing.
+
+Print the summary in this shape:
+
+```
+swarm doctor
+  fronts found:        <N>
+  independent?         <yes | collapsed M→N>
+  below floor (<4)?    <no | YES → refusing>
+  est. cost:           ~<N>× session  ⚠
+  > confirm fan-out? [y/N]
+```
