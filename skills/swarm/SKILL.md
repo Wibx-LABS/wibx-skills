@@ -58,3 +58,20 @@ swarm doctor
   est. cost:           ~<N>× session  ⚠
   > confirm fan-out? [y/N]
 ```
+
+## 2. Partition
+
+A front **owns a set of paths no other front touches** — that disjoint ownership is what
+makes parallel instances collision-free. For each front, record:
+
+- **name** — short, area-based (e.g. `gateway-authz`, `radar-fetch`).
+- **owned_paths** — the dirs/files only this front edits. If two drafts overlap, you
+  didn't finish the independence test — go back and merge.
+- **branch** — `feat/<name>` (code) or `docs/<name>` (docs-only fronts).
+- **is_feeder** — true if another front needs this front's decision or interface before it
+  can finish (e.g. an access-control design, a data-shape contract, a key decision).
+- **depends_on** — the feeder fronts this one consumes.
+
+**Feeders ship first.** A downstream front builds behind a stubbed interface until the
+feeder's contract lands on the blackboard, so nobody blocks waiting. Order the emitted
+prompts feeders-first and say so in the manager cheat-sheet.
