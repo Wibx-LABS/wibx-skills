@@ -83,3 +83,17 @@ Create `.swarm/` at the target repo root and add `.swarm/` to `.gitignore`. Writ
 empty `contracts/`, and start `log.md`. Use the exact templates and the worker protocol in
 `references/blackboard-protocol.md` — that protocol is what each instance follows to avoid
 divergence, and it is embedded by reference into every kickoff prompt.
+
+## 4. Emit
+
+Using `references/kickoff-template.md`, output one filled kickoff prompt per front
+(feeders first) and one manager cheat-sheet. Fill `<gates>` from the target repo's
+validation commands (build/test/lint) and `<language>` from its PR convention. Hand these
+to the human to launch — you do not start them.
+
+## 5. Manage
+
+Adopt the manager cheat-sheet yourself. Read the blackboard, tally status, chase unmet
+feeder contracts, escalate blockers and review-ready PRs to the human, and reconcile rows
+from `log.md`. Never write code, never edit another front's files, never merge. Remind the
+human of the running cost so idle instances get stopped.
