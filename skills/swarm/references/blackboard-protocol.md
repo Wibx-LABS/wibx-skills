@@ -14,7 +14,13 @@ here that's the feature, not a bug.)
   blackboard.md   # one row per front: state + ownership
   contracts/      # one file per published interface/decision others depend on
   log.md          # append-only event log — the divergence guard
+  prompts/        # launcher-only: <front>.md kickoff + optional <front>.system.md guard
+  worktrees/      # launcher-only: one git worktree checkout per front
+  launch.tsv      # launcher-only: front⇥branch⇥promptfile[⇥model⇥effort] manifest
 ```
+
+`prompts/`, `worktrees/`, and `launch.tsv` exist only when the optional macOS+alacritty
+launch step (SKILL.md §5) is used; the manual emit-only path never creates them.
 
 ## blackboard.md template
 

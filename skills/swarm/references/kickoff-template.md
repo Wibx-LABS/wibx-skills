@@ -26,6 +26,14 @@ Your items:
 <the backlog items for this front, verbatim>
 ```
 
+**Auto-launch variant (only when emitting for `scripts/swarm-launch.sh`):** the launcher
+already created the worktree and started you inside it, so replace step 3 with:
+
+```
+3. Your worktree already exists at <repo-root>/.swarm/worktrees/<front-name> on branch
+   <branch>, and you are already in it. Do NOT create another worktree.
+```
+
 ## Manager cheat-sheet (emit once)
 
 ```

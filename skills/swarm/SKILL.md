@@ -9,9 +9,11 @@ Turn a backlog into a collision-free, multi-instance attack plan — and act as 
 manager who keeps the instances from diverging — without spending more than the job
 is worth.
 
-**This skill plans and emits. It never launches the workers.** You produce the
-partition, the shared blackboard, and the paste-ready prompts; the human starts the
-instances. That keeps the expensive axis (how many instances) under human control.
+**This skill plans and emits.** You produce the partition, the shared blackboard, and the
+paste-ready prompts; by default the human starts the instances, which keeps the expensive
+axis (how many instances) under human control. On macOS with `alacritty`, an **opt-in**
+final step can launch the confirmed fan-out for you (step 6) — but only *after* the cost
+gate's `y`, so the human still decides how many instances to pay for.
 
 **Not** `superpowers:dispatching-parallel-agents`: that dispatches throwaway subagents
 inside one session that share your context budget and need no shared state. Swarm
@@ -25,7 +27,9 @@ blackboard, with git-worktree isolation and a manager role.
 3. **Scaffold** the `.swarm/` blackboard (see `references/blackboard-protocol.md`).
 4. **Emit** one kickoff prompt per front + a manager cheat-sheet (see
    `references/kickoff-template.md`).
-5. Become the **manager**: track the blackboard, chase feeders, escalate. No code.
+5. **(Optional) Launch** — only on macOS+alacritty, only after the doctor `y`: open one
+   positioned window per front, each starting its worker. Skip on any other platform.
+6. Become the **manager**: track the blackboard, chase feeders, escalate. No code.
 
 ## 1. Cost gate (`doctor`) — run first, every time
 
@@ -99,7 +103,48 @@ or CI config — and `<language>` from its PR/commit convention; if a value cann
 determined, emit it as `<TODO: ...>` so the worker resolves it explicitly instead of
 shipping unvalidated. Hand these to the human to launch — you do not start them.
 
-## 5. Manage
+## 5. Launch (optional — macOS + alacritty only)
+
+**Skip this entire section unless the user asked to auto-launch AND you are on macOS with
+`alacritty` installed.** On any other setup, stay emit-only: hand the kickoff prompts to the
+human (step 4) and go straight to managing. Launch runs **only after the doctor `y`** — it
+never changes how many instances exist, it just opens the ones the human already paid for.
+
+To launch:
+
+1. Write each front's filled kickoff prompt to `.swarm/prompts/<front>.md` (durable artifact;
+   avoids quoting a multi-line prompt on the command line).
+2. Write the manifest `.swarm/launch.tsv`, one TAB-separated row per front:
+   `front⇥branch⇥promptfile` — `promptfile` relative to the repo root
+   (`.swarm/prompts/<front>.md`). Optionally append `⇥model⇥effort` to tune a heavy front up
+   (`opus`/`high`) or a trivial one down.
+3. **Optional scope guard:** for any front, write `.swarm/prompts/<front>.system.md` restating
+   its `owned_paths`, "never edit outside them", and the absolute blackboard path. The launcher
+   passes it via `--append-system-prompt`, enforcing scope at the system level, not just the
+   user prompt.
+4. Run `scripts/swarm-launch.sh <repo-root>`. It refuses if alacritty is missing, the manifest
+   is absent, or fewer than 4 rows remain (defense-in-depth mirror of the floor). It
+   **pre-creates each worktree serially** (concurrent `git worktree add` from N windows would
+   race on git's repo lock), then opens one positioned window per front — titled
+   `swarm:<front>`, parked in an auto-computed screen grid, `cd`'d into its worktree — and
+   starts each worker autonomously.
+
+Each worker launches via the user's `cc` function (`claude --dangerously-skip-permissions`),
+plus `--add-dir <repo>/.swarm` (so the worktree can reach the shared blackboard, which sits
+above its cwd) and `-n swarm-<front>` (so the session is named in the prompt box / `/resume`
+picker / title — a dead window is recoverable with `cc -c` in its worktree).
+
+> **Cost & safety:** launched workers run with permissions bypassed and start immediately, so
+> N windows are spending in parallel from the moment they open. Keep the running-cost reminder
+> loud; the `swarm:<front>` titles make idle windows easy to spot. Teardown:
+> `scripts/swarm-down.sh <repo-root>` (add `--windows` to also close them).
+
+Because the launcher creates the worktree and drops the window inside it, the auto-launch
+kickoff variant tells the worker its worktree **already exists** (it does not create one). The
+emit-only path keeps the original "create your worktree" wording. See
+`references/kickoff-template.md`.
+
+## 6. Manage
 
 Adopt the manager cheat-sheet yourself. Read the blackboard, tally status, chase unmet
 feeder contracts, escalate blockers and review-ready PRs to the human, and reconcile rows
