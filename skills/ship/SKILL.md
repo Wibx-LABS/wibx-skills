@@ -1,4 +1,5 @@
 ---
+name: ship
 description: Build, commit, push & version bump workflow - automates the complete release cycle
 allowed-tools: Read Write Edit Bash Grep Glob
 ---
