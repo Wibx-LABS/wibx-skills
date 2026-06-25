@@ -35,6 +35,9 @@ wibx-skills/
 │   └── utils.py             # Helpers compartilhados
 ├── packages/                # Arquivos .skill prontos para importar (o entregável)
 │   └── <nome-da-skill>.skill
+├── docs/                    # Documentação interna
+│   ├── plans/               # Planos de implementação
+│   └── specs/               # Especificações
 └── README.md
 ```
 
@@ -54,6 +57,18 @@ Cada skill vive em `skills/<nome>/SKILL.md`. O frontmatter YAML (`name` + `descr
 | **Frontend Design** | [`skills/frontend-design`](./skills/frontend-design) | Cria interfaces frontend distintas e de qualidade de produção. | `Ativo` |
 | **n8n** | [`skills/n8n`](./skills/n8n) | Cria, modifica, faz deploy, testa e depura workflows do n8n. | `Ativo` |
 | **Refactor** | [`skills/refactor`](./skills/refactor) | Melhora estrutura e legibilidade do código sem mudar o comportamento externo. | `Ativo` |
+| **Golang Pro** | [`skills/golang-pro`](./skills/golang-pro) | Go concorrente (goroutines/channels), microsserviços gRPC/REST, otimização com pprof e Go idiomático. | `Ativo` |
+| **Swarm** | [`skills/swarm`](./skills/swarm) | Particiona um backlog em "fronts" paralelos e gera prompts para múltiplas instâncias separadas do Claude Code, coordenadas por um blackboard `.swarm/`. | `Ativo` |
+
+### 🦀 RTK Toolkit (Rust / CLI)
+
+Skills voltadas ao desenvolvimento do RTK (codebase Rust/CLI).
+
+| Nome da Skill | Pasta | Descrição | Status |
+| :--- | :--- | :--- | :--- |
+| **Security Guardian** | [`skills/security-guardian`](./skills/security-guardian) | Especialista em segurança CLI do RTK — command injection, shell escaping, segurança de hooks. | `Ativo` |
+| **TDD Rust** | [`skills/tdd-rust`](./skills/tdd-rust) | Workflow TDD (Red-Green-Refactor) para filtros do RTK, com idioms Rust e snapshot tests (insta). | `Ativo` |
+| **Ship** | [`skills/ship`](./skills/ship) | Workflow de release: build, commit, push e bump de versão automatizados. | `Ativo` |
 
 ## 🛠 Como Usar
 
