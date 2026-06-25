@@ -1,20 +1,21 @@
 ---
 name: tdd-rust
 description: TDD workflow for RTK filter development. Red-Green-Refactor with Rust idioms. Real fixtures, token savings assertions, snapshot tests with insta. Auto-triggers on new filter implementation.
-triggers:
-  - "new filter"
-  - "implement filter"
-  - "add command"
-  - "write tests for"
-  - "test coverage"
-  - "fix failing test"
 allowed-tools:
   - Read
   - Write
   - Edit
   - Bash
-effort: medium
-tags: [tdd, testing, rust, filters, snapshots, token-savings, rtk]
+metadata:
+  effort: medium
+  tags: [tdd, testing, rust, filters, snapshots, token-savings, rtk]
+  triggers:
+    - "new filter"
+    - "implement filter"
+    - "add command"
+    - "write tests for"
+    - "test coverage"
+    - "fix failing test"
 ---
 
 # RTK TDD Workflow
