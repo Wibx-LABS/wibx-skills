@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "wibx-skills",
-      "description": "Skills internas da Wibx: prisma, tot-h, prompt-engineer, sexy-copy, refactor, docling-parser, skill-creator, wibx-presentations, frontend-design, n8n, golang-pro.",
+      "description": "Skills internas da Wibx: prisma, tot-h, prompt-engineer, sexy-copy, refactor, docling-parser, skill-creator, wibx-presentations, frontend-design, n8n, golang-pro. rtk toolkit (Rust/CLI, rtk-codebase): code-simplifier, design-patterns, performance, ship, tdd-rust, rtk-tdd, security-guardian, pr-review, pr-triage, issue-triage, rtk-triage, repo-recap.",
       "author": {
         "name": "Wibx Labs"
       },
