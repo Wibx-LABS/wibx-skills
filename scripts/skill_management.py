@@ -2,6 +2,7 @@
 import os
 import sys
 import time
+import shutil
 import threading
 from pathlib import Path
 
@@ -201,6 +202,24 @@ def show_skill_description(skill_name):
     else:
         print(f"[Warning] No frontmatter description found in {skill_md.name}")
 
+def link_or_copy(source_path, target_link, target_type):
+    """Symlink source_path -> target_link, falling back to a real COPY when the OS
+    refuses symlinks. On Windows without Developer Mode / an elevated shell,
+    os.symlink raises OSError (WinError 1314: SeCreateSymbolicLinkPrivilege), which
+    left every skill unsynced (issue #258). The copy fallback needs no privilege.
+    Returns "link" or "copy" so the caller can report which happened. Copies are
+    re-materialized on each sync run (the caller removed any stale target first)."""
+    try:
+        os.symlink(source_path, target_link)
+        return "link"
+    except OSError:
+        if target_type == "file":
+            shutil.copy2(source_path, target_link)
+        else:
+            shutil.copytree(source_path, target_link)
+        return "copy"
+
+
 def sync_single_skill(skill_name):
     print(f"--> {BOLD}Syncing skill '{skill_name}'...{RESET}")
 
@@ -244,9 +263,10 @@ def sync_single_skill(skill_name):
                             target_link.unlink()
 
                 if result_msg is None:
-                    os.symlink(source_path, target_link)
+                    mode = link_or_copy(source_path, target_link, target_type)
                     display_source = f"skills/{skill_name}/SKILL.md" if target_type == "file" else f"skills/{skill_name}"
-                    result_msg = f"{GREEN}[Link]{RESET} Created: {target_link.name} -> {display_source} in {name}"
+                    verb, action = ("Link", "Created") if mode == "link" else ("Copy", "Copied")
+                    result_msg = f"{GREEN}[{verb}]{RESET} {action}: {target_link.name} -> {display_source} in {name}"
             except Exception as e:
                 result_err = f"{RED}[Error]{RESET} Failed to link to {name}: {e}"
 
@@ -311,9 +331,10 @@ def sync_all_skills():
                                 target_link.unlink()
 
                     if result_msg is None:
-                        os.symlink(source_path, target_link)
+                        mode = link_or_copy(source_path, target_link, target_type)
                         display_source = f"skills/{skill_name}/SKILL.md" if target_type == "file" else f"skills/{skill_name}"
-                        result_msg = f"{GREEN}[Link]{RESET} Created: {target_link.name} -> {display_source}"
+                        verb, action = ("Link", "Created") if mode == "link" else ("Copy", "Copied")
+                        result_msg = f"{GREEN}[{verb}]{RESET} {action}: {target_link.name} -> {display_source}"
                 except Exception as e:
                     result_err = f"{RED}[Error]{RESET} Failed to link {skill_name}: {e}"
 
