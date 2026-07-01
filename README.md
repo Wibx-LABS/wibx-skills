@@ -104,6 +104,13 @@ python scripts/skill_management.py --sync
 
 Como o link é via symlink, **editar um `SKILL.md` aqui reflete imediatamente** nos agentes — sem passo de cópia.
 
+> **Windows:** `os.symlink` exige Developer Mode (ou terminal Admin) — sem isso o SO
+> retorna `WinError 1314`. O sync detecta essa falha e **cai automaticamente para uma
+> cópia real** (`shutil`), então funciona sem privilégio nenhum. A diferença: a cópia
+> **não** reflete edições ao vivo — rode o `--sync` de novo após editar uma skill (ou
+> ligue o Developer Mode para voltar aos symlinks live-update). Skills órfãs em modo
+> cópia não são auto-removidas na limpeza (só symlinks são), por segurança.
+
 ### 📦 Empacotar uma skill (gerar `.skill`)
 
 ```bash
