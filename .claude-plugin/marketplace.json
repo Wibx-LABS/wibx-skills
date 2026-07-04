@@ -14,6 +14,34 @@
       },
       "category": "productivity",
       "source": "."
+    },
+    {
+      "name": "ponytail",
+      "description": "Lazy senior dev mode — YAGNI, stdlib-first, one line over fifty. Compresses the CODE the agent writes. Wibx-LABS audited fork (SAFE, 2026-07-04), SHA-pinned.",
+      "author": {
+        "name": "Wibx Labs (fork of DietrichGebert/ponytail, MIT)"
+      },
+      "category": "productivity",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/Wibx-LABS/ponytail",
+        "path": ".",
+        "ref": "40e50d9e03242aa5dd53ac771950f9127362b25f"
+      }
+    },
+    {
+      "name": "caveman",
+      "description": "Terse caveman-mode output — compresses the agent's RESPONSE prose. Wibx-LABS audited fork (SAFE, 2026-07-04), SHA-pinned.",
+      "author": {
+        "name": "Wibx Labs (fork of JuliusBrussee/caveman, MIT)"
+      },
+      "category": "productivity",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/Wibx-LABS/caveman",
+        "path": ".",
+        "ref": "0d95a81d35a9f2d123a5e9430d1cfc43d55f1bb0"
+      }
     }
   ]
 }

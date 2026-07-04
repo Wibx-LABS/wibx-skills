@@ -71,6 +71,29 @@ Skills voltadas ao desenvolvimento do RTK (codebase Rust/CLI).
 | **TDD Rust** | [`skills/tdd-rust`](./skills/tdd-rust) | Workflow TDD (Red-Green-Refactor) para filtros do RTK, com idioms Rust e snapshot tests (insta). | `Ativo` |
 | **Ship** | [`skills/ship`](./skills/ship) | Workflow de release: build, commit, push e bump de versão automatizados. | `Ativo` |
 
+## 🔒 Ferramentas de terceiros (forks Wibx-LABS, source-of-trust)
+
+Tudo que rodamos vem de um fork **Wibx-LABS**, auditado (ClamAV + semgrep + osv-scanner +
+review manual, veredito `SAFE TO RUN` em 2026-07-04) e **fixado por SHA**. Bump de versão =
+re-auditar o novo SHA e atualizar o pin aqui. Instalação/pin são gerenciados pelo `devkit`.
+
+**Plugins agregados** (instalam via este marketplace como `nome@wibx-skills`; SHA-pin no
+`.claude-plugin/marketplace.json`):
+
+| Plugin | Fork | Licença | SHA fixado | O que comprime |
+| :--- | :--- | :--- | :--- | :--- |
+| **ponytail** | [`Wibx-LABS/ponytail`](https://github.com/Wibx-LABS/ponytail) | MIT | `40e50d9` | o **código** escrito (YAGNI) |
+| **caveman** | [`Wibx-LABS/caveman`](https://github.com/Wibx-LABS/caveman) | MIT | `0d95a81` | a **resposta** (prosa terse) |
+
+**Ferramentas de host** (não são plugins de marketplace — binário/pacote instalado pelo
+`devkit init`/`sync`, multiplataforma; viram no-op se ausentes; pin em `tools.<t>.ref` do
+`.devkit.yaml`):
+
+| Ferramenta | Fork | Licença | SHA auditado | Instalação |
+| :--- | :--- | :--- | :--- | :--- |
+| **rtk** | [`Wibx-LABS/rtk`](https://github.com/Wibx-LABS/rtk) | Apache-2.0 | `31f9d43` | binário Rust (install.sh / `cargo install`) — hook reescreve comandos de shell. ⚠️ CVEs de deps transitivas (quick-xml) em remediação. |
+| **graphify** | [`Wibx-LABS/graphify`](https://github.com/Wibx-LABS/graphify) | MIT | `983da3c` | pacote pip; hooks de git reconstroem o grafo de código |
+
 ## 🛠 Como Usar
 
 Há dois caminhos: importar o pacote `.skill` no Claude Desktop, ou linkar as skills localmente para o Claude Code / Antigravity.
