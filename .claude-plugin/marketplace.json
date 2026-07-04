@@ -26,7 +26,8 @@
         "source": "git-subdir",
         "url": "https://github.com/Wibx-LABS/ponytail",
         "path": ".",
-        "ref": "40e50d9e03242aa5dd53ac771950f9127362b25f"
+        "ref": "main",
+        "sha": "40e50d9e03242aa5dd53ac771950f9127362b25f"
       }
     },
     {
@@ -40,7 +41,8 @@
         "source": "git-subdir",
         "url": "https://github.com/Wibx-LABS/caveman",
         "path": ".",
-        "ref": "0d95a81d35a9f2d123a5e9430d1cfc43d55f1bb0"
+        "ref": "main",
+        "sha": "0d95a81d35a9f2d123a5e9430d1cfc43d55f1bb0"
       }
     }
   ]
