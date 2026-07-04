@@ -91,7 +91,7 @@ re-auditar o novo SHA e atualizar o pin aqui. Instalação/pin são gerenciados 
 
 | Ferramenta | Fork | Licença | SHA auditado | Instalação |
 | :--- | :--- | :--- | :--- | :--- |
-| **rtk** | [`Wibx-LABS/rtk`](https://github.com/Wibx-LABS/rtk) | Apache-2.0 | `31f9d43` | binário Rust (install.sh / `cargo install`) — hook reescreve comandos de shell. ⚠️ CVEs de deps transitivas (quick-xml) em remediação. |
+| **rtk** | [`Wibx-LABS/rtk`](https://github.com/Wibx-LABS/rtk) | Apache-2.0 | `a56f2b0` | binário Rust (install.sh / `cargo install`) — hook reescreve comandos de shell. Deps CVE-free (quick-xml/anyhow bump, rtk#1). |
 | **graphify** | [`Wibx-LABS/graphify`](https://github.com/Wibx-LABS/graphify) | MIT | `983da3c` | pacote pip; hooks de git reconstroem o grafo de código |
 
 ## 🛠 Como Usar
