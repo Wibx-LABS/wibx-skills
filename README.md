@@ -94,6 +94,55 @@ re-auditar o novo SHA e atualizar o pin aqui. Instalação/pin são gerenciados 
 | **rtk** | [`Wibx-LABS/rtk`](https://github.com/Wibx-LABS/rtk) | Apache-2.0 | `a56f2b0` | binário Rust (install.sh / `cargo install`) — hook reescreve comandos de shell. Deps CVE-free (quick-xml/anyhow bump, rtk#1). |
 | **graphify** | [`Wibx-LABS/graphify`](https://github.com/Wibx-LABS/graphify) | MIT | `983da3c` | pacote pip; hooks de git reconstroem o grafo de código |
 
+## 🚀 Instalação em um comando
+
+O jeito mais rápido de ter tudo: o **pacote de economia de tokens** (rtk + graphify +
+caveman + ponytail) **junto** com o catálogo completo de skills — num único comando, sem
+depender do `devkit` (que é privado). Como este repo é **público**, dá pra rodar direto:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Wibx-LABS/wibx-skills/main/install.sh | sh
+# ou, de um clone:
+sh install.sh
+```
+
+O instalador (`install.sh` → `scripts/install.py`, só stdlib) faz, a nível de **usuário**
+(`~/.claude`, compartilhado por CLI, IDE e GUI do Claude Code):
+
+1. **Host tools** — `rtk` (binário → `~/.local/bin`) e `graphify` (pip), fixados por SHA em
+   [`install/pins.json`](./install/pins.json). No-op gracioso se faltar `curl`/`cargo`/`pip`.
+2. **Plugins** — `claude plugin install {wibx-skills,caveman,ponytail}@wibx-skills` a partir
+   deste marketplace (só quando o CLI `claude` existe).
+3. **Settings** — faz **merge** (nunca sobrescreve) em `~/.claude/settings.json`:
+   `enabledPlugins`, marketplace, env `CAVEMAN_DEFAULT_MODE`/`PONYTAIL_DEFAULT_MODE`, e os
+   hooks do rtk/graphify. Respeita `CLAUDE_CONFIG_DIR`.
+4. **Skills** — sincroniza o catálogo inteiro via `scripts/skill_management.py --sync`.
+
+### Flags
+
+| Flag | Efeito |
+| :--- | :--- |
+| _(nenhuma)_ | pack completo + todas as skills |
+| `--tools-only` | só o pack (tools + plugins + settings), sem as skills |
+| `--skills-only` | só o catálogo de skills |
+| `--no-tools` | pula os binários rtk/graphify (mantém plugins/settings/skills) |
+| `--desktop` | imprime o caminho best-effort para o app Claude Desktop |
+| `--dry-run` | mostra tudo que faria, sem executar |
+| `--check` | relatório de status (o que está instalado) |
+
+### Onde funciona (matriz de setups)
+
+| Setup | Pack executável (rtk/graphify/caveman/ponytail) | Skills |
+| :--- | :--- | :--- |
+| **Claude Code — CLI / IDE / GUI (local)** | ✅ completo (mesmo `~/.claude`, shell local roda os hooks) | ✅ symlink |
+| **Claude Code na web (sandbox cloud)** | ⚠️ hooks rodam, mas o binário `rtk`/`graphify` precisa ser instalado **dentro do sandbox** (rode o `install.sh` lá), não na tua máquina | ✅ via plugin |
+| **Claude Desktop (chat app) / claude.ai (web chat)** | ⚠️ best-effort: sem shell local → rtk/graphify **não** rodam; caveman/ponytail viram texto colado ([`install/desktop-preamble.md`](./install/desktop-preamble.md)) | ⬆️ upload `.skill` |
+
+> [!NOTE]
+> O `devkit` (privado) continua sendo o superset interno — ele já instala este mesmo pack +
+> skills a nível de repositório com governança de CI/PR. Este instalador é o caminho
+> **público e a nível de máquina**.
+
 ## 🛠 Como Usar
 
 Há dois caminhos: importar o pacote `.skill` no Claude Desktop, ou linkar as skills localmente para o Claude Code / Antigravity.

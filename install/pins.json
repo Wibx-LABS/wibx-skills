@@ -1,0 +1,23 @@
+{
+  "_comment": "Pinned sources for the wibx public one-command installer (install.sh). Host tools are audited Wibx-LABS forks, SHA-pinned. caveman/ponytail plugin pins live in .claude-plugin/marketplace.json. Bump = re-audit the new SHA, then update here.",
+  "marketplace": "Wibx-LABS/wibx-skills",
+  "plugins": [
+    "wibx-skills@wibx-skills",
+    "caveman@wibx-skills",
+    "ponytail@wibx-skills"
+  ],
+  "tools": {
+    "rtk": {
+      "repo": "Wibx-LABS/rtk",
+      "ref": "a56f2b0d408318a0467172b8b49849bf5343c848"
+    },
+    "graphify": {
+      "repo": "Wibx-LABS/graphify",
+      "ref": "983da3c15f3eb31862bca4c9977ff5329a6b12d4"
+    }
+  },
+  "economy": {
+    "caveman_mode": "full",
+    "ponytail_mode": "full"
+  }
+}
