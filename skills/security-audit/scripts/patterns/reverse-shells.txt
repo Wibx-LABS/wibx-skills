@@ -1,0 +1,52 @@
+# Patterns indicating reverse shell or backdoor behavior
+# Used by 03-code-patterns.sh (grep -Ei)
+
+# Classic bash reverse shells
+/bin/bash -i >&
+/bin/bash -i >& /dev/tcp
+exec /bin/bash
+0>&1 2>&1
+
+# Netcat reverse shells
+nc -e /bin/bash
+nc -e /bin/sh
+ncat -e /bin/bash
+nc\.traditional
+
+# Python reverse shells
+socket\.connect.{0,100}os\.dup2
+import socket.*import subprocess
+subprocess\.call\(['"]/bin/sh
+pty\.spawn\(['"]/bin/
+
+# Perl reverse shells
+perl -e.*socket
+use Socket.*exec\("/bin/sh
+
+# PHP reverse shells
+exec\("/bin/sh
+shell_exec\(.*\$_
+passthru\(.*\$_
+
+# General socket + exec combination
+socket\(AF_INET.{0,200}(exec|system|popen|spawn)
+connect\(.{0,200}(exec|system|dup2|os\.system)
+
+# Known C2 / RAT indicators
+meterpreter
+cobalt.?strike
+empire\.?agent
+sliver\.?implant
+havoc\.?agent
+beacon\.?dll
+
+# Crypto mining
+xmrig
+stratum\+tcp
+pool\.minexmr
+moneroocean
+cryptonight
+
+# Port binding for persistence
+bind\(.*0\.0\.0\.0
+listen\(.*0\.0\.0\.0.*[0-9]{4,5}

@@ -1,0 +1,25 @@
+# Patterns for dangerous build/install script behaviors
+# Used by 02-build-scripts.sh (grep -Ei)
+
+# Remote code execution via pipe
+(curl|wget).*(sh|bash|python|node|perl|ruby)
+(curl|wget).*\|.*(sh|bash)
+bash.*<\(curl
+sh.*<\(curl
+
+# Base64-decoded execution
+base64 -d.*\|.*(sh|bash|python)
+base64 --decode.*\|.*sh
+openssl base64.*\|.*sh
+
+# Inline interpreter execution
+python -c ['"]
+python3 -c ['"]
+perl -e ['"]
+ruby -e ['"]
+node -e ['"]
+
+# Fetching and executing
+eval.*\$\(curl
+eval.*\$\(wget
+exec.*\$\(curl
