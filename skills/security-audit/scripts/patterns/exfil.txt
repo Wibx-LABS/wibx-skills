@@ -1,0 +1,55 @@
+# Patterns indicating credential/data exfiltration
+# Used by 03-code-patterns.sh (grep -Ei)
+
+# SSH key access
+['"` /]\.ssh/id_rsa
+['"` /]\.ssh/id_ed25519
+['"` /]\.ssh/authorized_keys
+readFileSync.*\.ssh
+open.*\.ssh
+
+# AWS credentials
+['"` /]\.aws/credentials
+['"` /]\.aws/config
+AWS_SECRET_ACCESS_KEY
+AWS_ACCESS_KEY_ID
+
+# General credential files
+['"` /]\.gnupg
+['"` /]\.netrc
+['"` /]\.npmrc
+['"` /]\.pypirc
+['"` /]\.gitconfig
+keychain.*password
+SecKeychainFind
+
+# macOS Keychain access
+SecItemCopyMatching
+kSecClass.*kSecClassGenericPassword
+
+# Environment variable harvesting + network (combined signal)
+process\.env\b.{0,200}(fetch|axios|http|XMLHttpRequest|request\()
+os\.environ.{0,200}(requests|urllib|http\.client|socket)
+ENV\[.{0,200}(Net::HTTP|open-uri|Faraday)
+
+# Sensitive system files
+/etc/passwd
+/etc/shadow
+/etc/hosts
+/proc/self/environ
+
+# Browser credential stores
+Login Data
+Cookies.*Chrome
+Cookies.*Firefox
+key4\.db
+
+# Reading and sending (combined)
+readFileSync.{0,100}(fetch|axios|http\.request|https\.request)
+open\(.{0,50}\).{0,200}(requests\.post|requests\.get|urllib)
+
+# Clipboard access
+clipboard\.readText
+NSPasteboard
+xclip -o
+pbpaste

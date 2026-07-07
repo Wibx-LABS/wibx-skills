@@ -1,0 +1,30 @@
+# Patterns indicating code obfuscation
+# Used by 03-code-patterns.sh (grep -Ei)
+
+# JavaScript obfuscation
+eval\(atob\(
+eval\(Buffer\.from\(
+eval\(unescape\(
+eval\(decodeURIComponent\(
+Function\(['"][^'"]{20,}['"]\)
+String\.fromCharCode\([0-9, ]{30,}\)
+\[\s*['"\\x][^'"]{3,}['"\\x]\s*\]\s*\.join\(
+
+# Hex/unicode string encoding
+\\x[0-9a-fA-F]{2}\\x[0-9a-fA-F]{2}\\x[0-9a-fA-F]{2}
+\\u[0-9a-fA-F]{4}\\u[0-9a-fA-F]{4}\\u[0-9a-fA-F]{4}
+
+# Python obfuscation
+exec\(compile\(
+exec\(__import__\('base64'\)
+exec\(base64\.b64decode\(
+exec\(zlib\.decompress\(
+__import__\('os'\)\.system\(
+__builtins__\[.{0,30}\]\(
+
+# Generic encoded payload execution
+fromBase64\(.*eval\(
+atob\(.*JSON\.parse\(
+
+# Suspiciously obfuscated variable names (entropy indicator)
+[a-zA-Z]{1}[0-9]{4,}[a-zA-Z]{1}[0-9]{4,}
