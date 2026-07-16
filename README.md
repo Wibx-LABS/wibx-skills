@@ -118,8 +118,9 @@ O instalador (`install.sh` → `scripts/install.py`, só stdlib) faz, a nível d
    hooks do rtk/graphify. Respeita `CLAUDE_CONFIG_DIR`.
 4. **Badges de statusline** — copia `install/hooks/*.sh` para `~/.claude/hooks/` e aponta o
    `statusLine` para `statusline-combined.sh`, que renderiza lado a lado todo badge
-   `*-statusline.sh` presente (`[CAVEMAN] [PONYTAIL] [RTK 83% 27M]` — o do rtk mostra a
-   economia do `rtk gain` com cache de 5 min). Statusline **custom existente nunca é
+   `*-statusline.sh` presente (`[CAVEMAN] [GRAPHIFY] [PONYTAIL] [RTK 83%]` — o do rtk
+   mostra a economia do `rtk gain` com cache de 5 min; o do graphify acende quando o
+   projeto aberto tem `graphify-out/graph.json`). Statusline **custom existente nunca é
    sobrescrito**; badge novo = dropar um `*-statusline.sh` no diretório.
 5. **Skills** — sincroniza o catálogo inteiro via `scripts/skill_management.py --sync`.
 
