@@ -82,8 +82,8 @@ re-auditar o novo SHA e atualizar o pin aqui. Instalação/pin são gerenciados 
 
 | Plugin | Fork | Licença | SHA fixado | O que comprime |
 | :--- | :--- | :--- | :--- | :--- |
-| **ponytail** | [`Wibx-LABS/ponytail`](https://github.com/Wibx-LABS/ponytail) | MIT | `40e50d9` | o **código** escrito (YAGNI) |
-| **caveman** | [`Wibx-LABS/caveman`](https://github.com/Wibx-LABS/caveman) | MIT | `0d95a81` | a **resposta** (prosa terse) |
+| **ponytail** | [`Wibx-LABS/ponytail`](https://github.com/Wibx-LABS/ponytail) | MIT | `1688e69` | o **código** escrito (YAGNI) |
+| **caveman** | [`Wibx-LABS/caveman`](https://github.com/Wibx-LABS/caveman) | MIT | `0f4a54a` | a **resposta** (prosa terse) |
 
 **Ferramentas de host** (não são plugins de marketplace — binário/pacote instalado pelo
 `devkit init`/`sync`, multiplataforma; viram no-op se ausentes; pin em `tools.<t>.ref` do

@@ -23,9 +23,8 @@
       },
       "category": "productivity",
       "source": {
-        "source": "git-subdir",
-        "url": "https://github.com/Wibx-LABS/ponytail",
-        "path": ".",
+        "source": "github",
+        "repo": "Wibx-LABS/ponytail",
         "ref": "main",
         "sha": "1688e69351efc92511b756918ee91f7affd18dbc"
       }
@@ -38,9 +37,8 @@
       },
       "category": "productivity",
       "source": {
-        "source": "git-subdir",
-        "url": "https://github.com/Wibx-LABS/caveman",
-        "path": ".",
+        "source": "github",
+        "repo": "Wibx-LABS/caveman",
         "ref": "main",
         "sha": "0f4a54a9537f6135da3dc88d8f2aa7366d7187c9"
       }
