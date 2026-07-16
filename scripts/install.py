@@ -172,9 +172,11 @@ def install_plugins(pins):
     ok("plugins reconciled")
 
 # ---- user-scope settings.json (MERGE, never clobber) --------------------- #
+def config_dir():
+    return Path(os.environ.get("CLAUDE_CONFIG_DIR") or str(Path.home() / ".claude"))
+
 def settings_path():
-    base = os.environ.get("CLAUDE_CONFIG_DIR") or str(Path.home() / ".claude")
-    return Path(base) / "settings.json"
+    return config_dir() / "settings.json"
 
 # rtk + graphify Claude hooks. Each is keyed by a stable marker so re-runs and
 # machines that already have the hook do not duplicate it.
@@ -248,6 +250,17 @@ def reconcile_settings(data, pins):
             pre.append(entry)
     hooks["PreToolUse"] = pre
     data["hooks"] = hooks
+
+    # statusLine — set when absent; upgrade a bare single-badge command to the
+    # combined script. A custom statusline (anything we don't recognize) is
+    # never touched.
+    combined = config_dir() / "hooks" / "statusline-combined.sh"
+    sl = data.get("statusLine")
+    cmd = (sl or {}).get("command", "") if isinstance(sl, dict) else ""
+    known = ("caveman-statusline", "ponytail-statusline", "rtk-statusline",
+             "statusline-combined")
+    if sl is None or any(k in cmd for k in known):
+        data["statusLine"] = {"type": "command", "command": f'bash "{combined}"'}
     return data
 
 def write_settings(pins):
@@ -269,6 +282,41 @@ def write_settings(pins):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     ok(f"settings merged -> {path}")
+
+# ---- statusline badges ---------------------------------------------------- #
+HOOKS_SRC = REPO / "install" / "hooks"
+
+# Badge scripts bundled by the plugins themselves — surfaced (copied) into
+# ~/.claude/hooks so the combined statusline picks them up. Plugin cache paths
+# are version-hashed, hence the globs. Best-effort: absent plugin = no badge.
+_PLUGIN_BADGE_GLOBS = (
+    "*/caveman/*/hooks/caveman-statusline.sh",
+    "*/caveman/*/src/hooks/caveman-statusline.sh",
+    "*/ponytail/*/hooks/ponytail-statusline.sh",
+)
+
+def install_statusline(_pins):
+    say(BOLD("→ Statusline badges (caveman / ponytail / rtk)"))
+    dest = config_dir() / "hooks"
+    if DRY:
+        say(f"  {DIM('would copy:')} {HOOKS_SRC}/*.sh -> {dest}/ (+ plugin badge scripts)")
+        return
+    dest.mkdir(parents=True, exist_ok=True)
+    copied = []
+    for src in sorted(HOOKS_SRC.glob("*.sh")):
+        tgt = dest / src.name
+        shutil.copy2(src, tgt)
+        tgt.chmod(0o755)
+        copied.append(src.name)
+    cache = config_dir() / "plugins" / "cache"
+    for pat in _PLUGIN_BADGE_GLOBS:
+        for f in cache.glob(pat):
+            tgt = dest / f.name
+            if not tgt.exists():
+                shutil.copy2(f, tgt)
+                tgt.chmod(0o755)
+                copied.append(f.name)
+    ok(f"statusline badges -> {dest} ({', '.join(copied) or 'nothing new'})")
 
 # ---- skills catalog ------------------------------------------------------ #
 def sync_skills():
@@ -310,6 +358,8 @@ def do_check(pins):
             no(f"{sp} is not valid JSON")
     else:
         no(f"{sp} absent")
+    combined = config_dir() / "hooks" / "statusline-combined.sh"
+    (ok if combined.exists() else no)(f"{combined} — statusline badges")
     skills = Path(os.environ.get("CLAUDE_CONFIG_DIR") or str(Path.home() / ".claude")) / "skills"
     n = len(list(skills.iterdir())) if skills.exists() else 0
     (ok if n else no)(f"{skills} — {n} skills linked")
@@ -338,6 +388,7 @@ def main():
         if install_binaries:
             install_tools(pins)
         install_plugins(pins)
+        install_statusline(pins)
         write_settings(pins)
     if want_skills:
         sync_skills()
