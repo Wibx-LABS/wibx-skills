@@ -45,7 +45,7 @@ fi
 # blocks terminal-escape injection via the cache contents.
 if [ -f "$CACHE" ]; then
   VAL=$(head -c 32 "$CACHE" 2>/dev/null | tr -cd '0-9.%kM ')
-  [ -n "$VAL" ] && printf '\033[38;5;208m[RTK %s]\033[0m' "$VAL" && exit 0
+  [ -n "$VAL" ] && printf '\033[38;5;39m[RTK %s]\033[0m' "$VAL" && exit 0
 fi
 # Cache not built yet — plain badge.
-printf '\033[38;5;208m[RTK]\033[0m'
+printf '\033[38;5;39m[RTK]\033[0m'
