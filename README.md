@@ -116,7 +116,12 @@ O instalador (`install.sh` → `scripts/install.py`, só stdlib) faz, a nível d
 3. **Settings** — faz **merge** (nunca sobrescreve) em `~/.claude/settings.json`:
    `enabledPlugins`, marketplace, env `CAVEMAN_DEFAULT_MODE`/`PONYTAIL_DEFAULT_MODE`, e os
    hooks do rtk/graphify. Respeita `CLAUDE_CONFIG_DIR`.
-4. **Skills** — sincroniza o catálogo inteiro via `scripts/skill_management.py --sync`.
+4. **Badges de statusline** — copia `install/hooks/*.sh` para `~/.claude/hooks/` e aponta o
+   `statusLine` para `statusline-combined.sh`, que renderiza lado a lado todo badge
+   `*-statusline.sh` presente (`[CAVEMAN] [PONYTAIL] [RTK 83% 27M]` — o do rtk mostra a
+   economia do `rtk gain` com cache de 5 min). Statusline **custom existente nunca é
+   sobrescrito**; badge novo = dropar um `*-statusline.sh` no diretório.
+5. **Skills** — sincroniza o catálogo inteiro via `scripts/skill_management.py --sync`.
 
 ### Flags
 
