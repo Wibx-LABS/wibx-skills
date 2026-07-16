@@ -28,23 +28,15 @@ if [ "$STALE" = 1 ]; then
   (
     JSON=$(rtk gain --format json 2>/dev/null) || exit 0
     PCT=$(printf '%s' "$JSON" | sed -n 's/.*"avg_savings_pct": *\([0-9]*\)\..*/\1/p' | head -1)
-    SAVED=$(printf '%s' "$JSON" | sed -n 's/.*"total_saved": *\([0-9]*\).*/\1/p' | head -1)
-    [ -n "$PCT" ] && [ -n "$SAVED" ] || exit 0
-    if [ "$SAVED" -ge 1000000 ]; then
-      HUMAN=$(awk "BEGIN{printf \"%.1fM\", $SAVED/1000000}")
-    elif [ "$SAVED" -ge 1000 ]; then
-      HUMAN=$(awk "BEGIN{printf \"%.0fk\", $SAVED/1000}")
-    else
-      HUMAN="$SAVED"
-    fi
-    printf '%s%% %s' "$PCT" "$HUMAN" > "$CACHE.tmp" && mv "$CACHE.tmp" "$CACHE"
+    [ -n "$PCT" ] || exit 0
+    printf '%s%%' "$PCT" > "$CACHE.tmp" && mv "$CACHE.tmp" "$CACHE"
   ) >/dev/null 2>&1 &
 fi
 
 # Render. Cap read + strip anything outside the tiny expected charset —
 # blocks terminal-escape injection via the cache contents.
 if [ -f "$CACHE" ]; then
-  VAL=$(head -c 32 "$CACHE" 2>/dev/null | tr -cd '0-9.%kM ')
+  VAL=$(head -c 32 "$CACHE" 2>/dev/null | tr -cd '0-9.%')
   [ -n "$VAL" ] && printf '\033[38;5;39m[RTK %s]\033[0m' "$VAL" && exit 0
 fi
 # Cache not built yet — plain badge.
