@@ -59,6 +59,7 @@ Cada skill vive em `skills/<nome>/SKILL.md`. O frontmatter YAML (`name` + `descr
 | **Refactor** | [`skills/refactor`](./skills/refactor) | Melhora estrutura e legibilidade do código sem mudar o comportamento externo. | `Ativo` |
 | **Golang Pro** | [`skills/golang-pro`](./skills/golang-pro) | Go concorrente (goroutines/channels), microsserviços gRPC/REST, otimização com pprof e Go idiomático. | `Ativo` |
 | **Swarm** | [`skills/swarm`](./skills/swarm) | Particiona um backlog em "fronts" paralelos e gera prompts para múltiplas instâncias separadas do Claude Code, coordenadas por um blackboard `.swarm/`. | `Ativo` |
+| **Wibx Blueprint** | [`skills/wibx-blueprint`](./skills/wibx-blueprint) | Gera o WiBX Project Blueprint: 3 fases encadeadas de deep research (diagnóstico, mercado/custos, cruzamento) a partir do site da empresa, escritas na página Notion destino. | `Ativo` |
 | **Ultraswarm** | [`skills/ultraswarm`](./skills/ultraswarm) | Variante extrema do swarm: plano primeiro, pilha de skills + caveman + RTK por front, modelo/esforço sob medida, trava `/goal` por worker, `/code-review ultra` por front e no merge, e dashboard ao vivo. | `Ativo` |
 
 ### 🦀 RTK Toolkit (Rust / CLI)

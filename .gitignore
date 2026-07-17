@@ -109,3 +109,6 @@ temp/
 *.bak
 *.swp
 *~
+
+# wibx-blueprint runtime output (research artifacts, not skill source)
+blueprints/
