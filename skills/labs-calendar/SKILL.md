@@ -74,7 +74,7 @@ Monte `Tags` = `[<área>, <tipo>]`. Ex.: reunião de DEV/TI → `["DEV/TI", "Reu
 - [ ] <o que precisa estar verdade pra fechar>
 ```
 
-**Reunião**
+**Reunião** — sempre termina com o bloco **AI Meeting Notes** (grava a reunião direto do card).
 ```
 ## Participantes
 - <quem>
@@ -84,7 +84,19 @@ Monte `Tags` = `[<área>, <tipo>]`. Ex.: reunião de DEV/TI → `["DEV/TI", "Reu
 
 ## Decisões / próximos passos
 _(preencher na reunião)_
+
+<meeting-notes>
+	Reunião <mention-date start="YYYY-MM-DD"/>
+</meeting-notes>
 ```
+
+> **AI Meeting Notes (obrigatório em toda Reunião).** O bloco `<meeting-notes>` cria o card de
+> gravação nativo do Notion — o time aperta "gravar/transcrever" direto na página. Regras de
+> criação (spec Notion-flavored Markdown): indentação interna = **tab**; **omita** `<summary>` e
+> `<transcript>` (dão erro na criação); só inclua `<notes>` se o usuário ditar notas. Use a **data
+> da reunião** no `<mention-date>`. No JSON do `content`, o bloco vira:
+> `\n\n<meeting-notes>\n\tReunião <mention-date start=\"YYYY-MM-DD\"/>\n</meeting-notes>`.
+> Vale **só para Tipo = Reunião** — não colar em Afazer/Entrega/Marco.
 
 **Entrega**
 ```
@@ -115,7 +127,8 @@ _(preencher na reunião)_
 3. **Se a tag necessária não existir**, cadastre-a primeiro (ver Gotcha) — com OK do Pedro.
 4. **Crie** com `notion-create-pages` (parent = data source acima), `properties` =
    `{ "Name": <título>, "date:Date:start": <ISO>, [+ end/is_datetime], "Tags": [<área>, <tipo>] }`,
-   `content` = corpo do tipo.
+   `content` = corpo do tipo. **Se Tipo = Reunião, o corpo obrigatoriamente termina com o bloco
+   `<meeting-notes>` (AI Meeting Notes) — ver template.**
 5. **Devolva a URL** da página criada.
 
 ### Exemplo de payload
@@ -130,7 +143,7 @@ _(preencher na reunião)_
       "date:Date:is_datetime": 1,
       "Tags": ["DEV/TI", "Reunião"]
     },
-    "content": "## Participantes\n- Caio, Ed, Coura\n\n## Pauta\n- [ ] Mapear ferramentas do depto\n\n## Decisões / próximos passos\n_(preencher na reunião)_"
+    "content": "## Participantes\n- Caio, Ed, Coura\n\n## Pauta\n- [ ] Mapear ferramentas do depto\n\n## Decisões / próximos passos\n_(preencher na reunião)_\n\n<meeting-notes>\n\tReunião <mention-date start=\"2026-07-28\"/>\n</meeting-notes>"
   }]
 }
 ```
