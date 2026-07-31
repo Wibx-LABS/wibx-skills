@@ -60,6 +60,7 @@ Cada skill vive em `skills/<nome>/SKILL.md`. O frontmatter YAML (`name` + `descr
 | **Golang Pro** | [`skills/golang-pro`](./skills/golang-pro) | Go concorrente (goroutines/channels), microsserviços gRPC/REST, otimização com pprof e Go idiomático. | `Ativo` |
 | **Swarm** | [`skills/swarm`](./skills/swarm) | Particiona um backlog em "fronts" paralelos e gera prompts para múltiplas instâncias separadas do Claude Code, coordenadas por um blackboard `.swarm/`. | `Ativo` |
 | **Wibx Blueprint** | [`skills/wibx-blueprint`](./skills/wibx-blueprint) | Gera o WiBX Project Blueprint: 3 fases encadeadas de deep research (diagnóstico, mercado/custos, cruzamento) a partir do site da empresa, escritas na página Notion destino. | `Ativo` |
+| **Maintainer** | [`skills/maintainer`](./skills/maintainer) | Papel de mantenedor sobre PRs de vários repos: classifica (verde/CI pendente/conflito/CI vermelho), mergeia só o que é seguro na ordem certa, e comenta instruindo quem abriu a PR. Contínuo via `/loop`. | `Ativo` |
 | **Yap to Context** | [`skills/yap-to-context`](./skills/yap-to-context) | Auditoria lógica bloqueante de ideias cruas ("yap sessions"): expõe contradições e variáveis não definidas antes de sintetizar um Context Document Markdown para outros LLMs. | `Ativo` |
 | **Ultraswarm** | [`skills/ultraswarm`](./skills/ultraswarm) | Variante extrema do swarm: plano primeiro, pilha de skills + caveman + RTK por front, modelo/esforço sob medida, trava `/goal` por worker, `/code-review ultra` por front e no merge, e dashboard ao vivo. | `Ativo` |
 
