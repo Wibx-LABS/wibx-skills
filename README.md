@@ -210,6 +210,14 @@ A skill `n8n` lê `N8N_API_URL` e `N8N_API_KEY` do ambiente. **Nenhum segredo é
 cp skills/n8n/.env.example skills/n8n/.env   # .env é git-ignored
 ```
 
+## 📚 Guias
+
+Material de conhecimento interno, fora do fluxo de skills. Abra o arquivo no navegador.
+
+| Guia | Arquivo | Descrição |
+|------|---------|-----------|
+| **Guia de Maestria em IA** | [`docs/guias/guia-maestria-ia.html`](./docs/guias/guia-maestria-ia.html) | Traduzindo Intenção em Realidade — as 8 etapas do caminho de maestria em IA do Wibx LABS. Deck HTML de 21 slides, self-contained, navegável por teclado. |
+
 ## 🤝 Contribuindo
 
 1. Crie `skills/<nova-skill>/SKILL.md` com frontmatter (`name` + `description`) e instruções.
