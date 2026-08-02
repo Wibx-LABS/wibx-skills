@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guia de Maestria em IA — Wibx LABS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0c0c0c;
+  --surface:#141414;
+  --card:#1c1c1c;
+  --card-2:#202020;
+  --border:#2e2e2e;
+  --green:#00ff70;
+  --text:#ebf7ee;
+  --muted:#ababab;
+  --red:#f06a6f;
+  --red-tint:#2a1214;
+  --green-tint:#0c2318;
+  --accent:var(--green);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:"Red Hat Display","Helvetica Neue",Arial,sans-serif;
+  font-weight:500;
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;
+}
+.deck{position:relative;height:100dvh;width:100%}
+
+.slide{
+  display:none;
+  position:absolute;
+  inset:0;
+  flex-direction:column;
+  justify-content:center;
+  padding:clamp(34px,5vh,72px) clamp(22px,5vw,84px);
+  background:var(--surface);
+  overflow-y:auto;
+  overflow-x:hidden;
+}
+.slide:not(.chapter){justify-content:flex-start}
+.slide.active{display:flex;animation:fade .32s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.slide::before,.slide::after{
+  content:"";position:absolute;left:0;right:0;height:7px;background:var(--accent);z-index:2;
+}
+.slide::before{top:0}
+.slide::after{bottom:0}
+.slide.chapter{background:var(--bg)}
+.slide.danger{--accent:var(--red)}
+
+/* ---------- typography ---------- */
+h1{font-size:clamp(26px,4.4vw,54px);font-weight:700;color:var(--green);line-height:1.12;letter-spacing:-.01em}
+.slide.danger h1{color:var(--red)}
+.chapter h1{color:var(--text);font-size:clamp(30px,5.4vw,72px);max-width:16ch}
+.eyebrow{
+  color:var(--green);font-size:clamp(11px,1.35vw,16px);font-weight:700;
+  letter-spacing:.42em;text-transform:uppercase;margin-bottom:clamp(12px,1.8vh,22px);
+}
+.sub{
+  color:var(--muted);font-style:italic;font-weight:400;
+  font-size:clamp(12.5px,1.6vw,20px);line-height:1.5;margin-top:14px;max-width:62ch;
+}
+h1 + .sub{margin-top:10px}
+.headline{margin-bottom:clamp(16px,2.6vh,30px)}
+.headline .sub{margin-top:8px}
+
+/* ---------- chapter slide ---------- */
+.chapter{justify-content:center;padding-left:clamp(24px,8vw,110px)}
+.chapter .chapter-icon{
+  position:absolute;right:clamp(28px,9vw,120px);top:50%;transform:translateY(-58%);
+  width:clamp(64px,10vw,132px);height:auto;color:var(--green);
+}
+.chapter.danger .chapter-icon{color:var(--red)}
+
+/* ---------- grids ---------- */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(12px,1.5vw,22px)}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(12px,1.4vw,20px)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(12px,1.5vw,22px)}
+.stack{display:flex;flex-direction:column;gap:clamp(12px,1.6vh,20px)}
+/* fill the slide height like the original Keynote layout */
+.slide > .fill{flex:1 1 auto;min-height:0}
+.slide > .fill.stack > .card{flex:1 1 auto}
+.slide > .grid4 > .card{min-height:min(44vh,400px)}
+.slide > .grid2 > .card:not(.path-item),
+.slide > .grid3 > .card,
+.slide > .grid4 > .card,
+.slide > .stack > .card,
+.slide > .grid2 > .panel{display:flex;flex-direction:column;justify-content:center}
+
+/* ---------- cards ---------- */
+.card{
+  background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:clamp(14px,1.7vw,24px);
+}
+.card-l{border-left:5px solid var(--green);border-radius:0 10px 10px 0}
+.card-t{border-top:5px solid var(--green);border-radius:0 0 10px 10px}
+.card h3{font-size:clamp(14.5px,1.85vw,23px);font-weight:700;color:var(--text);line-height:1.25}
+.card p,.card li{font-size:clamp(12px,1.35vw,16.5px);font-weight:400;color:var(--muted);line-height:1.55}
+.card p + p{margin-top:8px}
+.card .body{margin-top:clamp(10px,1.4vh,18px)}
+
+/* path card (slide 2) */
+.path-item{display:flex;align-items:center;gap:clamp(10px,1.4vw,18px)}
+.path-item svg{width:clamp(24px,2.7vw,38px);height:auto;color:var(--green);flex:none}
+.path-item .n{font-size:clamp(20px,2.4vw,30px);font-weight:700;color:var(--green);flex:none;min-width:1ch}
+.path-item .lbl{font-size:clamp(13px,1.5vw,19px);font-weight:500;color:var(--text)}
+.path-item.kill svg,.path-item.kill .n{color:var(--red)}
+
+/* numbered bubble (slide 4) */
+.q-head{display:flex;align-items:center;gap:clamp(10px,1.4vw,18px)}
+.bubble{
+  flex:none;display:grid;place-items:center;border-radius:999px;background:var(--green);
+  color:#0c0c0c;font-weight:700;width:clamp(30px,3.4vw,46px);height:clamp(30px,3.4vw,46px);
+  font-size:clamp(15px,1.8vw,23px);
+}
+
+/* labelled panels (bad/good) */
+.panel{border-radius:10px;overflow:hidden;border:1px solid var(--border);display:flex;flex-direction:column}
+.panel-head{
+  padding:clamp(9px,1.1vw,15px) clamp(13px,1.5vw,22px);
+  font-weight:700;font-size:clamp(12px,1.4vw,17px);letter-spacing:.04em;
+  display:flex;align-items:center;gap:10px;
+}
+.panel-head svg{width:clamp(16px,1.7vw,22px);height:auto}
+.panel-body{padding:clamp(14px,1.8vw,26px);flex:1;font-size:clamp(12px,1.35vw,16.5px);font-weight:400;color:var(--muted);line-height:1.6}
+.panel-body p + p{margin-top:10px}
+.panel-body .quote{font-style:italic;color:var(--text)}
+.panel-body strong{color:var(--text);font-weight:700}
+.bad .panel-head{background:var(--red);color:#1a0507}
+.bad .panel-body{background:var(--red-tint)}
+.good .panel-head{background:var(--green);color:#062713}
+.good .panel-body{background:var(--green-tint)}
+.bad-l{border-left:5px solid var(--red);background:var(--red-tint);border-radius:0 10px 10px 0;border-top:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
+.good-l{border-left:5px solid var(--green);background:var(--green-tint);border-radius:0 10px 10px 0;border-top:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
+.tag{font-size:clamp(11.5px,1.3vw,16px);font-weight:700;letter-spacing:.04em}
+.tag.r{color:var(--red)}
+.tag.g{color:var(--green)}
+
+/* callout strip */
+.callout{
+  margin-top:clamp(14px,2vh,24px);background:var(--card);border:1px solid var(--border);
+  border-radius:10px;padding:clamp(13px,1.6vw,22px) clamp(15px,1.8vw,26px);
+  display:flex;align-items:center;gap:clamp(12px,1.5vw,20px);
+}
+.callout svg{width:clamp(20px,2.2vw,30px);height:auto;color:var(--green);flex:none}
+.callout p{font-size:clamp(12px,1.4vw,17px);font-weight:400;color:var(--text);line-height:1.5}
+.callout.solid{background:var(--green);border-color:var(--green);justify-content:center}
+.callout.solid p{color:#062713;font-weight:700;text-align:center}
+
+/* code-ish block */
+.block{
+  margin-top:clamp(14px,2vh,24px);background:#0a0a0a;border:1px solid var(--border);border-radius:10px;
+  padding:clamp(13px,1.6vw,22px) clamp(15px,1.8vw,26px);
+}
+.block .ttl{color:var(--green);font-weight:700;font-size:clamp(11px,1.25vw,15px);letter-spacing:.09em;text-transform:uppercase;margin-bottom:10px}
+.block p{font-size:clamp(11.5px,1.3vw,16px);font-weight:400;color:var(--muted);line-height:1.65}
+.block .k{color:var(--green);font-weight:700}
+.block .quote{font-style:italic;color:var(--text)}
+
+/* tables */
+table{width:100%;border-collapse:collapse;font-size:clamp(11.5px,1.3vw,16.5px);font-weight:400}
+th,td{border:1px solid var(--border);padding:clamp(8px,1.1vw,15px) clamp(9px,1.2vw,16px);text-align:center}
+thead th{font-weight:700;color:var(--text)}
+th.k{text-align:left;color:var(--green);font-weight:700}
+td{color:var(--muted)}
+th.hl-green{background:var(--green);color:#062713}
+th.hl-red{background:var(--red);color:#1a0507}
+td.no{color:var(--red);font-weight:700;text-decoration:line-through}
+td.yes{color:var(--green)}
+
+/* summary slide */
+.summary{align-items:center;text-align:center;justify-content:center}
+.summary .mark{width:clamp(54px,7vw,88px);height:auto;margin-bottom:clamp(16px,2.4vh,28px)}
+.summary h1{color:var(--text);font-size:clamp(28px,4.8vw,62px)}
+.summary .list{
+  display:grid;grid-template-columns:1fr 1fr;gap:clamp(10px,1.5vh,20px) clamp(24px,5vw,70px);
+  margin-top:clamp(20px,3vh,36px);text-align:left;width:min(880px,100%);
+}
+.summary .row{display:flex;align-items:baseline;gap:clamp(12px,1.6vw,22px)}
+.summary .row .n{color:var(--green);font-weight:700;font-size:clamp(15px,1.9vw,24px);min-width:1ch}
+.summary .row .t{font-size:clamp(13px,1.55vw,20px);font-weight:500}
+.summary .rule{width:min(880px,100%);height:4px;background:var(--green);margin:clamp(20px,3vh,36px) 0 clamp(10px,1.4vh,16px)}
+.summary .foot{font-size:clamp(11px,1.25vw,15px);font-weight:500;color:var(--muted);letter-spacing:.06em}
+
+/* title slide */
+.title-slide{background:var(--bg);justify-content:center;padding-left:clamp(24px,8vw,110px)}
+.brand{display:flex;align-items:center;gap:clamp(12px,1.6vw,22px);margin-bottom:clamp(28px,5vh,58px)}
+.brand .mark{width:clamp(46px,5.4vw,74px);height:auto}
+.brand .wordmark{
+  color:var(--green);font-weight:700;letter-spacing:.34em;
+  font-size:clamp(15px,2vw,27px);
+}
+.title-slide h1{color:var(--text);font-size:clamp(38px,7.4vw,96px);max-width:11ch;line-height:1.08}
+.title-slide .kicker{color:var(--green);font-size:clamp(15px,2.1vw,28px);font-weight:500;margin-top:clamp(16px,2.6vh,30px)}
+.title-slide .rule{width:clamp(150px,17vw,250px);height:5px;background:var(--green);margin:clamp(14px,2.2vh,26px) 0}
+.title-slide .note{color:var(--muted);font-style:italic;font-weight:400;font-size:clamp(12px,1.5vw,19px)}
+
+/* ---------- nav ---------- */
+.nav{
+  position:fixed;right:clamp(14px,2vw,26px);bottom:clamp(14px,2vh,26px);
+  display:flex;align-items:center;gap:10px;z-index:10;
+}
+.nav button{
+  width:clamp(36px,3.6vw,46px);height:clamp(36px,3.6vw,46px);border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);background:rgba(28,28,28,.82);color:var(--text);
+  font-size:18px;line-height:1;cursor:pointer;backdrop-filter:blur(6px);
+  transition:transform .15s ease,box-shadow .15s ease,background .15s ease,color .15s ease;
+}
+.nav button:hover:not(:disabled){
+  background:var(--green);color:#062713;transform:scale(1.08);
+  box-shadow:0 0 18px rgba(0,255,112,.34);
+}
+.nav button:disabled{opacity:.32;cursor:default}
+.nav .count{
+  font-size:clamp(12px,1.3vw,15px);font-weight:700;color:var(--muted);
+  background:rgba(28,28,28,.82);border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;padding:8px 14px;backdrop-filter:blur(6px);font-variant-numeric:tabular-nums;
+}
+
+@media (max-width:860px){
+  .grid2,.grid3,.grid4,.summary .list{grid-template-columns:1fr}
+  .slide{justify-content:flex-start;padding-top:clamp(40px,7vh,70px);padding-bottom:clamp(70px,10vh,100px)}
+  .chapter{justify-content:center}
+  .chapter .chapter-icon{position:static;transform:none;margin-bottom:20px}
+  .summary{justify-content:flex-start}
+  table{font-size:12px}
+  th,td{padding:7px 8px}
+}
+@media print{
+  .nav{display:none}
+  .slide{display:flex;position:relative;height:auto;page-break-after:always}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-frog" viewBox="0 0 64.69 64.69">
+      <path fill="#00ff70" d="M33.79,64.64h-2.94C5.62,64.64,0,59.02,0,33.79v-2.94C0,5.62,5.62,0,30.85,0h2.94c25.23,0,30.85,5.62,30.85,30.85v2.94c0,25.23-5.62,30.85-30.85,30.85Z"/>
+      <circle fill="#0c0c0c" cx="19.09" cy="24.98" r="2.94"/>
+      <circle fill="#0c0c0c" cx="45.52" cy="24.98" r="2.94"/>
+      <path fill="#0c0c0c" d="M53.16,29.97c1.2-1.6,1.91-3.58,1.91-5.73,0-5.27-4.27-9.54-9.54-9.54-3.97,0-7.37,2.42-8.81,5.87-1.23.92-2.75,1.47-4.4,1.47s-3.18-.55-4.4-1.47c-1.44-3.45-4.84-5.87-8.81-5.87-5.27,0-9.54,4.27-9.54,9.54,0,2.15.71,4.14,1.91,5.73-3.68,3.46-2.65,7.15-2,8.58,0,0,.66,1.26,1.62,2.35,8.39,9.52,20.94,9.04,21.22,9.04h0c.28,0,12.83.48,21.22-9.04.96-1.09,1.62-2.34,1.62-2.35.65-1.43,1.69-5.12-2-8.58ZM45.52,19.1c2.84,0,5.14,2.3,5.14,5.14s-2.3,5.14-5.14,5.14-5.14-2.3-5.14-5.14,2.3-5.14,5.14-5.14ZM19.09,19.1c2.84,0,5.14,2.3,5.14,5.14s-2.3,5.14-5.14,5.14-5.14-2.3-5.14-5.14,2.3-5.14,5.14-5.14ZM50.59,37.86s-.3.33-.3.34c-6.89,7.61-17.62,7.29-17.99,7.29,0,0,0,0,0,0s0,0,0,0c-.37,0-11.1.32-17.99-7.29,0,0-.29-.33-.3-.34-1.25-1.58-1-3.83.64-5.17,1.32.7,2.83,1.09,4.43,1.09,4.79,0,8.75-3.52,9.44-8.12,1.16.5,2.44.78,3.78.78s2.62-.28,3.78-.78c.69,4.6,4.65,8.12,9.44,8.12,1.6,0,3.11-.4,4.43-1.09,1.64,1.34,1.89,3.59.64,5.17Z"/>
+    </symbol>
+
+    <symbol id="i-brain" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M11.1 2.2c-1.9 0-3.5 1.4-3.8 3.2-1.5.3-2.6 1.6-2.6 3.2 0 .5.1 1 .3 1.4-.8.7-1.3 1.7-1.3 2.9 0 1.3.6 2.4 1.6 3.1-.1.3-.1.6-.1.9 0 2 1.6 3.6 3.6 3.6.9 0 1.8-.4 2.3-.9V2.2h-.1Zm1.8 0v17.4c.6.6 1.4.9 2.3.9 2 0 3.6-1.6 3.6-3.6 0-.3 0-.6-.1-.9 1-.7 1.6-1.8 1.6-3.1 0-1.1-.5-2.2-1.3-2.9.2-.4.3-.9.3-1.4 0-1.5-1.1-2.8-2.6-3.2-.3-1.8-1.9-3.2-3.8-3.2Z"/>
+    </symbol>
+
+    <symbol id="i-pencil" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25Zm2.2 1.55v-.73l8.86-8.86.73.73-8.86 8.86h-.73Z"/>
+      <path fill="currentColor" d="M20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83Z"/>
+      <path fill="currentColor" d="M3 17.25 6.75 21l-4.6 1a.6.6 0 0 1-.72-.72l.87-4.03Z"/>
+    </symbol>
+
+    <symbol id="i-funnel" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M2.4 3.6h19.2c.9 0 1.4 1.1.7 1.7l-7.2 7.6v7.4c0 .8-.9 1.3-1.6.8l-3-2a1 1 0 0 1-.4-.8v-5.4L1.7 5.3c-.6-.6-.2-1.7.7-1.7Z"/>
+    </symbol>
+
+    <symbol id="i-gears" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M11.9 8.6c-.1-.4-.2-.8-.4-1.1l1-1.2-1.5-1.5-1.2 1c-.3-.2-.7-.3-1.1-.4L8.5 4h-2.1l-.2 1.5c-.4.1-.8.2-1.1.4l-1.2-1L2.4 6.4l1 1.2c-.2.3-.3.7-.4 1.1L1.5 8.9V11l1.5.2c.1.4.2.8.4 1.1l-1 1.2 1.5 1.5 1.2-1c.3.2.7.3 1.1.4l.2 1.5h2.1l.2-1.5c.4-.1.8-.2 1.1-.4l1.2 1 1.5-1.5-1-1.2c.2-.3.3-.7.4-1.1l1.5-.2V8.9l-1.5-.3Zm-4.4 4.1a2.7 2.7 0 1 1 0-5.4 2.7 2.7 0 0 1 0 5.4Z"/>
+      <path fill="currentColor" d="M21.6 6.5c0-.3-.1-.6-.2-.8l.8-.7-.9-1.5-1 .4c-.2-.2-.4-.3-.7-.4l-.1-1.1h-1.7l-.1 1.1c-.3.1-.5.2-.7.4l-1-.4-.9 1.5.8.7c0 .3-.1.5-.1.8s0 .6.1.8l-.8.7.9 1.5 1-.4c.2.2.4.3.7.4l.1 1.1h1.7l.1-1.1c.3-.1.5-.2.7-.4l1 .4.9-1.5-.8-.7c.1-.3.2-.5.2-.8Zm-2.9 1.4a1.4 1.4 0 1 1 0-2.9 1.4 1.4 0 0 1 0 2.9Z"/>
+      <path fill="currentColor" d="M21.6 16.9c0-.3-.1-.6-.2-.8l.8-.7-.9-1.5-1 .4c-.2-.2-.4-.3-.7-.4l-.1-1.1h-1.7l-.1 1.1c-.3.1-.5.2-.7.4l-1-.4-.9 1.5.8.7c0 .3-.1.5-.1.8s0 .6.1.8l-.8.7.9 1.5 1-.4c.2.2.4.3.7.4l.1 1.1h1.7l.1-1.1c.3-.1.5-.2.7-.4l1 .4.9-1.5-.8-.7c.1-.3.2-.5.2-.8Zm-2.9 1.4a1.4 1.4 0 1 1 0-2.9 1.4 1.4 0 0 1 0 2.9Z"/>
+    </symbol>
+
+    <symbol id="i-db" viewBox="0 0 24 24">
+      <ellipse fill="currentColor" cx="12" cy="4.6" rx="9.2" ry="3.1"/>
+      <path fill="currentColor" d="M2.8 7.6c1.6 1.6 5 2.5 9.2 2.5s7.6-.9 9.2-2.5v3.6c0 1.7-4.1 3.1-9.2 3.1s-9.2-1.4-9.2-3.1V7.6Z"/>
+      <path fill="currentColor" d="M2.8 13.8c1.6 1.6 5 2.5 9.2 2.5s7.6-.9 9.2-2.5v3.6c0 1.7-4.1 3.1-9.2 3.1s-9.2-1.4-9.2-3.1v-3.6Z"/>
+    </symbol>
+
+    <symbol id="i-dumbbell" viewBox="0 0 24 24">
+      <rect fill="currentColor" x=".6" y="9.4" width="2.6" height="5.2" rx="1"/>
+      <rect fill="currentColor" x="3.6" y="6.3" width="4.1" height="11.4" rx="1.4"/>
+      <rect fill="currentColor" x="7.5" y="10.2" width="9" height="3.6"/>
+      <rect fill="currentColor" x="16.3" y="6.3" width="4.1" height="11.4" rx="1.4"/>
+      <rect fill="currentColor" x="20.8" y="9.4" width="2.6" height="5.2" rx="1"/>
+    </symbol>
+
+    <symbol id="i-shield" viewBox="0 0 24 24">
+      <path fill="currentColor" fill-rule="evenodd" d="M12 1.6 2.9 5.6v6.2c0 5.1 3.9 9.6 9.1 10.6 5.2-1 9.1-5.5 9.1-10.6V5.6L12 1.6Zm1 3.1v14.9c3.4-1.2 5.7-4.4 5.7-8V7.2L13 4.7Z"/>
+    </symbol>
+
+    <symbol id="i-skull" viewBox="0 0 24 24">
+      <rect fill="currentColor" x="1.5" y="16.1" width="21" height="3.6" rx="1.8" transform="rotate(21 12 17.9)"/>
+      <rect fill="currentColor" x="1.5" y="16.1" width="21" height="3.6" rx="1.8" transform="rotate(-21 12 17.9)"/>
+      <path fill="currentColor" fill-rule="evenodd" d="M12 1.4C7.4 1.4 4 4.6 4 8.7c0 2.3 1.1 4.3 2.8 5.5l-.4 1.2c-.2.6.3 1.2.9 1.2h9.4c.6 0 1.1-.6.9-1.2l-.4-1.2c1.7-1.2 2.8-3.2 2.8-5.5 0-4.1-3.4-7.3-8-7.3ZM9.1 10.4a1.9 1.9 0 1 1 0-3.8 1.9 1.9 0 0 1 0 3.8Zm5.8 0a1.9 1.9 0 1 1 0-3.8 1.9 1.9 0 0 1 0 3.8Z"/>
+    </symbol>
+
+    <symbol id="i-x" viewBox="0 0 24 24">
+      <circle fill="#f06a6f" cx="12" cy="12" r="11"/>
+      <path fill="#fff" d="m16.6 9.2-1.8-1.8L12 10.2 9.2 7.4 7.4 9.2l2.8 2.8-2.8 2.8 1.8 1.8 2.8-2.8 2.8 2.8 1.8-1.8-2.8-2.8 2.8-2.8Z"/>
+    </symbol>
+
+    <symbol id="i-check" viewBox="0 0 24 24">
+      <circle fill="#00ff70" cx="12" cy="12" r="11"/>
+      <path fill="#062713" d="m10.4 16.8-4.2-4.2 1.8-1.8 2.4 2.4 5.8-5.8 1.8 1.8-7.6 7.6Z"/>
+    </symbol>
+
+    <symbol id="i-bulb" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M12 1.8a7.6 7.6 0 0 0-4.3 13.9v1.6h8.6v-1.6A7.6 7.6 0 0 0 12 1.8Z"/>
+      <path fill="currentColor" d="M7.7 18.6h8.6v.6a2.6 2.6 0 0 1-2.6 2.6h-3.4a2.6 2.6 0 0 1-2.6-2.6v-.6Z"/>
+      <path fill="#0c0c0c" d="M8.4 9.6a.9.9 0 0 1-1.8 0 4.9 4.9 0 0 1 4.9-4.9.9.9 0 0 1 0 1.8 3.1 3.1 0 0 0-3.1 3.1Z"/>
+    </symbol>
+
+    <symbol id="i-warn" viewBox="0 0 24 24">
+      <path fill="currentColor" fill-rule="evenodd" d="M13.7 3a2 2 0 0 0-3.4 0L1.6 18.6A2 2 0 0 0 3.3 21.6h17.4a2 2 0 0 0 1.7-3L13.7 3ZM10.9 7.9h2.2v6.3h-2.2V7.9Zm1.1 11.1a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Z"/>
+    </symbol>
+  </defs>
+</svg>
+
+<main class="deck" id="deck">
+
+  <!-- 1 -->
+  <section class="slide title-slide active">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 64.69 64.69"><use href="#i-frog"/></svg>
+      <span class="wordmark">WIBX LABS</span>
+    </div>
+    <h1>Guia de Maestria em IA</h1>
+    <p class="kicker">Traduzindo Intenção em Realidade</p>
+    <div class="rule"></div>
+    <p class="note">IA não é chat. É componente do seu fluxo de trabalho.</p>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide">
+    <div class="headline">
+      <h1>O CAMINHO</h1>
+      <p class="sub">Cada etapa existe por um motivo. Pule e o resultado será mediocre.</p>
+    </div>
+    <div class="grid2 fill">
+      <div class="card card-l path-item"><svg viewBox="0 0 24 24"><use href="#i-brain"/></svg><span class="n">0</span><span class="lbl">Pense antes de digitar</span></div>
+      <div class="card card-l path-item"><svg viewBox="0 0 24 24"><use href="#i-db"/></svg><span class="n">4</span><span class="lbl">Dê memória à IA</span></div>
+      <div class="card card-l path-item"><svg viewBox="0 0 24 24"><use href="#i-pencil"/></svg><span class="n">1</span><span class="lbl">Estruture o prompt</span></div>
+      <div class="card card-l path-item"><svg viewBox="0 0 24 24"><use href="#i-dumbbell"/></svg><span class="n">5</span><span class="lbl">Cresça com a ferramenta</span></div>
+      <div class="card card-l path-item"><svg viewBox="0 0 24 24"><use href="#i-funnel"/></svg><span class="n">2</span><span class="lbl">Escolha o que delegar</span></div>
+      <div class="card card-l path-item"><svg viewBox="0 0 24 24"><use href="#i-shield"/></svg><span class="n">6</span><span class="lbl">Compliance embutido</span></div>
+      <div class="card card-l path-item"><svg viewBox="0 0 24 24"><use href="#i-gears"/></svg><span class="n">3</span><span class="lbl">Controle a lógica</span></div>
+      <div class="card card-l path-item kill"><svg viewBox="0 0 24 24"><use href="#i-skull"/></svg><span class="n">7</span><span class="lbl">Saiba quando parar</span></div>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide chapter">
+    <svg class="chapter-icon" viewBox="0 0 24 24"><use href="#i-brain"/></svg>
+    <p class="eyebrow">Etapa 0</p>
+    <h1>Defina o Problema Antes de Abrir a IA</h1>
+    <p class="sub">O maior erro não é um prompt ruim.<br>É delegar uma tarefa que você ainda não entendeu.</p>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide">
+    <div class="headline">
+      <h1>O Filtro de 4 Perguntas</h1>
+      <p class="sub">Se não conseguir responder em 1 frase cada, você não está pronto.</p>
+    </div>
+    <div class="grid2">
+      <div class="card card-l">
+        <div class="q-head"><span class="bubble">1</span><h3>Qual é a entrega concreta?</h3></div>
+        <div class="body"><p>"Preciso de um e-mail" não basta.<br>"E-mail de follow-up para lead que pediu demo há 3 dias" é uma entrega.</p></div>
+      </div>
+      <div class="card card-l">
+        <div class="q-head"><span class="bubble">3</span><h3>O que eu faria em 5 min?</h3></div>
+        <div class="body"><p>Se não consegue esboçar a estrutura,<br>a IA vai gerar lixo bonito.</p></div>
+      </div>
+      <div class="card card-l">
+        <div class="q-head"><span class="bubble">2</span><h3>Quem vai consumir isso?</h3></div>
+        <div class="body"><p>Um texto para o CEO é diferente<br>de um texto para o suporte.</p></div>
+      </div>
+      <div class="card card-l">
+        <div class="q-head"><span class="bubble">4</span><h3>Como vou saber se ficou bom?</h3></div>
+        <div class="body"><p>Defina o critério ANTES.<br>"Bom" sem métrica é opinião.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide">
+    <div class="headline"><h1>Na Prática: Antes vs. Depois</h1></div>
+    <div class="grid2">
+      <div class="panel bad">
+        <div class="panel-head"><svg viewBox="0 0 24 24"><use href="#i-x"/></svg>SEM O FILTRO</div>
+        <div class="panel-body">
+          <p class="quote">"IA, me ajuda a escrever um texto sobre a Wibx para redes sociais."</p>
+          <p><strong>Resultado:</strong><br>Post genérico com "revolução no mercado". Você gasta 20 min editando e o resultado ainda é mediocre.</p>
+        </div>
+      </div>
+      <div class="panel good">
+        <div class="panel-head"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg>COM O FILTRO</div>
+        <div class="panel-body">
+          <p>1. Entrega: Post LinkedIn, 150 palavras<br>2. Leitor: Dono de comércio, sem jargão<br>3. Esboço: Problema → Solução → CTA<br>4. Critério: Zero jargão cripto</p>
+          <p style="color:var(--green);font-weight:700">Agora sim o prompt gera algo útil na primeira tentativa.</p>
+        </div>
+      </div>
+    </div>
+    <div class="callout solid"><p>Se você não consegue preencher as 4 perguntas, a tarefa é para você pensar mais.</p></div>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide chapter">
+    <svg class="chapter-icon" viewBox="0 0 24 24"><use href="#i-pencil"/></svg>
+    <p class="eyebrow">Etapa 1</p>
+    <h1>Protocolo Universal de Prompts (UPP)</h1>
+    <p class="sub">Para a IA funcionar, ela precisa de arquitetura, não de conversa.</p>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide">
+    <div class="headline"><h1>1.1&nbsp; Atribuição de Papel</h1></div>
+    <div class="grid2">
+      <div class="card bad-l">
+        <p class="tag r">FRACO</p>
+        <div class="body">
+          <p class="quote" style="font-style:italic;color:var(--text)">"Você é um especialista em marketing."</p>
+          <p style="margin-top:14px">Qual marketing? B2B? Performance? Conteúdo? A IA vai chutar.</p>
+        </div>
+      </div>
+      <div class="card good-l">
+        <p class="tag g">FORTE</p>
+        <div class="body">
+          <p class="quote" style="font-style:italic;color:var(--text)">"Aja como um Growth Marketer de programas de fidelidade no varejo brasileiro. Você entende PIX, cashback e comportamento da classe C."</p>
+          <p style="margin-top:14px">Perímetro claro. A IA sabe o que pode e o que não pode.</p>
+        </div>
+      </div>
+    </div>
+    <div class="callout">
+      <svg viewBox="0 0 24 24"><use href="#i-bulb"/></svg>
+      <p>Defina: expertise específica + contexto do mercado + o que a IA entende do público.</p>
+    </div>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide">
+    <div class="headline">
+      <h1>1.2&nbsp; Delimitadores</h1>
+      <p class="sub">Separam instruções de dados. Sem eles, a IA mistura tudo.</p>
+    </div>
+    <div class="grid2">
+      <div class="panel bad">
+        <div class="panel-head">TUDO MISTURADO</div>
+        <div class="panel-body">
+          <p>Analise o feedback do cliente João que disse que o app trava muito e que o cashback demora e compare com a Maria que elogiou o suporte mas reclamou do prazo de crédito e me dê um resumo.</p>
+        </div>
+      </div>
+      <div class="panel good">
+        <div class="panel-head">COM DELIMITADORES</div>
+        <div class="panel-body">
+          <p><span style="color:var(--green);font-weight:700">### INSTRUÇÃO</span><br>Compare feedbacks: problemas, positivos, ação.<br>
+          <span style="color:var(--green);font-weight:700">### FEEDBACK 1 — João</span><br>App trava. Cashback demora.<br>
+          <span style="color:var(--green);font-weight:700">### FEEDBACK 2 — Maria</span><br>Suporte bom. Prazo longo.</p>
+        </div>
+      </div>
+    </div>
+    <div class="callout" style="display:block">
+      <p style="color:var(--green);font-weight:700;font-size:clamp(13px,1.55vw,19px);margin-bottom:10px">1.3&nbsp; Contexto: Volume Funciona, Preguiça Não</p>
+      <p>Modelos atuais processam 40+ páginas. Colar a Bíblia Wibx inteira não é o erro.<br>O erro é colar e não dar direção. Contexto grande + prompt estruturado = melhor resultado.</p>
+    </div>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide chapter">
+    <svg class="chapter-icon" viewBox="0 0 24 24"><use href="#i-funnel"/></svg>
+    <p class="eyebrow">Etapa 2</p>
+    <h1>O Framework D.R.A.G.</h1>
+    <p class="sub">Delegue o que suga seu tempo.<br>Foque no que é estratégico.</p>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide">
+    <div class="headline"><h1>O que Delegar?</h1></div>
+    <div class="grid4">
+      <div class="card card-t" style="text-align:center">
+        <p style="font-size:clamp(30px,4.4vw,58px);font-weight:700;color:var(--green);line-height:1">D</p>
+        <h3 style="margin-top:8px">Drafting</h3>
+        <div class="body"><p>Vença o bloqueio da<br>página em branco.</p></div>
+      </div>
+      <div class="card card-t" style="text-align:center">
+        <p style="font-size:clamp(30px,4.4vw,58px);font-weight:700;color:var(--green);line-height:1">R</p>
+        <h3 style="margin-top:8px">Research</h3>
+        <div class="body"><p>Acelere a busca<br>por informações.</p></div>
+      </div>
+      <div class="card card-t" style="text-align:center">
+        <p style="font-size:clamp(30px,4.4vw,58px);font-weight:700;color:var(--green);line-height:1">A</p>
+        <h3 style="margin-top:8px">Analysis</h3>
+        <div class="body"><p>Encontre padrões<br>em dados brutos.</p></div>
+      </div>
+      <div class="card card-t" style="text-align:center">
+        <p style="font-size:clamp(30px,4.4vw,58px);font-weight:700;color:var(--green);line-height:1">G</p>
+        <h3 style="margin-top:8px">Grunt Work</h3>
+        <div class="body"><p>Limpeza, formatação,<br>tarefas repetitivas.</p></div>
+      </div>
+    </div>
+    <div class="callout">
+      <svg viewBox="0 0 24 24"><use href="#i-warn"/></svg>
+      <p style="color:var(--green);font-weight:700">Se não cabe em nenhuma letra, é decisão estratégica — e decisão não se delega.</p>
+    </div>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide chapter">
+    <svg class="chapter-icon" viewBox="0 0 24 24"><use href="#i-gears"/></svg>
+    <p class="eyebrow">Etapa 3</p>
+    <h1>Controles de Lógica</h1>
+    <p class="sub">Como evitar que a IA "alucine" — invente informações com confiança.</p>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide">
+    <div class="headline"><h1>3 Técnicas de Controle</h1></div>
+    <div class="grid3">
+      <div class="card card-t">
+        <h3>Pense Passo a Passo</h3>
+        <p class="tag g" style="margin-top:8px">Chain of Thought</p>
+        <div class="block" style="margin-top:clamp(14px,2vh,24px)">
+          <p class="quote">"Liste as 3 variáveis que mais impactam precificação de SaaS. Depois, aplique ao Wibx Social. Só então sugira estratégia."</p>
+        </div>
+      </div>
+      <div class="card card-t">
+        <h3>Validação de Buracos</h3>
+        <p class="tag g" style="margin-top:8px">Red Team</p>
+        <div class="block" style="margin-top:clamp(14px,2vh,24px)">
+          <p class="quote">"Encontre 3 falhas nesta proposta que podem nos custar caro em 6 meses. Seja duro."</p>
+        </div>
+      </div>
+      <div class="card card-t">
+        <h3>Exemplo de Ouro</h3>
+        <p class="tag g" style="margin-top:8px">One-Shot</p>
+        <div class="block" style="margin-top:clamp(14px,2vh,24px)">
+          <p class="quote">"Seus clientes já compram com você. A questão é se voltam. Com Wibx Social, cada compra vira motivo para a próxima."</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide chapter">
+    <svg class="chapter-icon" viewBox="0 0 24 24"><use href="#i-db"/></svg>
+    <p class="eyebrow">Etapa 4</p>
+    <h1>Memória e Grounding</h1>
+    <p class="sub">A IA não sabe nada sobre a Wibx.<br>Você precisa dar a ela a memória correta.</p>
+  </section>
+
+  <!-- 14 -->
+  <section class="slide">
+    <div class="headline"><h1>Contexto Manual vs. RAG</h1></div>
+    <table>
+      <thead>
+        <tr><th></th><th>Contexto Manual</th><th class="hl-green">RAG</th></tr>
+      </thead>
+      <tbody>
+        <tr><th class="k">Quem faz?</th><td>Você copia e cola</td><td>Sistema busca automaticamente</td></tr>
+        <tr><th class="k">Precisão</th><td>Depende do que você selecionou</td><td>Busca por significado</td></tr>
+        <tr><th class="k">Escala</th><td>Limitado a uma tarefa</td><td>Funciona para toda equipe</td></tr>
+        <tr><th class="k">Quando usar</th><td>Tarefas pontuais e urgentes</td><td>Fluxos recorrentes</td></tr>
+      </tbody>
+    </table>
+    <div class="callout">
+      <svg viewBox="0 0 24 24"><use href="#i-bulb"/></svg>
+      <div>
+        <p style="color:var(--green);font-weight:700;margin-bottom:8px">Busca Semântica</p>
+        <p style="color:var(--muted)">A IA não busca por palavras-chave exatas — busca por significado.<br>"Ganhar recompensa" e "Programa de fidelidade" são matematicamente próximos.<br>Você não precisa acertar o termo exato — só precisa estar no bairro certo.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15 -->
+  <section class="slide chapter">
+    <svg class="chapter-icon" viewBox="0 0 24 24"><use href="#i-dumbbell"/></svg>
+    <p class="eyebrow">Etapa 5</p>
+    <h1>Academia Inteligente</h1>
+    <p class="sub">A IA deve ser seu Ajudante,<br>não seu Substituto.</p>
+  </section>
+
+  <!-- 16 -->
+  <section class="slide">
+    <div class="headline"><h1>Mentalidade de Uso</h1></div>
+    <div class="grid2">
+      <div class="card card-l">
+        <h3>Resistência é Crescimento</h3>
+        <div class="body"><p>Tente resolver sozinho por 5 min antes de pedir.<br>Use a IA para validar, não para substituir.<br>Se sempre pede resposta pronta, em 6 meses você não consegue mais argumentar sem ajuda.</p></div>
+      </div>
+      <div class="card card-l">
+        <h3>Sobrecarga Progressiva</h3>
+        <div class="body"><p>Peça para a IA te desafiar.<br>Use como sparring partner,<br>não como assistente passivo.</p></div>
+      </div>
+    </div>
+    <div class="block">
+      <p class="ttl">Prompts de Desafio</p>
+      <p class="quote">"Me questione como se fosse um auditor rigoroso sobre este plano."<br>"Identifique a premissa mais frágil do meu argumento."<br>"Se fosse um concorrente da Wibx, como exploraria essa fraqueza?"</p>
+    </div>
+  </section>
+
+  <!-- 17 -->
+  <section class="slide chapter">
+    <svg class="chapter-icon" viewBox="0 0 24 24"><use href="#i-shield"/></svg>
+    <p class="eyebrow">Etapa 6</p>
+    <h1>Compliance Embutido no Fluxo</h1>
+    <p class="sub">Regras de compliance não funcionam isoladas.<br>Elas precisam estar dentro do prompt.</p>
+  </section>
+
+  <!-- 18 -->
+  <section class="slide">
+    <div class="headline"><h1>Termos Proibidos + Substituições</h1></div>
+    <table>
+      <thead>
+        <tr><th class="hl-red">NUNCA USE</th><th class="hl-green">USE EM VEZ DISSO</th><th>POR QUÊ</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="no">Investimento</td><td class="yes">Programa de recompensas</td><td>Risco regulatório</td></tr>
+        <tr><td class="no">Lucratividade</td><td class="yes">Redução de custo</td><td>Associa token a ganho</td></tr>
+        <tr><td class="no">esgX</td><td class="yes">Wibx Social</td><td>Termo descontinuado</td></tr>
+        <tr><td class="no">Criptomoeda</td><td class="yes">Fidelidade digital</td><td>Evita especulação</td></tr>
+        <tr><td class="no">Blockchain (p/ cliente)</td><td class="yes">Tec. de rastreamento</td><td>Afasta público varejo</td></tr>
+      </tbody>
+    </table>
+    <div class="block">
+      <p class="ttl">Bloco para colar em qualquer prompt</p>
+      <p><span class="k">### RESTRIÇÕES DE COMPLIANCE</span><br>
+      - Nunca use: "investimento", "lucratividade", "esgX", "criptomoeda".<br>
+      - Substitua "blockchain" por "tecnologia de rastreamento" para clientes.<br>
+      - Reflita pelo menos 1 Pilar: Efeito em Rede, P2P, Plug-and-Play, Interoperabilidade.<br>
+      - Se puder ser lido como oferta de investimento, reescreva.</p>
+    </div>
+  </section>
+
+  <!-- 19 -->
+  <section class="slide chapter danger">
+    <svg class="chapter-icon" viewBox="0 0 24 24"><use href="#i-skull"/></svg>
+    <p class="eyebrow" style="color:var(--red)">Etapa 7</p>
+    <h1>O que MATAR</h1>
+    <p class="sub">Sinais de que você está usando a IA errado.<br>Se identificar qualquer um, pare.</p>
+  </section>
+
+  <!-- 20 -->
+  <section class="slide danger">
+    <div class="headline"><h1>Sinais de Alerta</h1></div>
+    <div class="stack fill">
+      <div class="card bad-l">
+        <h3 style="color:var(--red)">Decisões Terceirizadas</h3>
+        <div class="body"><p>A IA está escolhendo a estratégia? Você perdeu o controle.<br>A IA gera opções. Você decide.</p></div>
+      </div>
+      <div class="card bad-l">
+        <h3 style="color:var(--red)">Lero-Lero Genérico</h3>
+        <div class="body"><p>"Sinergia", "revolucionário", "disruptivo"? Delete.<br>Se não pode ser medido ou verificado, não deveria existir.</p></div>
+      </div>
+      <div class="card bad-l">
+        <h3 style="color:var(--red)">Automação Inútil</h3>
+        <div class="body"><p>Demora mais criando o prompt do que faria manualmente?<br>Abandone. IA é alavanca, não muleta.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 21 -->
+  <section class="slide chapter summary">
+    <svg class="mark" viewBox="0 0 64.69 64.69"><use href="#i-frog"/></svg>
+    <p class="eyebrow">Resumo</p>
+    <h1>O Caminho Completo</h1>
+    <div class="list">
+      <div class="row"><span class="n">0</span><span class="t">Pense antes de digitar</span></div>
+      <div class="row"><span class="n">4</span><span class="t">Dê contexto</span></div>
+      <div class="row"><span class="n">1</span><span class="t">Estruture o pedido</span></div>
+      <div class="row"><span class="n">5</span><span class="t">Cresça com a ferramenta</span></div>
+      <div class="row"><span class="n">2</span><span class="t">Delegue o que é mecânico</span></div>
+      <div class="row"><span class="n">6</span><span class="t">Proteja o compliance</span></div>
+      <div class="row"><span class="n">3</span><span class="t">Controle a lógica</span></div>
+      <div class="row"><span class="n">7</span><span class="t">Saiba quando parar</span></div>
+    </div>
+    <div class="rule"></div>
+    <p class="foot">WIBX LABS &nbsp;·&nbsp; Guia de Maestria em IA</p>
+  </section>
+
+</main>
+
+<nav class="nav" aria-label="Navegação dos slides">
+  <button id="prev" aria-label="Slide anterior">&#8592;</button>
+  <span class="count"><span id="cur">1</span> / <span id="total">21</span></span>
+  <button id="next" aria-label="Próximo slide">&#8594;</button>
+</nav>
+
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var cur = 0;
+  var elCur = document.getElementById('cur');
+  var elPrev = document.getElementById('prev');
+  var elNext = document.getElementById('next');
+  document.getElementById('total').textContent = slides.length;
+
+  function show(i){
+    cur = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach(function(s, n){ s.classList.toggle('active', n === cur); });
+    slides[cur].scrollTop = 0;
+    elCur.textContent = cur + 1;
+    elPrev.disabled = cur === 0;
+    elNext.disabled = cur === slides.length - 1;
+    if (location.hash !== '#' + (cur + 1)) history.replaceState(null, '', '#' + (cur + 1));
+  }
+
+  elPrev.addEventListener('click', function(){ show(cur - 1); });
+  elNext.addEventListener('click', function(){ show(cur + 1); });
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); show(cur + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); show(cur - 1); }
+    else if (e.key === 'Home') { e.preventDefault(); show(0); }
+    else if (e.key === 'End') { e.preventDefault(); show(slides.length - 1); }
+  });
+
+  var x0 = null;
+  document.addEventListener('touchstart', function(e){ x0 = e.changedTouches[0].clientX; }, {passive:true});
+  document.addEventListener('touchend', function(e){
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 60) show(cur + (dx < 0 ? 1 : -1));
+    x0 = null;
+  }, {passive:true});
+
+  var start = parseInt((location.hash || '').slice(1), 10);
+  show(isNaN(start) ? 0 : start - 1);
+})();
+</script>
+</body>
+</html>
