@@ -45,6 +45,26 @@ jobs:
           done
           exit $fail
 
+      - name: packages/ está sincronizado com skills/
+        run: |
+          tmp=$(mktemp -d)
+          fail=0
+          for dir in skills/*/; do
+            name=$(basename "$dir")
+            cmd="python scripts/package_skill.py skills/$name packages"
+            if ! python scripts/package_skill.py "$dir" "$tmp" > /dev/null 2>&1; then
+              echo "::error::falha ao empacotar '$name'"
+              fail=1
+            elif [ ! -f "packages/$name.skill" ]; then
+              echo "::error::packages/$name.skill não existe — rode: $cmd"
+              fail=1
+            elif ! cmp -s "$tmp/$name.skill" "packages/$name.skill"; then
+              echo "::error file=packages/$name.skill::pacote desatualizado — rode: $cmd"
+              fail=1
+            fi
+          done
+          exit $fail
+
       - name: Manifests do plugin são JSON válido
         run: |
           for file in .claude-plugin/*.json; do
