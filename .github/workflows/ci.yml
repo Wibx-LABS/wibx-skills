@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validar skills
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependências
+        run: pip install --quiet pyyaml
+
+      - name: Frontmatter de cada SKILL.md
+        run: |
+          fail=0
+          for dir in skills/*/; do
+            if ! out=$(python scripts/quick_validate.py "$dir" 2>&1); then
+              echo "::error file=${dir}SKILL.md::$out"
+              fail=1
+            fi
+          done
+          exit $fail
+
+      - name: README indexa toda skill
+        run: |
+          fail=0
+          for dir in skills/*/; do
+            name=$(basename "$dir")
+            if ! grep -q "skills/$name" README.md; then
+              echo "::error file=README.md::skill '$name' não está indexada no README (regra 4 de Contribuindo)"
+              fail=1
+            fi
+          done
+          exit $fail
+
+      - name: Manifests do plugin são JSON válido
+        run: |
+          for file in .claude-plugin/*.json; do
+            python -m json.tool "$file" > /dev/null || exit 1
+          done
+
+      - name: Scripts Python compilam
+        run: python -m compileall -q scripts
