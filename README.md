@@ -48,6 +48,9 @@ Cada skill vive em `skills/<nome>/SKILL.md`. O frontmatter YAML (`name` + `descr
 | Nome da Skill | Pasta | Descrição | Status |
 | :--- | :--- | :--- | :--- |
 | **Sexy Copy** | [`skills/sexy-copy`](./skills/sexy-copy) | Copywriting persuasivo de alta performance, com modo de compliance Wibx. | `Ativo` |
+| **Tandera Audit** | [`skills/tandera-audit`](./skills/tandera-audit) | Auditoria técnica GEO/AEO de qualquer site (score T/G/C, gate de auditabilidade, metodologia Olho de Tandera v2.0). | `Ativo` |
+| **Tandera SoV** | [`skills/tandera-sov`](./skills/tandera-sov) | Share of voice em LLMs com protocolo estatístico (n≥5 runs, roster 2026 c/ Meta AI, mapa de fontes citadas). | `Ativo` |
+| **Tandera Conteúdo** | [`skills/tandera-conteudo`](./skills/tandera-conteudo) | Conteúdo citável por LLMs (narrativa própria, Q&A people-first) com gate de compliance WBX obrigatório. | `Ativo` |
 | **Wibx Presentations** | [`skills/wibx-presentations`](./skills/wibx-presentations) | Gera apresentações HTML self-contained no design system da Wibx. | `Ativo` |
 | **Prompt Engineer** | [`skills/prompt-engineer`](./skills/prompt-engineer) | Estrutura sistemática para criar e otimizar prompts de alta performance. | `Ativo` |
 | **ToT-H** | [`skills/tot-h`](./skills/tot-h) | Painel de 16 personas (engenharia + produto) em Tree of Thought sob disciplina PRISMA. | `Ativo` |
