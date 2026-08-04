@@ -67,6 +67,22 @@ Cada skill vive em `skills/<nome>/SKILL.md`. O frontmatter YAML (`name` + `descr
 | **Security Audit** | [`skills/security-audit`](./skills/security-audit) | Varre um repo clonado atrás de malware, ataque de supply chain e ameaças à máquina host, antes de rodar código de terceiro. | `Ativo` |
 | **Wibx Brand** | [`skills/wibx-brand`](./skills/wibx-brand) | Fonte canônica dos tokens de marca da Wibx: cores do tema Admin Dashboard, tipografia e regras de uso. | `Ativo` |
 
+### 🎧 CS Suite (Customer Success / Suporte)
+
+Skills operacionais do time de CS da Wibx, feitas para **Claude Desktop / claude.ai** com MCP
+Notion. Nenhum ID de Notion, nome ou credencial vive neste repo (ele é público): cada skill usa
+`PLACEHOLDER_*` documentados em `references/config.md`, resolvidos pelas **Project Instructions
+privadas** do projeto do time (repo de setup privado). Skill sem o mapa de IDs para e pergunta —
+nunca adivinha destino.
+
+| Nome da Skill | Pasta | Descrição | Status |
+| :--- | :--- | :--- | :--- |
+| **CS Notion Reporting** | [`skills/cs-notion-reporting`](./skills/cs-notion-reporting) | Roteador de demandas do CS: decide o destino certo (Tech, Design, Suporte, Produto, CS), monta o payload obrigatório, classifica N1/N2/N3 e aplica o formato canônico de bug. | `Draft` |
+| **CS Budgeter** | [`skills/cs-budgeter`](./skills/cs-budgeter) | Calcula e valida budget de campanha: valor do ponto, taxa de 3,5%, base de débito por mecânica, saldo e validação contra o histórico. | `Draft` |
+| **CS Campaign Strategy** | [`skills/cs-campaign-strategy`](./skills/cs-campaign-strategy) | Briefing de Estratégia no formato oficial + Checklist Mínimo Obrigatório, escolha de mecânica com limites de caracteres e triagem por tamanho. | `Draft` |
+| **CS Campaign Validation** | [`skills/cs-campaign-validation`](./skills/cs-campaign-validation) | Gate pré-lançamento: checklist bloqueante de 9 itens (budget, saldo, card de Tech antes, briefing, aprovações, assets, datas). | `Draft` |
+| **CS Reporter** | [`skills/cs-reporter`](./skills/cs-reporter) | Gera o relatório diário de tasks (alertas N1, status, indicadores) e o mensal de performance por carteira, direto do kanban/database via MCP. | `Draft` |
+
 ### 🦀 RTK Toolkit (Rust / CLI)
 
 Skills voltadas ao desenvolvimento do RTK (codebase Rust/CLI).
