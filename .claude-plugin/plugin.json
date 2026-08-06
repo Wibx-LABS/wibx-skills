@@ -1,6 +1,6 @@
 {
   "name": "wibx-skills",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Hub de skills internas de IA da Wibx Labs (expõe as skills em skills/).",
   "author": {
     "name": "Wibx Labs"

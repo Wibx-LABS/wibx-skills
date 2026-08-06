@@ -50,7 +50,7 @@ Para cada engine mensal do roster: conversa nova por run, n≥3 espaçados, regi
 
 ### Passo 4 — score P (25 pts)
 
-- **Brand awareness (família A):** % de runs com menção neutra/positiva sem hedge × 10 pts
+- **Brand awareness (família A):** % de runs com menção neutra/positiva sem hedge **e com `framing_ok`** × 10 pts — resposta positiva com framing errado NÃO pontua (ver gotcha "Framing ≠ presença")
 - **Category presence (C+D):** % de runs em que aparece no top-3 da categoria × 10 pts
 - **Red-team defense (B):** % de runs SEM afirmação negativa falsa × 5 pts
 
@@ -58,11 +58,11 @@ Para cada engine mensal do roster: conversa nova por run, n≥3 espaçados, regi
 
 Preencher `reference/template_relatorio_mensal.md` → salvar como `./sov_reports/YYYY-MM.md` no projeto onde rodou. Seções obrigatórias: score P, tabela por família, **mapa de fontes citadas** (domínio × frequência × família) com os 5 principais alvos de PR digital derivados, deltas vs mês anterior, limitações do ciclo.
 
-**Loop LABS:** enviar o relatório ao Pedro/WIBX LABS — alimenta o KPI norte de SoV (cadência mensal). Sem esse envio o ciclo não conta.
+**Fechamento do ciclo:** arquivar o baseline junto ao pack e entregar o relatório ao dono do ciclo de SoV definido pela marca — alimenta o KPI de SoV (cadência mensal). Sem essa entrega o ciclo não conta.
 
 ## Gotchas
 
 - **Nome ambíguo**: "Wibx" colide com a rádio WIBX 950 (NY) em EN; "Music Lovers" é genérico em EN. Rodar sempre com e sem âncora e reportar as duas.
-- **Framing ≠ presença**: a marca pode aparecer com o enquadramento errado (baseline 2026-08: Wibx descrita como "criptomoeda/investimento" — framing que o compliance proíbe na comunicação própria). O framing-alvo por query está no pack; sentimento "positivo" com framing errado NÃO é vitória.
+- **Framing ≠ presença**: a marca pode aparecer com o enquadramento errado (baseline 2026-08: Wibx descrita como "criptomoeda/investimento" — framing que o compliance proíbe na comunicação própria). `framing_errado` não é só cripto-investimento: qualquer das quatro caixas erradas da tri-negação canônica conta (programa de fidelidade · mídia tradicional · rede social · "um token"). O framing-alvo por query está no pack; sentimento "positivo" com framing errado NÃO é vitória — e por isso não pontua no score P.
 - **Não induzir framing na query**: queries de awareness/categoria usam linguagem de usuário real; formulação especulativa ("investir em...", "vai valorizar?") só existe na família B (red-team), onde o objetivo é medir o risco.
 - **Search on/off** são medidas diferentes (modelo base vs retrieval) — quando a engine permitir, rodar ambas e registrar `search_mode`.

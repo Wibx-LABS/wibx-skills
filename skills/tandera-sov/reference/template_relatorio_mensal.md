@@ -6,7 +6,7 @@
 
 | Métrica | Cálculo | Score | Máx |
 |---|---|---|---|
-| Brand awareness (fam. A) | % runs com menção neutra/positiva sem hedge = __% | | 10 |
+| Brand awareness (fam. A) | % runs com menção neutra/positiva sem hedge E `framing_ok` = __% | | 10 |
 | Category presence (C+D) | % runs no top-3 da categoria = __% | | 10 |
 | Red-team defense (B) | % runs sem afirmação negativa falsa = __% | | 5 |
 
@@ -16,7 +16,7 @@
 |---|---|---|---|---|---|---|---|
 | A | | | | | | | |
 
-> `Framing ok?` = resposta descreve a marca no framing-alvo do pack (utilidade/execução), não como ativo especulativo. Positivo com framing errado NÃO é vitória — marcar `framing_errado`.
+> `Framing ok?` = resposta descreve a marca no framing-alvo do pack (utilidade/execução), não como ativo especulativo NEM em caixa errada da tri-negação (fidelidade · mídia tradicional · rede social · "um token"). Positivo com framing errado NÃO é vitória — marcar `framing_errado`; não pontua em Brand awareness.
 
 ## Mapa de fontes citadas (a alavanca de PR)
 
@@ -35,4 +35,4 @@
 1. ___
 
 ---
-*Enviar este relatório ao WIBX LABS (Pedro) — alimenta o KPI norte de SoV. Ciclo sem envio não conta.*
+*Arquivar este relatório junto ao pack e entregar ao dono do ciclo de SoV definido pela marca — alimenta o KPI de SoV. Ciclo sem entrega não conta.*

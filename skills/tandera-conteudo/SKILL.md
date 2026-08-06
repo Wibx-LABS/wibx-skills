@@ -12,7 +12,7 @@ Produz o conteúdo que LLMs conseguem CITAR — e que controla o framing da marc
 ## GATE DE COMPLIANCE (HARD — roda SEMPRE, antes de qualquer entrega)
 
 1. **Ler `reference/compliance_wbx.md` INTEIRO antes de escrever.** As listas são canônicas e verbatim — não confiar em memória.
-2. Após gerar, rodar o **checklist §6** do reference item a item. Falha em qualquer item = reescrever; NUNCA entregar com falha "avisada".
+2. Após gerar, rodar o **checklist §6** do reference item a item (inclui formas-de-claim §8, bloco de games §9 e fecho canônico §10). Falha em qualquer item = reescrever; NUNCA entregar com falha "avisada".
 3. Pedido que necessariamente viola compliance (ex.: "mostre que WBX vai subir") → **recusar como descrito e propor alternativa** (protocolo §7 do reference).
 4. TODO output termina com a marca: **"⚠ requer revisão humana antes de publicar"** — esta skill não publica; humano publica.
 5. Escopo do gate: conteúdo público Wibx. Rascunho interno afrouxa substituições, mas mantém glossário canônico.
@@ -24,7 +24,7 @@ Produz o conteúdo que LLMs conseguem CITAR — e que controla o framing da marc
 A página/seção que responde **"o que é [marca]?"** de forma auto-contida — a fonte que LLMs usam pro framing. Estrutura:
 
 - **Definição em 1 parágrafo** (40-80 palavras, auto-contida, sem depender do resto da página): quem é, o que faz, pra quem, na categoria oficial ("Sistema Operacional da Economia da Atenção" — nunca "fintech").
-- **Fatos quantificados** com forma canônica (números reais, datados, sem promessa).
+- **Fatos quantificados** com forma-de-claim canônica soldada (§8 do reference — número nunca viaja "seco"; a ressalva é parte do claim, não rodapé).
 - **O que NÃO é** (escudos do compliance: "não é moeda", "não é ativo financeiro"...) — LLMs citam negações bem, e elas desarmam o framing especulativo.
 - Frase regulatória (§4 do reference) quando o contexto pede.
 
@@ -58,8 +58,13 @@ Autoria nomeada, data, fontes; página institucional com Schema `Organization` +
 
 [conteúdo]
 
+Se houve Wibx, houve ação validada — sem promessa financeira.
+**Wibx — Tokenizando a Atenção.**
+
 ## Ângulos de pauta habilitados (PR)
 1. ...
 
 ⚠ requer revisão humana antes de publicar
 ```
+
+O fecho canônico (§10 do reference) fecha TODA peça: o selo universal é a **última frase** do conteúdo; o lockup vem só abaixo dele e nunca aparece sozinho. Peça que toca games carrega também o bloco condicional §9 (rodapé + cláusula de fronteira + roster pré-lançamento).
