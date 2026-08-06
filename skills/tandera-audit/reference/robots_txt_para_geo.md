@@ -4,11 +4,6 @@ type: architecture
 status: stable
 version: 2.0
 updated: 2026-05-08
-sources:
-  - ../sources/2026-05-04_geo_llm_seo_perplexity.md
-  - ../sources/2026-05-04_geo_perplexity_part2.md
-  - ../sources/2026-05-08_ai_txt_research_cross_llm.md
-  - ../../../CLAUDE.md
 external_refs:
   - https://developers.openai.com/api/docs/bots
   - https://www.softwareseni.com/how-to-govern-ai-crawler-access-to-your-website-in-2026/
@@ -162,7 +157,6 @@ Allow: /
 
 # --- Sitemaps ---
 Sitemap: https://wibx.io/sitemap.xml
-Sitemap: https://wibx.io/llms.txt
 ```
 
 **Caso especial — Perplexity:**
@@ -173,14 +167,14 @@ PerplexityBot é, em parte, training + index acoplados. Bloqueio em `robots.txt`
 2. **Bloquear `PerplexityBot` em robots.txt + WAF/ASN** — postura forte, exige infraestrutura.
 3. **Bloquear apenas paths sensíveis** (e.g., `/admin/`, `/private/`, `/dashboard/`) e permitir o público — postura intermediária recomendada como default.
 
-## Por que o LABS usa
+## Por que essa configuração importa
 
-Para [[wiki/components/olho_de_tandera.md]], robots.txt em 3 blocos é uma das primeiras alavancas técnicas. Razões:
+Na metodologia Olho de Tandera, robots.txt em 3 blocos é uma das primeiras alavancas técnicas. Razões:
 
 1. **Determina presença em AI search.** Bloqueio errado mata SoV antes mesmo de qualquer trabalho de conteúdo dar resultado.
-2. **Compliance + estratégia.** Compliance utility-token (vide [[wiki/architecture/compliance_wbx_utility.md]]) é mais bem servida quando narrativa oficial Wibx **está em RAG-time** — o que exige bloco 2 aberto.
-3. **Sinaliza postura institucional.** robots.txt sólido + llms.txt + schema bem estruturado mostra que a Wibx leva GEO a sério (vs sites que fazem `Disallow: /` indiscriminadamente por medo).
-4. **Domínios afetados:** `wibx.com.br`, `bora.app`/`bora.com.br`, e cada WL ativo (BORA, Music Lovers, Gate0, WomanX, Amplyfiq, Uau CAIXA, Wibx). Cada domínio tem seu próprio robots.txt; postura coerente cross-WL.
+2. **Compliance + estratégia.** O compliance utility-token é mais bem servido quando a narrativa oficial Wibx **está em RAG-time** — o que exige bloco 2 aberto.
+3. **Sinaliza postura institucional.** robots.txt sólido + schema bem estruturado mostra que a Wibx leva GEO a sério (vs sites que fazem `Disallow: /` indiscriminadamente por medo).
+4. **Domínios afetados:** propriedades Wibx (`wibx.io`, `wibx.com.br`), comunidades do Hub (`bora.com.br`, `musiclovers.app`; Iuby quando lançar) e whitelabels contratados ativos. **Uau Caixa = programa parceiro da Caixa (via BORA) — domínio fora do controle Wibx, não entra na configuração.** Cada domínio tem seu próprio robots.txt; postura coerente entre propriedades.
 
 ## Fatos-chave (atualizado 2026-05-08 com pesquisa empírica)
 
@@ -266,15 +260,13 @@ Reavaliar postura por engine cada trimestre (políticas evoluem)
 
 ## Diretivas emergentes (adoção voluntária)
 
-[[2026-05-04_geo_perplexity_part2]] §3.7 detalha:
-
 - **`X-Robots-Tag: noai`** — sinaliza recusa a uso em training de IA, em nível de resposta HTTP (cabeçalho)
 - **`X-Robots-Tag: noimageai`** — recusa a uso de imagens em training
 - **Meta tags `<meta name="noai" content="1">` e `<meta name="noimageai" content="1">`** — surgiram em comunidades criativas (DeviantArt, etc.)
 
 ⚠ **Adoção é voluntária e não há garantia de respeito** por modelos comerciais. São sinais de intenção, não cercas rígidas. Para postura forte, combinar com WAF/ASN.
 
-## Pressões regulatórias 2025-2026 ([[2026-05-04_geo_perplexity_part2]] §8.6)
+## Pressões regulatórias 2025-2026
 
 Movimentos institucionais que tendem a mudar o ecossistema:
 
@@ -285,14 +277,6 @@ Movimentos institucionais que tendem a mudar o ecossistema:
 
 → Para Wibx, postura recomendada: **ancorar narrativa em fontes de alta qualidade + governança de dados sólida** — compatível com qualquer regime regulatório que surja.
 
-## Conceitos relacionados
-
-- [[wiki/concepts/llm_3_camadas_presenca.md]] — fundamento conceitual dos 3 blocos
-- [[wiki/concepts/llms_txt.md]] — convenção complementar
-- [[wiki/architecture/compliance_wbx_utility.md]] — narrativa oficial precisa estar em RAG-time
-- [[wiki/components/olho_de_tandera.md]] — operação dona dessa configuração
-- [[wiki/concepts/share_of_voice_llm.md]] — KPI que mede o efeito final
-
 ## Referências externas
 
 - developers.openai.com/api/docs/bots
@@ -302,33 +286,17 @@ Movimentos institucionais que tendem a mudar o ecossistema:
 - coywolf.com — Google-Extended opt-out
 - momenticmarketing.com/blog/ai-search-crawlers-bots — lista completa de user-agents (Winter 2025)
 
-## Estado atual da Wibx (auditoria técnica 2026-05-08)
+## Exemplo histórico datado (auditoria 2026-05-08 — NÃO é estado corrente; rode `audit.sh` para o estado de hoje)
 
-**AUDITORIA REALIZADA. Resultado: pior cenário possível em todos os domínios auditados.**
+Primeira auditoria dos domínios Wibx (2026-05-08), preservada como exemplo do padrão de achado típico:
 
 | Domínio | robots.txt | Postura | Diagnóstico |
 |---|---|---|---|
 | `wibx.io` | EXISTE — Yoast `User-agent: * Disallow:` | **Permissivo TOTAL** | Doação total de conteúdo para training |
 | `bora.com.br` | EXISTE — Yoast `User-agent: * Disallow:` | **Permissivo TOTAL** | Idem |
 | `musiclovers.app` | EXISTE — Yoast `User-agent: * Disallow:` | **Permissivo TOTAL** | Idem |
-| `uaucaixa.caixa.gov.br` | Silêncio na auditoria | Não auditável | Provavelmente Caixa bloqueia ou não responde |
-| Outros WLs (Gate0, WomanX, Amplyfiq) | **NÃO AUDITADOS** | — | Pendente |
+| `uaucaixa.caixa.gov.br` | Silêncio na auditoria | Não auditável | Domínio da Caixa (parceiro) — fora do controle Wibx |
 
-Todos os domínios Wibx auditados em 2026-05-08 usam **configuração padrão Yoast/WordPress** que permite **todos os bots em todo conteúdo** — incluindo GPTBot, ClaudeBot, Google-Extended, Bytespider, Meta-ExternalAgent. Isso é **inconsistente com a tese de "Wibx sobreviveu ao crypto winter"** — concorrentes globais podem treinar modelos com conteúdo Wibx hoje sem qualquer barreira.
+Todos os domínios auditados naquela data usavam **configuração padrão Yoast/WordPress** permitindo **todos os bots em todo conteúdo** — incluindo GPTBot, ClaudeBot, Google-Extended, Bytespider, Meta-ExternalAgent. Permissivo total é inconsistente com uma marca que quer **controlar o próprio framing em LLMs**: entrega o corpus inteiro para training sem nenhuma curadoria de postura. Achados complementares da época: `llms.txt` auto-gerado por plugin Hostinger expondo páginas protegidas; WAF e logs de bots não configurados.
 
-**Outros achados:**
-- `wibx.io/llms.txt` existe mas é **auto-gerado por plugin Hostinger**, expondo páginas protegidas por senha (vide [[wiki/concepts/llms_txt]])
-- `wibx.io/ai.txt` — **NÃO existe** em nenhum domínio (vide [[wiki/concepts/ai_txt]])
-- WAF/Cloudflare — configuração não auditada
-- Logs de bots — não monitorados
-
-→ Vide [[wiki/architecture/auditoria_tecnica_wibx_robots_llms_2026]] para diagnóstico completo + plano de remediação.
-
-### Próximos passos travados pela auditoria
-
-1. ❌ **URGENTE:** substituir robots.txt permissivo por configuração 3-blocos canônica acima — todos os domínios Wibx
-2. ❌ Auditar Gate0, WomanX, Amplyfiq + outros WLs
-3. ❌ Substituir llms.txt auto-gerado Hostinger por versão curada manual
-4. ❌ Implementar ai.txt (vide [[wiki/concepts/ai_txt]])
-5. ❌ Configurar Cloudflare WAF para Bytespider, Meta-ExternalAgent, GrokBot (stealth)
-6. ❌ Estabelecer monitoramento semanal de logs por user-agent
+Remediação-padrão derivada (ordem de prioridade): (1) substituir robots.txt permissivo pela configuração 3-blocos canônica acima; (2) remover ou curar manualmente o llms.txt auto-gerado (máx. valor informativo — ver gotchas da skill); (3) configurar WAF para bots stealth (Bytespider, Meta-ExternalAgent, GrokBot); (4) monitorar logs por user-agent semanalmente.
