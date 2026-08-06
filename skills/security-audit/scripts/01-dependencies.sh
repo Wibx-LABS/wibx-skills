@@ -15,10 +15,25 @@ if [[ -f package.json ]]; then
   echo ""
   echo "--- Node.js ---"
 
+  # Check .npmrc for registry overrides BEFORE invoking npm.
+  # npm reads the .npmrc of the current directory — which is the audited repo.
+  # A registry override there would send the dependency tree (and any auth token
+  # whose scope matches that host) to a server the repo author controls.
+  NPMRC_UNSAFE=0
+  if [[ -f .npmrc ]] && grep -q "registry" .npmrc; then
+    echo "[HIGH] .npmrc overrides the registry — dependency confusion / exfiltration risk:"
+    grep "registry" .npmrc | sed 's/^/  /'
+    echo "[HIGH] Skipping npm audit: running it here would honor this override."
+    NPMRC_UNSAFE=1
+    FOUND=1
+  fi
+
   # npm audit
-  if command -v npm &>/dev/null; then
+  if [[ "$NPMRC_UNSAFE" -eq 0 ]] && command -v npm &>/dev/null; then
     echo "[INFO] Running npm audit..."
-    AUDIT=$(npm audit --json 2>/dev/null || true)
+    # --registry on the CLI outranks the repo's .npmrc in npm's config precedence,
+    # so the request cannot be redirected even if the check above missed something.
+    AUDIT=$(npm audit --json --registry=https://registry.npmjs.org/ 2>/dev/null || true)
     if [[ -n "$AUDIT" ]]; then
       # Extract high/critical counts
       CRITICAL=$(echo "$AUDIT" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('metadata',{}).get('vulnerabilities',{}).get('critical',0))" 2>/dev/null || echo 0)
@@ -85,14 +100,7 @@ except: pass
     done
   done
 
-  # Check .npmrc for registry overrides (dependency confusion)
-  if [[ -f .npmrc ]]; then
-    if grep -q "registry" .npmrc; then
-      echo "[MEDIUM] .npmrc contains registry override — check for dependency confusion:"
-      grep "registry" .npmrc | sed 's/^/  /'
-      FOUND=1
-    fi
-  fi
+  # (.npmrc registry override is checked above, before npm is invoked)
 fi
 
 # ── Python ─────────────────────────────────────────────────────────────────────
