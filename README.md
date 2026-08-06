@@ -68,6 +68,7 @@ Cada skill vive em `skills/<nome>/SKILL.md`. O frontmatter YAML (`name` + `descr
 | **Ultraswarm** | [`skills/ultraswarm`](./skills/ultraswarm) | Variante extrema do swarm: plano primeiro, pilha de skills + caveman + RTK por front, modelo/esforço sob medida, trava `/goal` por worker, `/code-review ultra` por front e no merge, e dashboard ao vivo. | `Ativo` |
 | **LABS Calendar** | [`skills/labs-calendar`](./skills/labs-calendar) | Ponte para subir qualquer item no LABS Calendar (Notion) — afazer, tarefa, reunião, entrega, marco ou evento — em qualquer área da Wibx, com data, tags e corpo estruturado. | `Ativo` |
 | **Security Audit** | [`skills/security-audit`](./skills/security-audit) | Varre um repo clonado atrás de malware, ataque de supply chain e ameaças à máquina host, antes de rodar código de terceiro. | `Ativo` |
+| **Espolio** | [`skills/espolio`](./skills/espolio) | Intake de repo de terceiro: gates eliminatórios de licença, segurança e saúde, clone em quarentena com regras de opsec, e veredito ordenado por custo (descartar → canibalizar → vendorizar → forkar). | `Ativo` |
 | **Wibx Brand** | [`skills/wibx-brand`](./skills/wibx-brand) | Fonte canônica dos tokens de marca da Wibx: cores do tema Admin Dashboard, tipografia e regras de uso. | `Ativo` |
 
 ### 🎧 CS Suite (Customer Success / Suporte)
