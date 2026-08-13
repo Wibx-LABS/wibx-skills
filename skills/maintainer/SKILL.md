@@ -72,27 +72,25 @@ Falhou, para e diz exatamente o que falta. Não tenta contornar.
 ```json
 { "repos": [
   { "repo": "wibx-skills", "merge": "squash" },
-  { "repo": "MAESTRO-PLATFORM", "merge": "squash",
+  { "repo": "outro-repo", "merge": "squash",
     "require_label": "rotina",
-    "hold_paths": [".github/workflows/", "backend/scripts/gates.sh", "backend/compose.prod.yml",
-                   "backend/engine/.golangci.yml", ".semgrep/", "backend/gateway/eslint.config.mjs",
-                   "Dockerfile", "backend/engine/internal/db/migrations/"] }
+    "hold_paths": [".github/workflows/", "deploy/", "migrations/"] }
 ] }
 ```
 
 `repo` é o nome curto dentro de `Wibx-LABS`. `merge` ∈ `squash` | `merge` | `rebase`.
 
-Dois campos opcionais, criados para a política de merge autônomo do MAESTRO (CLAUDE.md do repo,
-"exceção única", 2026-08-13) — mas genéricos:
+Dois campos opcionais, para repos onde o dono definiu política de merge autônomo. O skill é o
+MECANISMO; qual label e quais paths são a POLÍTICA de cada repo — ela mora no repo dono (seu
+CLAUDE.md/convenções) e a instância entra aqui no `repos.json` da máquina:
 
 - **`require_label`**: só entra na faixa `MERGE` a PR que carrega este label. Existe porque
-  autor NÃO distingue rotina de humano — as rotinas agendadas e o dono usam a MESMA conta gh.
-  As rotinas rotulam as próprias PRs; PR verde sem o label cai em `HOLD` → **Aguardando você**,
-  marcada `sem label <require_label>`.
+  autor NÃO distingue agente de humano — rotinas agendadas e o dono podem usar a MESMA conta gh.
+  Quem abre PR elegível a auto-merge a rotula; PR verde sem o label cai em `HOLD` →
+  **Aguardando você**, marcada `sem label <require_label>`.
 - **`hold_paths`**: PR cujo diff toca QUALQUER caminho com um destes prefixos nunca auto-mergeia,
   verde ou não — cai em `HOLD` → **Aguardando você**, marcada `toca caminho protegido: <path>`.
-  Mudança de gate/deploy/schema sempre espera humano; foi um gate de árvore inteira mergeado
-  atrás da main que deixou a main vermelha em 2026-08-12.
+  Mudança de gate/deploy/schema sempre espera humano.
 
 Se o arquivo não existe, criar com `repos: []` e perguntar quais entrar, sugerindo os de:
 
@@ -220,9 +218,9 @@ CI reruns on the push; this merges on the next sweep.
 <!-- maintainer:STALE:<headRefOid> -->
 ```
 
-Por que isso existe: um gate de árvore inteira mergeado atrás da main deixou a main do MAESTRO
-vermelha em 2026-08-12 — três merges em minutos, o CI do commit N testou contra uma base que já
-estava em N+2. `BEHIND` verde é verde de ontem.
+Por que isso existe: PR verde e atrás da base já derrubou main em produção — vários merges em
+minutos, e o CI do commit N testou contra uma base que já estava em N+2. `BEHIND` verde é verde
+de ontem, e o caso que mais dói é PR que muda gate de árvore inteira.
 
 ### 5. Anti-spam
 
