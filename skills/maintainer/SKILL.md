@@ -4,7 +4,8 @@ description: >-
   Faz o papel de mantenedor dos repositórios da org Wibx-LABS (org fixa, nunca outra) numa
   varredura determinística: lê as PRs abertas dos repos configurados via gh, classifica cada uma (verde, CI pendente, conflito, CI vermelho,
   segurar), mergeia sozinho só o que é seguro, e comenta na PR instruindo quem a abriu (humano
-  ou agente) sobre o próximo passo. Uma passada por invocação; persistência vem do /loop nativo.
+  ou agente) sobre o próximo passo. Uma passada por invocação; monitoramento contínuo é o modo
+  `watch` (Monitor orientado a evento, nunca cron/`/loop`).
   Use quando o usuário pedir para vigiar, cuidar, manter ou zelar por repos e PRs, quando houver
   fila de PRs de várias instâncias de agente conflitando entre si, ou quando pedir merge
   automático do que estiver verde. Dispara em "mantém esses repos", "cuida das minhas PRs",
@@ -21,7 +22,9 @@ allowed-tools:
 # Maintainer
 
 Varredura de mantenedor sobre PRs abertas em vários repos. Uma invocação = uma passada completa
-(coletar, classificar, agir, reportar). Não fica em loop sozinho: quem repete é o `/loop`.
+(coletar, classificar, agir, reportar). Não fica em loop sozinho por padrão: quem quer
+continuidade usa `/maintainer watch`, que arma um `Monitor` orientado a evento — não `/loop`,
+não `CronCreate`. Ver seção "Modo watch".
 
 O problema que isso resolve: várias instâncias de agente abrindo PR em branches diferentes do
 mesmo repo. Elas conflitam entre si, o CI quebra sem ninguém olhar, e merge na ordem errada
@@ -33,12 +36,14 @@ gera mais conflito. O maintainer mergeia na ordem certa e diz a cada PR travada 
 |-----|--------|
 | _(nenhum)_ | Confirma a lista de repos, depois varre |
 | `dry` | Classifica e reporta. Zero merge, zero comentário. **Use assim na primeira vez** |
-| `go` | Pula a confirmação. Forma usada dentro do loop |
+| `go` | Pula a confirmação. Forma usada dentro do watch |
+| `watch` | Arma monitoramento contínuo via `Monitor` (evento, não cron). Ver seção própria |
 | `<repo>` | Varre só esse repo da org, ignora a config. Nome curto, sem `owner/` |
 
 Combináveis: `/maintainer dry wibx-skills`.
 
-Modo contínuo: `/loop 10m /maintainer go`.
+Modo contínuo: `/maintainer watch` (ou `watch <repo>`). **Nunca `/loop` nem `CronCreate` para
+isso** — ver seção "Modo watch".
 
 ## Org fixa
 
@@ -65,11 +70,29 @@ Falhou, para e diz exatamente o que falta. Não tenta contornar.
 `~/.claude/maintainer/repos.json`:
 
 ```json
-{ "repos": [ { "repo": "wibx-skills", "merge": "squash" } ] }
+{ "repos": [
+  { "repo": "wibx-skills", "merge": "squash" },
+  { "repo": "MAESTRO-PLATFORM", "merge": "squash",
+    "require_label": "rotina",
+    "hold_paths": [".github/workflows/", "backend/scripts/gates.sh", "backend/compose.prod.yml",
+                   "backend/engine/.golangci.yml", ".semgrep/", "backend/gateway/eslint.config.mjs",
+                   "Dockerfile", "backend/engine/internal/db/migrations/"] }
+] }
 ```
 
-`repo` é o nome curto dentro de `Wibx-LABS`. `merge` ∈ `squash` | `merge` | `rebase`. Só esses
-dois campos por repo.
+`repo` é o nome curto dentro de `Wibx-LABS`. `merge` ∈ `squash` | `merge` | `rebase`.
+
+Dois campos opcionais, criados para a política de merge autônomo do MAESTRO (CLAUDE.md do repo,
+"exceção única", 2026-08-13) — mas genéricos:
+
+- **`require_label`**: só entra na faixa `MERGE` a PR que carrega este label. Existe porque
+  autor NÃO distingue rotina de humano — as rotinas agendadas e o dono usam a MESMA conta gh.
+  As rotinas rotulam as próprias PRs; PR verde sem o label cai em `HOLD` → **Aguardando você**,
+  marcada `sem label <require_label>`.
+- **`hold_paths`**: PR cujo diff toca QUALQUER caminho com um destes prefixos nunca auto-mergeia,
+  verde ou não — cai em `HOLD` → **Aguardando você**, marcada `toca caminho protegido: <path>`.
+  Mudança de gate/deploy/schema sempre espera humano; foi um gate de árvore inteira mergeado
+  atrás da main que deixou a main vermelha em 2026-08-12.
 
 Se o arquivo não existe, criar com `repos: []` e perguntar quais entrar, sugerindo os de:
 
@@ -101,9 +124,10 @@ Cada PR cai em **uma** faixa. Primeira condição que casar, nesta ordem:
 
 | Faixa | Condição | Ação |
 |-------|----------|------|
-| `HOLD` | draft, ou `reviewDecision == CHANGES_REQUESTED`, ou `additions > 1000` **e não é PR de sync**, ou `statusCheckRollup` vazio/`null` | só relatório |
+| `HOLD` | draft, ou `reviewDecision == CHANGES_REQUESTED`, ou `additions > 1000` **e não é PR de sync**, ou `statusCheckRollup` vazio/`null`, ou toca `hold_paths`, ou falta o `require_label` do repo | só relatório |
 | `CONFLICT` | `mergeable == CONFLICTING` | comentário de rebase |
 | `CI_RED` | algum check em `FAILURE` ou `ERROR` | comentário com job + causa |
+| `STALE` | `mergeStateStatus == BEHIND` (base andou depois do CI) | comentário: traga a main |
 | `WAIT` | algum check `PENDING`/`IN_PROGRESS`, ou `mergeable == UNKNOWN` | só relatório |
 | `MERGE` | `mergeable == MERGEABLE` e **todos** os checks verdes | mergeia |
 
@@ -184,9 +208,25 @@ Everything else is green. Fix that and this merges on the next sweep.
 Puxar a causa com `gh run view <run-id> --repo <slug> --log-failed | tail -40` e citar só a
 linha decisiva. Se não der para extrair, deixa só o nome do job e o link do run.
 
+**Branch atrás da base (STALE):**
+```
+@<author> the base moved after your CI ran. `mergeable=CLEAN` only means no textual
+conflict — checks tested the branch against an older <base>.
+
+    git fetch origin && git merge origin/<base> && git push
+
+CI reruns on the push; this merges on the next sweep.
+
+<!-- maintainer:STALE:<headRefOid> -->
+```
+
+Por que isso existe: um gate de árvore inteira mergeado atrás da main deixou a main do MAESTRO
+vermelha em 2026-08-12 — três merges em minutos, o CI do commit N testou contra uma base que já
+estava em N+2. `BEHIND` verde é verde de ontem.
+
 ### 5. Anti-spam
 
-Este skill roda a cada 10 minutos. Sem dedupe ele vira spam na terceira passada.
+No modo watch este skill re-varre a cada mudança de estado. Sem dedupe ele vira spam na terceira passada.
 
 Todo comentário termina com o marcador oculto `<!-- maintainer:<faixa>:<headRefOid> -->`.
 Antes de postar:
@@ -198,6 +238,52 @@ gh pr view <n> --repo <slug> --json comments \
 
 Já existe comentário com a **mesma faixa e o mesmo SHA**: não posta. Push novo = SHA novo =
 comenta de novo, porque o estado mudou. Zero arquivo de estado local.
+
+## Modo watch (monitoramento contínuo)
+
+**Substitui `/loop` e `CronCreate` para este skill.** Um cron dispara a varredura inteira a
+cada N minutos mesmo quando nada mudou — barulho e chamada de API desperdiçada. O watch arma um
+`Monitor` que só acorda quando o estado das PRs muda de verdade.
+
+`/maintainer watch [repo]` faz isto:
+
+1. Resolve a lista de repos (config, ou só `<repo>` se veio um argumento — mesma regra do modo
+   normal).
+2. Roda uma passada completa agora (`go`), igual a uma invocação comum.
+3. Arma **um único** `Monitor` persistente, cobrindo todos os repos da lista, com um script que
+   faz *long-poll* e só emite linha quando algo muda de verdade — não em toda iteração:
+
+   ```bash
+   declare -A prev
+   while true; do
+     for slug in Wibx-LABS/repo1 Wibx-LABS/repo2; do
+       cur=$(gh pr list --repo "$slug" --state open --limit 50 \
+         --json number,headRefOid,title,mergeable,statusCheckRollup \
+         --jq 'sort_by(.number) | .[] | "\(.number):\(.headRefOid[0:7]):\(.mergeable):\([.statusCheckRollup[].conclusion // .statusCheckRollup[].status] | join(","))"' \
+         2>/dev/null | tr '\n' '|')
+       if [ "$cur" != "${prev[$slug]}" ]; then
+         echo "CHANGE $slug: ${cur:-<none open>}"
+         prev[$slug]="$cur"
+       fi
+     done
+     sleep 90
+   done
+   ```
+
+   Cada linha do fingerprint inclui `mergeable` e o resumo dos checks, não só a SHA — assim uma
+   PR que estava `WAIT` e virou `MERGE` (CI terminou, sem push novo) também dispara evento, não
+   só push novo.
+4. Cada evento (`<task-notification>`) é uma linha `CHANGE <slug>: ...`. Ao recebê-la, rodar a
+   passada completa (seção "Passada, por repo") **só para aquele `slug`**, `go`, com relatório.
+5. Poll interno do script: 90s (API remota, mesma faixa de cadência sugerida pro `Monitor`).
+   Isso é o intervalo de detecção, não o gatilho — o gatilho é a mudança, o poll só existe porque
+   PR não tem webhook aqui.
+6. Sessão fecha → monitor morre com ela. Sem persistência entre sessões (igual ao resto deste
+   skill: zero estado local). Se o usuário quiser watch sobrevivendo à sessão, isso é fora do
+   escopo deste skill — não usar `CronCreate` como substituto, ele reintroduz o polling cego que
+   este modo existe para eliminar.
+
+Parar: `TaskStop` no id retornado pelo `Monitor`.
 
 ## Relatório
 
@@ -241,3 +327,9 @@ Nada aqui é simplificável.
   vai para **Aguardando você** e reaparece na próxima passada. No máximo uma `AskUserQuestion`
   no fim, e só fora do modo `go`.
 - Em modo `dry`: nenhum `gh pr merge`, nenhum `gh pr comment`. Só leitura.
+- **`require_label` e `hold_paths` são política do dono, não sugestão.** PR verde sem o label,
+  ou tocando caminho protegido, vai para **Aguardando você** — nunca para a faixa `MERGE`, nem
+  com todos os checks verdes. O maintainer não decide exceção de política; ele a executa.
+- **Continuidade nunca é cron.** Nunca usar `CronCreate` nem `/loop` pra repetir a varredura em
+  intervalo fixo — isso dispara mesmo sem nada ter mudado. Pedido de monitoramento contínuo é
+  `/maintainer watch`, que usa `Monitor` e só age quando o estado das PRs muda de verdade.
