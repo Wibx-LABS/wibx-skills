@@ -13,11 +13,13 @@ This skill plays maintainer over the open PRs of the configured `Wibx-LABS` repo
 - **Reclassify After Each Merge:** Re-reads the PR list after every merge instead of polling, so `mergeable` recalculation on GitHub's side resolves on the next sweep.
 - **Anti-Spam by SHA:** Every comment carries a hidden `<!-- maintainer:<band>:<sha> -->` marker. Same band + same SHA is never posted twice; a new push means a new SHA means the state changed, so it comments again. Zero local state.
 - **Never Merges Blind:** No CI configured is absence of signal, not a green light — it lands in `HOLD`. Drafts, `CHANGES_REQUESTED`, and >1000-line PRs (except upstream syncs) are held for you.
-- **Loop-Safe:** Never calls `AskUserQuestion` mid-sweep, since that would stall `/loop`. Pending decisions go to an "Aguardando você" list and come back next pass.
+- **Loop-Safe:** Never calls `AskUserQuestion` mid-sweep. Pending decisions go to an "Aguardando você" list and come back next pass.
 - **Dry Mode:** `/maintainer dry` classifies and reports with zero merges and zero comments. Use it the first time.
+- **Owner Policy, Enforced:** per-repo `require_label` (only PRs carrying it can auto-merge — agent PRs and human PRs share the same gh account, so a label is the only reliable marker) and `hold_paths` (PRs touching gate/deploy/schema paths always wait for a human).
+- **Watch Mode, Not Cron:** `/maintainer watch` arms a single event-driven `Monitor` across all configured repos. It only re-sweeps a repo when its PR state actually changed (new PR, new push, CI finished, mergeable flipped) — never on a blind fixed-interval timer. No `CronCreate`, no `/loop`.
 
 **Usage:**
-`/maintainer` (confirms repos, then sweeps) · `dry` (read-only) · `go` (no prompts, for loops) · `<repo>` (single repo). Combinable: `/maintainer dry wibx-skills`. Continuous: `/loop 10m /maintainer go`.
+`/maintainer` (confirms repos, then sweeps) · `dry` (read-only) · `go` (no prompts) · `watch` (continuous, event-driven) · `<repo>` (single repo). Combinable: `/maintainer dry wibx-skills`, `/maintainer watch wibx-skills`.
 
 ---
 
@@ -32,8 +34,10 @@ Esta skill faz o papel de mantenedor sobre as PRs abertas dos repos configurados
 - **Reclassifica a Cada Merge:** Relê a lista de PRs depois de cada merge em vez de fazer polling, então o recálculo do `mergeable` no lado do GitHub resolve na passada seguinte.
 - **Anti-Spam por SHA:** Todo comentário carrega o marcador oculto `<!-- maintainer:<faixa>:<sha> -->`. Mesma faixa + mesmo SHA nunca é postado duas vezes; push novo significa SHA novo, que significa estado mudado, então comenta de novo. Zero estado local.
 - **Nunca Mergeia às Cegas:** Sem CI configurado é ausência de sinal, não sinal verde — cai em `HOLD`. Drafts, `CHANGES_REQUESTED` e PRs acima de 1000 linhas (exceto syncs de upstream) ficam segurados para você.
-- **Seguro em Loop:** Nunca chama `AskUserQuestion` no meio da varredura, o que travaria o `/loop`. Decisões pendentes vão para a lista "Aguardando você" e reaparecem na próxima passada.
+- **Seguro em Loop:** Nunca chama `AskUserQuestion` no meio da varredura. Decisões pendentes vão para a lista "Aguardando você" e reaparecem na próxima passada.
 - **Modo Dry:** `/maintainer dry` classifica e reporta sem nenhum merge e nenhum comentário. Use assim na primeira vez.
+- **Política do Dono, Executada:** `require_label` por repo (só PR com o label pode auto-mergear — PR de agente e de humano saem da mesma conta gh, então label é o único marcador confiável) e `hold_paths` (PR tocando caminho de gate/deploy/schema sempre espera humano).
+- **Modo Watch, Não Cron:** `/maintainer watch` arma um único `Monitor` orientado a evento cobrindo todos os repos configurados. Só refaz a varredura de um repo quando o estado das PRs muda de verdade (PR nova, push novo, CI terminou, mergeable virou) — nunca em intervalo fixo às cegas. Sem `CronCreate`, sem `/loop`.
 
 **Uso:**
-`/maintainer` (confirma os repos, depois varre) · `dry` (só leitura) · `go` (sem perguntas, para loops) · `<repo>` (um repo só). Combináveis: `/maintainer dry wibx-skills`. Contínuo: `/loop 10m /maintainer go`.
+`/maintainer` (confirma os repos, depois varre) · `dry` (só leitura) · `go` (sem perguntas) · `watch` (contínuo, orientado a evento) · `<repo>` (um repo só). Combináveis: `/maintainer dry wibx-skills`, `/maintainer watch wibx-skills`.
