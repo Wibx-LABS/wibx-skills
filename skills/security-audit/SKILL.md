@@ -55,6 +55,15 @@ Both steps degrade gracefully (regex fallback) when optional tools are absent.
 ```bash
 bash "$SCRIPTS/06-system.sh"
 ```
+`06-system.sh` runs two batteries: (a) **hardening posture** — launch agents/daemons,
+config profiles/MDM, kernel/system extensions, listening ports, proxy/hosts, remote-access
+services, Tailscale serve/funnel/lock/shields, agent surface (Claude hooks/MCP), credential
+exposure (dotfile secrets, ssh-key passphrase via `ssh-keygen -y -P ''`, cloud creds), binary
+signatures, patch level; and (b) **compromise detection (IOC)** — is someone already inside:
+temp-dir processes, DYLD injection, remote login history, ghost/admin accounts, all-user
+authorized_keys, rogue trusted CAs (MITM), TCC keylogger/exfil grants, and non-loopback C2
+outbound. Some checks (sudoers content, Remote Login state, system TCC) need `sudo` — the
+script says so rather than silently skipping. Run with `sudo` for full coverage when possible.
 
 As each script runs, **stream findings live to the user** — do not buffer.
 
