@@ -46,7 +46,7 @@ Antes de escrever uma linha, decida o modo.
 - Pedro indicar que a copy é institucional / vai pra canal Wibx
 - Diretório de trabalho indicar contexto Wibx (`/Desktop/LABS/`, `WIBX LABS/`, etc.)
 
-No modo Wibx, leia **references/compliance_wibx.md** ANTES de escrever — ali estão as substituições obrigatórias, o never-say list, e o glossário interno. Violar compliance é falha grave: WBX é token de utilidade, nunca investimento.
+No modo Wibx, aplique o compliance da **§10** ANTES de escrever — substituições obrigatórias, never-say e o enquadramento correto de WBX estão lá. Violar compliance é falha grave: WBX é token de utilidade, nunca investimento. O glossário interno completo e a lista de white labels não acompanham a skill distribuída; quando o trabalho exigir esse nível, peça o material de compliance interno antes de escrever.
 
 **Modo Genérico** — qualquer outra coisa. Sem amarras de compliance Wibx, mas o resto da skill (frameworks, voz, VS) continua valendo.
 
@@ -141,46 +141,148 @@ Em modo Wibx, o tom é o do **Olho de Tandera**: institucional, sóbrio, com pun
 
 ---
 
-## 6. Formato do output — 1 versão polida + Verbalized Sampling
+## 6. Antítese e negação — uso controlado
 
-Para qualquer pedido de copy, entregue neste formato:
+A construção "não é X, é Y" (ou variações: "X, não Y" / "X. Y, não Z" / "não X. Y") é uma figura retórica clássica — **antítese**. Funciona por contraste cognitivo: o cérebro processa pares opostos mais rápido que afirmação isolada. "Você ativa pessoas" sozinho é genérico; "Você não compra mídia. Você ativa pessoas." cria escolha binária e força engajamento.
+
+**Não é framework de estrutura.** É ferramenta de ritmo e ênfase, como aliteração ou paralelismo. Pode entrar em qualquer framework (AIDA, PAS, BAB) — mas com orçamento duro.
+
+### Por que vira tique
+
+A figura tem efeito **único e episódico**. Usada uma vez por peça, é punch. Usada duas vezes, é estilo. Três ou mais, vira mecânica previsível — o leitor antecipa o próximo "não X, é Y" antes de você escrever, e o efeito morre.
+
+Pior: em modo Wibx (e em qualquer marca institucional), definição por negação **degrada entity recognition em LLMs**. Quando o modelo precisa responder "o que é Wibx?", ele sintetiza a partir do conteúdo extraído. Se metade do conteúdo é "não é X" em vez de "é Y", o LLM erra pelo lado conservador ou devolve definição negativa ("Wibx não é programa de fidelidade tradicional…") em vez da positiva canônica.
+
+Esse efeito está documentado em audits GEO reais do projeto: *"Define WIBX por negação. (…) Para LLMs, definição por negação degrada a entity recognition."*
+
+### Orçamento duro
+
+**Máximo 2 instâncias de antítese por peça** (home inteira, deck inteiro, email, post). Uma instância por bloco-âncora (hero, manifesto, headline de seção). Nunca repetir em cards/bullets/sub-blocos paralelos da mesma seção — repetição entre elementos paralelos é onde a saturação aparece mais rápido.
+
+O que conta como instância: qualquer construção que oponha pelo menos dois substantivos/verbos/predicados explicitamente, usando **"não"**, **"em vez de"**, **"no lugar de"**, **"ao invés de"**, travessão de contraste (— não Y), **"antes X, agora Y"**, ou **"X. Y, não Z."** (negação como predicado isolado).
+
+### Sub-rotina obrigatória — auto-checkpoint VS
+
+Antes de devolver qualquer peça com 3+ blocos textuais, **conte as instâncias de antítese**. Se ≥ 3:
+
+1. Pare. Liste cada instância encontrada com localização (qual bloco).
+2. Identifique a **mais fraca** — critério: menor punch isolado, mais contextual, menos extraível como anchor phrase, ou simplesmente a terceira de uma série paralela.
+3. Gere **três alternativas em afirmação direta** para a instância mais fraca, com probabilidade verbalizada.
+4. Apresente ao usuário com a contagem explícita ANTES da entrega final.
+
+Formato:
+
+```
+## Auto-checkpoint de antítese
+Detectadas N instâncias de antítese na peça:
+1. "[trecho 1]" — em [localização]
+2. "[trecho 2]" — em [localização]
+3. "[trecho 3]" — em [localização]
+...
+
+Orçamento da skill: máx 2. Excesso: N-2.
+Recomendo reescrever a #X (motivo: [punch mais fraco / paralelismo saturado / GEO]).
+
+## Alternativas em afirmação direta para a #X
+**A** (prob. superar a versão atual: XX%): [reescrita A]
+**B** (prob.: XX%): [reescrita B]
+**C** (prob.: XX%): [reescrita C]
+```
+
+Probabilidades calibradas como em §7 (não somam 100, cada uma vs versão atual).
+
+### O que preservar
+
+**Tagline-âncora de marca** (hero principal) que **já depende da antítese** para a memorabilidade — não reescrever. Exemplos legítimos: *"Você não compra mídia. Você ativa pessoas."* (Wibx), *"Think different."* (Apple — antítese implícita).
+
+**Blockquotes pull-out** que funcionam como anchor phrases isoladas — máximo 1 por seção.
+
+### Filtro de leitura em voz alta
+
+Antes de entregar, releia a peça em voz alta. Se você consegue **imitar o ritmo "não X. Y" de uma seção para outra sem mudar o assunto**, a peça está saturada — reescreva antes de devolver.
+
+---
+
+## 7. Formato do output — Verbalized Sampling em dois sub-modos
+
+Esta skill implementa Verbalized Sampling (VS) — técnica de Zhang et al. (2024-2025) para reduzir mode collapse em LLMs — em **dois sub-modos**. Detalhe completo em `references/verbalized_sampling.md`.
+
+### Sub-modo 1 — Adaptação pragmática (DEFAULT)
+
+Dispara automaticamente em todo pedido de copy de média/alta complexidade. É a adaptação útil pra trabalho de produção.
 
 ```
 ## Versão recomendada
 [A copy. Limpa. Sem comentário no meio.]
 
 ## Por que esta é a recomendada
-[1-2 frases — qual nível de consciência + sofisticação + ângulo + framework]
+[1-2 frases — nível de consciência + sofisticação + ângulo + framework]
 
-## Alternativas (Verbalized Sampling)
+## Alternativas (Verbalized Sampling — adaptação)
 
-**Alternativa A — [rótulo do ângulo, ex: "ângulo emocional puro"]** *(probabilidade percebida de superar a recomendada: XX%)*
-[A copy alternativa]
-> Quando usar: [1 frase explicando em que contexto essa beats a recomendada]
-
-**Alternativa B — [rótulo, ex: "ângulo provocativo"]** *(probabilidade: XX%)*
+**Alternativa A — [rótulo do ângulo]** *(prob. de superar a recomendada: XX%)*
 [A copy alternativa]
 > Quando usar: [1 frase]
 
-**Alternativa C — [rótulo, ex: "ângulo de prova"]** *(probabilidade: XX%)*
+**Alternativa B — [rótulo]** *(prob.: XX%)*
+[A copy alternativa]
+> Quando usar: [1 frase]
+
+**Alternativa C — [rótulo]** *(prob.: XX%)*
 [A copy alternativa]
 > Quando usar: [1 frase]
 ```
 
-### Como gerar as alternativas (Verbalized Sampling, detalhe em `references/verbalized_sampling.md`)
-
-VS força diversidade real, não cosmética. A recomendada é seu melhor palpite. As alternativas devem ser **substantivamente diferentes**, não a recomendada rearranjada. Heurística:
-
+Heurística de diversidade obrigatória:
 - Recomendada = ângulo + framework + voz mais alinhados ao briefing
 - Alt A = mude o **ângulo** (problem-led → promise-led, ou story-led → secret-led)
 - Alt B = mude o **framework de estrutura** (AIDA → PAS, ou BAB → FAB)
 - Alt C = mude o **nível de consciência** alvo (target Solution-aware → target Most-aware)
 
-Probabilidades devem ser honestas. Se você está 80% confiante na recomendada, as alts ficam entre 5% e 20% — não infle pra ficar bonito. Se está 50/50, distribua de verdade. A probabilidade é a chance percebida da alt **superar** a recomendada no contexto descrito — não a chance dela "ser boa". Sempre soma > 100% é OK porque cada alt é avaliada contra a recomendada, não entre si.
+Probabilidades nas alts são "chance de superar a recomendada no contexto descrito" — **não somam 100%**, cada alt é avaliada contra a recomendada. Calibração honesta: alts ficam tipicamente entre 5% e 25%. Distribuir 35/30/25 esconde sinal e é anti-padrão.
+
+### Sub-modo 2 — VS canônico (ESTRITO)
+
+Use **apenas** quando o usuário pedir explicitamente. Triggers:
+
+- "modo VS estrito"
+- "verbalized sampling canônico"
+- "VS do paper"
+- "amostragem verbalizada canônica"
+- "distribuição completa de probabilidade"
+- "modo VS rigoroso"
+- "VS fiel ao paper"
+
+Formato fiel ao paper: N candidatas (default N=5) sem hierarquia "recomendada vs alts", probabilidades absolutas que somam ≈ 1.0.
+
+```
+## Candidatas (N=5, probabilidades absolutas, soma ≈ 1.00)
+
+**1.** (p = 0.32) [copy]
+> Ângulo: [rótulo do framework/ângulo]
+
+**2.** (p = 0.24) [copy]
+> Ângulo: [rótulo]
+
+**3.** (p = 0.20) [copy]
+> Ângulo: [rótulo]
+
+**4.** (p = 0.14) [copy]
+> Ângulo: [rótulo]
+
+**5.** (p = 0.10) [copy]
+> Ângulo: [rótulo]
+
+> Soma: 1.00. Diversidade verificada em eixo: [eixo]
+```
+
+No modo estrito, calibração esperada: moda visível (uma p maior 0.30-0.45), distribuição decrescente. Distribuição flat (0.20/0.20/0.20/0.20/0.20) ou muito spike (0.80 + 4× 0.05) indica defeito de calibração.
+
+Use o sub-modo 2 para brainstorming sistemático, comparação entre versões de skill, ou quando "recomendada" seria prematura (briefing ambíguo).
 
 ### Quando o pedido é pequeno (1 frase, 1 botão)
 
-Se o pedido é apenas 1 elemento curto (CTA de botão, microcopy, 1 push de 60 caracteres), simplifique para:
+Se o pedido é apenas 1 elemento curto (CTA de botão, microcopy, push de 60 caracteres), VS é overhead. Simplifique para:
 
 ```
 ## Recomendada
@@ -192,11 +294,11 @@ Se o pedido é apenas 1 elemento curto (CTA de botão, microcopy, 1 push de 60 c
 - [alt 3] — ângulo Z
 ```
 
-Sem probabilidades verbalizadas para pedidos curtos — fica pomposo.
+Sem probabilidades verbalizadas — fica pomposo para pedidos micro.
 
 ---
 
-## 7. Headlines e leads — o trabalho mais caro
+## 8. Headlines e leads — o trabalho mais caro
 
 Headline e lead carregam 80% do peso. Se o leitor não passar dali, nada do resto importa. Antes de entregar uma headline, rode o filtro 4Us em silêncio:
 
@@ -211,7 +313,7 @@ Banco de fórmulas testadas em `references/headline_formulas.md` — use como in
 
 ---
 
-## 8. Por formato — receitas curtas
+## 9. Por formato — receitas curtas
 
 Cada formato tem peculiaridades. Detalhe em `references/format_recipes.md`. Sumário:
 
@@ -225,9 +327,9 @@ Cada formato tem peculiaridades. Detalhe em `references/format_recipes.md`. Sum�
 
 ---
 
-## 9. Compliance Wibx — releitura obrigatória antes de entregar
+## 10. Compliance Wibx — releitura obrigatória antes de entregar
 
-Em modo Wibx, releia a copy contra `references/compliance_wibx.md` antes de devolver. Pontos não negociáveis:
+Em modo Wibx, releia a copy contra esta lista antes de devolver. Pontos não negociáveis:
 
 - **Substituições obrigatórias**: "valor demonstrado" → "transparência operacional"; "investimentos ESG" → "iniciativas ESG"; "retorno" → "resultado operacional".
 - **WBX nunca é**: investimento, ativo, valorização, ROI garantido, "vai subir", yield, especulação.
@@ -238,7 +340,7 @@ Se a copy entregue violar compliance, isso conta como bug — corrija e entregue
 
 ---
 
-## 10. Calibração de qualidade — o teste do envelope
+## 11. Calibração de qualidade — o teste do envelope
 
 Antes de entregar copy importante, faça o **teste do envelope** (Halbert): imagine que cada palavra custa R$ 100. Cada palavra precisa pagar o aluguel. Se você pode cortar uma palavra sem dor, corte. Copy boa é densa de propósito, não de palavras.
 
@@ -248,7 +350,7 @@ Terceiro filtro: **a primeira frase**. Se ela não pede a segunda, jogue fora e 
 
 ---
 
-## 11. Referências disponíveis
+## 12. Referências disponíveis
 
 Quando precisar de profundidade num ponto específico, consulte:
 
@@ -258,14 +360,13 @@ Quando precisar de profundidade num ponto específico, consulte:
 - **references/psychological_triggers.md** — 7 princípios de Cialdini + 30 gatilhos de Sugarman. Quando cada um aciona.
 - **references/headline_formulas.md** — 50+ padrões testados, com origem e quando usar.
 - **references/format_recipes.md** — receitas por formato (LP, email, push, ad, social, microcopy).
-- **references/compliance_wibx.md** — substituições, never-say, glossário interno, lista de WLs.
 - **references/verbalized_sampling.md** — fundamento + como aplicar VS a copy.
 - **assets/intake_template.md** — perguntas obrigatórias antes de escrever.
-- **examples/** — 4 exemplos completos (2 Wibx, 2 genéricos) mostrando o output esperado.
+- **examples/** — 2 exemplos completos genéricos mostrando o output esperado (os exemplos com produto Wibx não acompanham a skill distribuída).
 
 ---
 
-## 12. O que evitar — anti-padrões
+## 13. O que evitar — anti-padrões
 
 - **Hedge words** — "talvez", "pode ser", "muitas vezes". Copy é afirmação ou pergunta, não hipótese.
 - **Buzzwords sem sustentação** — "revolucionário", "inovador", "disruptivo", "next-gen". Mostre, não fale.
@@ -275,15 +376,17 @@ Quando precisar de profundidade num ponto específico, consulte:
 - **"Nós" em excesso** — copy fala do leitor, não da empresa. "Você ganha" > "Nós oferecemos".
 - **Adjetivos vazios** — "incrível", "fantástico", "único" não significam nada. Substantivos concretos > adjetivos.
 - **Fechamento fraco** — copy não termina, ela mira. Toda peça termina em ação ou em frase que reverbera.
+- **Tique de antítese** — usar "não é X, é Y" (ou variações) mais de 2× na mesma peça vira mecânica previsível e degrada entity recognition em GEO. Ver §6 e rode a sub-rotina de auto-checkpoint antes de entregar.
 
 ---
 
-## 13. Encerramento — antes de devolver, pergunte-se
+## 14. Encerramento — antes de devolver, pergunte-se
 
-Antes de entregar, três perguntas:
+Antes de entregar, quatro perguntas:
 
 1. **Esta copy moveria você se você fosse o leitor descrito?** Se não, volte.
 2. **A recomendada e as alts são substantivamente diferentes ou só rearranjos?** Se rearranjo, refaça as alts.
 3. **Eu segui o protocolo de compliance se estou em modo Wibx?** Se não checou, releia agora.
+4. **A peça tem 3+ instâncias de antítese ("não X, é Y" ou variações)?** Se sim, rode a sub-rotina §6 e ofereça reescrita em afirmação direta antes de entregar.
 
-A skill termina quando o output passou nos três filtros.
+A skill termina quando o output passou nos quatro filtros.
