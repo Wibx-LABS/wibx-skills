@@ -71,6 +71,7 @@ Cada skill vive em `skills/<nome>/SKILL.md`. O frontmatter YAML (`name` + `descr
 | **Security Audit** | [`skills/security-audit`](./skills/security-audit) | Varre um repo clonado atrás de malware, ataque de supply chain e ameaças à máquina host, antes de rodar código de terceiro. | `Ativo` |
 | **Espolio** | [`skills/espolio`](./skills/espolio) | Intake de repo de terceiro: gates eliminatórios de licença, segurança e saúde, clone em quarentena com regras de opsec, e veredito ordenado por custo (descartar → canibalizar → vendorizar → forkar). | `Ativo` |
 | **Wibx Brand** | [`skills/wibx-brand`](./skills/wibx-brand) | Fonte canônica dos tokens de marca da Wibx: cores do tema Admin Dashboard, tipografia e regras de uso. | `Ativo` |
+| **Trim CoT Leakage** | [`skills/trim-cot-leakage`](./skills/trim-cot-leakage) | Auditoria de prosa que soa a transcrição de raciocínio — narração de mudança, citações mortas de sessão, vantagem de PR/review. Traz keep-list que protege medições, justificativas de suppression e marcadores epistêmicos. | `Ativo` |
 
 ### 🎧 CS Suite (Customer Success / Suporte)
 
