@@ -1,5 +1,5 @@
 ---
-name: n8n-antigravity-developer
+name: n8n
 description: |
   Use this skill whenever creating, modifying, deploying, testing, or debugging n8n workflows.
   It enforces strict JSON structural schemas, ensures proper node connection parameters, and runs
