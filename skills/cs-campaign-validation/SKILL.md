@@ -30,11 +30,11 @@ falta. Sem exceção por urgência — urgência foi como as crises começaram.
 | 1 | **Budget calculado** | Conta feita via `cs-budgeter`: base de débito certa por mecânica, taxa de 3,5% aplicada, valor a cadastrar explícito |
 | 2 | **Saldo conferido** | Saldo livre da carteira ≥ valor a cadastrar, com número e data/hora de quando foi conferido |
 | 3 | **Validação histórica** | Budget comparado com 2–3 campanhas semelhantes; desvio grande justificado por escrito |
-| 4 | **Card de Tech aberto ANTES** | Demanda registrada no destino oficial (via `cs-notion-reporting`) antes de qualquer execução — a falta do card foi a causa-raiz de crise real |
+| 4 | **Card de Tech aberto ANTES** | Demanda registrada no destino oficial (via `wibx-demanda`) antes de qualquer execução — a falta do card foi a causa-raiz de crise real |
 | 5 | **Briefing completo** | Checklist Mínimo Obrigatório da `cs-campaign-strategy` 100% verde; validar completude é responsabilidade do CS antes de enviar ao Design |
 | 6 | **Aprovações feitas** | Validação prévia com os aprovadores designados (`PLACEHOLDER_APROVADORES_BUDGET` nas instruções privadas) registrada |
 | 7 | **Recompensa no padrão** | 5 Wibx por engajamento, ou aprovação de exceção por escrito |
-| 8 | **Assets prontos** | Artes entregues e anexadas (prazo do Design respeitado — ver tabela de SLA na `cs-notion-reporting`) |
+| 8 | **Assets prontos** | Artes entregues e anexadas (prazo do Design respeitado — ver tabela de SLA na `wibx-demanda`) |
 | 9 | **Datas definidas** | Data de publicação, duração e data de encerramento explícitas; quem monitora o encerramento nomeado |
 
 ## Formato da resposta
@@ -65,5 +65,5 @@ Destravar: reenviar com os itens acima. Nada se faz sem alinhamento; o gate simp
 ## Rollback
 
 Campanha liberada por engano: registrar a reprovação no mesmo card (nunca apagar o parecer
-anterior) e avisar quem for ativar. Se já ativou, o incidente segue via `cs-notion-reporting`
+anterior) e avisar quem for ativar. Se já ativou, o incidente segue via `wibx-demanda`
 como N1/N2 conforme o impacto.

@@ -83,7 +83,7 @@ nunca adivinha destino.
 
 | Nome da Skill | Pasta | Descrição | Status |
 | :--- | :--- | :--- | :--- |
-| **CS Notion Reporting** | [`skills/cs-notion-reporting`](./skills/cs-notion-reporting) | Roteador de demandas do CS: decide o destino certo (Tech, Design, Suporte, Produto, CS), monta o payload obrigatório, classifica N1/N2/N3 e aplica o formato canônico de bug. | `Draft` |
+| **CS Notion Reporting** | — (aposentada 26/08/2026) | Substituída pela `wibx-demanda` (modelo de demandas único, repo `brutus`): roteava para os 5 destinos antigos e o SLA divergia do registro vivo. | `Retired` |
 | **CS Budgeter** | [`skills/cs-budgeter`](./skills/cs-budgeter) | Calcula e valida budget de campanha: valor do ponto, taxa de 3,5%, base de débito por mecânica, saldo e validação contra o histórico. | `Draft` |
 | **CS Campaign Strategy** | [`skills/cs-campaign-strategy`](./skills/cs-campaign-strategy) | Briefing de Estratégia no formato oficial + Checklist Mínimo Obrigatório, escolha de mecânica com limites de caracteres e triagem por tamanho. | `Draft` |
 | **CS Campaign Validation** | [`skills/cs-campaign-validation`](./skills/cs-campaign-validation) | Gate pré-lançamento: checklist bloqueante de 9 itens (budget, saldo, card de Tech antes, briefing, aprovações, assets, datas). | `Draft` |

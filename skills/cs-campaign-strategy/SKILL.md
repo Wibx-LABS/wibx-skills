@@ -10,7 +10,7 @@ description: |
   caracteres de cada uma, e faz a triagem por tamanho (simples, média, grande) que define
   quem executa. Campanha sem briefing completo trava a cadeia inteira — Design, Tech e
   Marketing dependem do que sai daqui.
-compatibility: Claude Desktop / claude.ai. Não escreve no Notion sozinha — produz o briefing pronto; o registro segue via cs-notion-reporting.
+compatibility: Claude Desktop / claude.ai. Não escreve no Notion sozinha — produz o briefing pronto; o registro segue via wibx-demanda.
 ---
 
 # CS Campaign Strategy — briefing e estratégia
@@ -92,5 +92,5 @@ Cronograma modelo de uma rodada:
 
 Entregue: briefing completo no formato oficial + checklist com status item a item + mecânica
 escolhida com copies dentro do limite + tamanho da triagem + cronograma com datas absolutas.
-Registro no Notion segue via `cs-notion-reporting`; validação final pré-lançamento via
+Registro no Notion segue via `wibx-demanda`; validação final pré-lançamento via
 `cs-campaign-validation`.

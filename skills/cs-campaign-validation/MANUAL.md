@@ -12,7 +12,7 @@ Pre-launch gate for Wibx campaigns. Runs a 9-item blocking checklist before anyt
 - **Evidence, Not Vibes:** Each item points to its evidence — card link, balance number with timestamp, approver name. "I trust it's fine" doesn't pass.
 - **Standard Blocked Response:** Incomplete demands get the canonical reply: exact missing items + what unblocks each. "Nothing gets done without alignment; the gate simplifies, it doesn't bureaucratize."
 - **Human Go/No-Go:** The skill reads Notion to verify, writes its verdict to the campaign card, and never activates anything itself.
-- **Auditable Rollback:** A wrong approval is superseded on the same card, never erased; live incidents route through cs-notion-reporting as N1/N2.
+- **Auditable Rollback:** A wrong approval is superseded on the same card, never erased; live incidents route through wibx-demanda as N1/N2.
 
 ---
 
@@ -26,4 +26,4 @@ Gate pré-lançamento de campanhas Wibx. Roda um checklist bloqueante de 9 itens
 - **Evidência, Não Feeling:** Cada item aponta sua evidência — link do card, número do saldo com data/hora, nome de quem aprovou. "Confio que está ok" não passa.
 - **Resposta Padrão de Bloqueio:** Demanda incompleta recebe a resposta canônica: itens faltantes exatos + o que destrava cada um. "Nada se faz sem alinhamento; o gate simplifica, não burocratiza."
 - **Go/No-Go Humano:** A skill lê o Notion para conferir, registra o parecer no card da campanha, e nunca ativa nada sozinha.
-- **Rollback Auditável:** Aprovação errada é sobreposta no mesmo card, nunca apagada; incidente com campanha no ar segue via cs-notion-reporting como N1/N2.
+- **Rollback Auditável:** Aprovação errada é sobreposta no mesmo card, nunca apagada; incidente com campanha no ar segue via wibx-demanda como N1/N2.
