@@ -130,7 +130,7 @@ PLUS:
 - a **self-gate**: before flipping status to `done`, run `/code-review ultra`, write the
   verdict to `review/<front>.md`, and set `reviewed`. Address findings before `done`.
 
-Populate `<gates>` and `<language>` from the target repo exactly as base swarm §4 instructs;
+Populate `<gates>`, `<language>` and `<manager-address>` exactly as base swarm §4 instructs;
 emit unknowns as `<TODO: …>`.
 
 ## 6. Launch (optional — macOS + alacritty only) + dashboard
@@ -161,6 +161,14 @@ Adopt the extended manager cheat-sheet. Run the base swarm manager loop
 (`skills/swarm/SKILL.md` §6) plus: reconcile `goal_met` from `goals/` and `reviewed` from
 `review/`; chase fronts that are code-complete but not goal-met or not review-clean; keep the
 cost reminder loud. Never write code, never merge.
+
+The message channel is the base one, unchanged — you are the hub, workers know only your
+address, HELLO gives you theirs, `notify_when_idle` gives you liveness. One extreme twist:
+under the DONE RULE **idle is not done**, so an idle notice is only good news when the row
+reads `done` + `goal_met=yes` + `reviewed=clean`; anything else is a stalled front wearing a
+finished front's silence. The inverse trap too — `/code-review ultra` pins a front as *busy*
+for a long stretch, so a quiet front in `review` is working, not stuck. The dashboard's idle
+count and the idle notices are two views of the same thing; neither replaces reading the row.
 
 When all fronts reach `done` and merge, run **one final global `/code-review ultra`** on the
 integrated result to catch cross-front issues, and report the verdict to the human. Teardown

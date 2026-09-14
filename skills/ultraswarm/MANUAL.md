@@ -3,7 +3,7 @@
 ## EN
 
 The extreme variant of `swarm`. Same engine (`.swarm/` blackboard, git-worktree isolation,
-`swarm/scripts/swarm-launch.sh`), plus: a plan-first gate, a matched skill stack + caveman +
+the star-shaped manager-hub message channel, `swarm/scripts/swarm-launch.sh`), plus: a plan-first gate, a matched skill stack + caveman +
 RTK on every front (token discipline), best-fit model/effort per front, a `/goal` lock per
 worker, and `/code-review ultra` on every front and on the merged result — with an optional
 live dashboard.
@@ -29,7 +29,8 @@ front windows). Teardown: `bash skills/swarm/scripts/swarm-down.sh <repo-root> -
 
 ## PT-BR
 
-Variante extrema do `swarm`. Mesmo motor (`.swarm/`, worktrees, `swarm-launch.sh`), mais:
+Variante extrema do `swarm`. Mesmo motor (`.swarm/`, worktrees, canal de mensagem em estrela
+com a gerente no centro, `swarm-launch.sh`), mais:
 plano primeiro, pilha de skills + caveman + RTK em cada frente (disciplina de token), modelo/
 esforço sob medida por frente, trava `/goal` por worker, e `/code-review ultra` em cada frente
 e no resultado final — com dashboard ao vivo opcional.
