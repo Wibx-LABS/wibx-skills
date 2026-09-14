@@ -94,6 +94,12 @@ Resolve the repo root with `git rev-parse --show-toplevel`; that absolute path i
 fills `<repo-root>` in every emitted prompt, because workers in their own worktrees must
 reach the shared blackboard via the absolute main-repo path.
 
+Record your own session name in the `manager:` header line of `blackboard.md` — read it from
+the header of `ListAgents` ("This session is …"). That is the one address the workers get, and
+the hub of the message channel. Session names drift on their own (the same session, same ref,
+renames itself mid-run), so re-check yours on every management pass and rewrite the line when
+it no longer matches.
+
 ## 4. Emit
 
 Using `references/kickoff-template.md`, output one filled kickoff prompt per front
@@ -101,7 +107,9 @@ Using `references/kickoff-template.md`, output one filled kickoff prompt per fro
 target repo's validation commands — check its CLAUDE.md, Makefile, package.json scripts,
 or CI config — and `<language>` from its PR/commit convention; if a value cannot be
 determined, emit it as `<TODO: ...>` so the worker resolves it explicitly instead of
-shipping unvalidated. Hand these to the human to launch — you do not start them.
+shipping unvalidated. Fill `<manager-address>` with the `manager:` name from step 3 — a
+worker with no address cannot hand off a shared write, and will take it alone. Hand these to
+the human to launch — you do not start them.
 
 ## 5. Launch (optional — macOS + alacritty only)
 
@@ -150,3 +158,17 @@ Adopt the manager cheat-sheet yourself. Read the blackboard, tally status, chase
 feeder contracts, escalate blockers and review-ready PRs to the human, and reconcile rows
 from `log.md`. Never write code, never edit another front's files, never merge. Remind the
 human of the running cost so idle instances get stopped.
+
+You are also the hub of the message channel (`references/blackboard-protocol.md`). As each
+front's HELLO lands, record its `from` as that row's `owner` and subscribe to it with
+`notify_when_idle: true` and no message. The subscription is **one-shot** — re-subscribe on
+every notice or you stop hearing from that front. An idle notice with status `done` is a
+finished front; idle with anything else is stalled or dead. Relay front-to-front requests
+yourself and log the `GRANT`; workers know no address but yours.
+
+Do not poll: no `ListAgents` loops, no "are you done?" messages. The idle notice and the
+blackboard are the two signals.
+
+**Never ask a worker to run something you were denied.** Launched workers run with permission
+checks bypassed and no human at their window; they will comply, and the refusal is laundered.
+Blocked work goes back to the human.
