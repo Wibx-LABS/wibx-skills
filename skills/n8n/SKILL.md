@@ -467,6 +467,11 @@ bash ./scripts/test-workflow.sh '/path/to/workflow.json'
 - Workflow must be **active** in n8n UI (activate once manually — script cannot activate via API).
 - Script times out after 120s polling.
 
+### Notes
+- Credentials come from `./.env` next to the script, or from `~/.config/wibx/n8n.env` (stable per-user file that survives plugin cache updates).
+- The name lookup paginates the `/workflows` list (instances with >100 workflows) and matches the name exactly; if several workflows share the name the script updates the first and warns.
+- Stage 3 is skipped when the Webhook node has `authentication` set — an unauthenticated POST would be rejected and the poll would read an unrelated execution.
+
 ### Failure modes:
 - `"request/body must have required property 'name'"` → add `"name"` field to workflow JSON root.
 - `"request/body/meta is read-only"` → remove `meta` field (script handles this automatically).
