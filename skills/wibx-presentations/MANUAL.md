@@ -1,29 +1,29 @@
-# Manual: Wibx HTML Presentations Skill
+# Manual: Wibx Presentations
 
 ---
 
 #### 🇺🇸 English
 **What it does:**
-This skill enables Claude to generate professional, interactive HTML slide decks using the Wibx Admin Dashboard design system (dark mode with neon green accents).
+Builds agency-grade, single-file HTML decks in the official Wibx Brand Manual (green `#22ff7b` on `#070707`, Clash Display, "wibx COMPANY" logo).
 
 **Key Features:**
-- **Company Logo Integration:** Automatically embeds the official Wibx logo (neon green icon + white wordmark) on title slides.
-- **Markdown to Slides:** Converts simple Markdown (separated by `---`) into a full presentation.
-- **Natural Language:** Designs slide structures from simple text requests.
-- **Interactive:** Includes keyboard navigation, slide transitions, and responsive layout.
-- **Charts:** Built-in support for Chart.js.
-- **Self-Contained:** Generates a single HTML file with all CSS and JS included.
+- **Fixed 1920×1080 stage** that scales to any screen, keyboard/touch/wheel navigation, print to PDF one slide per page.
+- **61 diagram and chart models** (architecture, flow, sequence, timeline, bar, sankey, venn, quadrant...) recolored to the brand, with draw-on animation and data packets that follow the real path.
+- **GSAP choreography per slide**, with a static final frame under reduced motion.
+- **Automatic QA**: dashes, leftover placeholders, duplicate ids, off-palette colors, SVG accessibility, overflow, overlapping blocks, long titles.
+- **Edit mode** in the delivered file (press E), Ctrl+S downloads the edited HTML.
+- **Lessons log** of real mistakes, so the same error is not repeated.
 
 ---
 
 #### 🇧🇷 Português
 **O que faz:**
-Esta skill permite que o Claude gere apresentações de slides em HTML profissionais e interativas, utilizando o sistema de design Wibx Admin Dashboard (modo escuro com detalhes em verde neon).
+Gera decks HTML de arquivo único, em nível de agência, no Manual da Marca oficial da Wibx (verde `#22ff7b` sobre `#070707`, Clash Display, logo "wibx COMPANY").
 
 **Principais Recursos:**
-- **Integração do Logotipo da Empresa:** Incorpora automaticamente o logotipo oficial da Wibx (ícone verde neon + marca nominativa branca) nos slides de título.
-- **Markdown para Slides:** Converte Markdown simples (separado por `---`) em uma apresentação completa.
-- **Linguagem Natural:** Projeta estruturas de slides a partir de pedidos simples em texto.
-- **Interativo:** Inclui navegação por teclado, transições de slides e layout responsivo.
-- **Gráficos:** Suporte integrado ao Chart.js.
-- **Autocontido:** Gera um único arquivo HTML com todo o CSS e JS incluídos.
+- **Palco fixo 1920×1080** que escala para qualquer tela, navegação por teclado/toque/scroll, impressão em PDF com um slide por página.
+- **61 modelos de diagrama e gráfico** (arquitetura, fluxo, sequência, timeline, barras, sankey, venn, quadrante...) recoloridos na marca, com animação de traço e pacotes de dados que seguem o caminho real.
+- **Coreografia GSAP por slide**, com quadro final estático em reduced-motion.
+- **QA automático**: travessões, placeholders esquecidos, ids duplicados, cor fora da paleta, acessibilidade dos SVGs, texto estourando, blocos sobrepostos, títulos longos.
+- **Modo edição** no arquivo entregue (tecla E), Ctrl+S baixa o HTML editado.
+- **Registro de lições** com erros reais, para o mesmo erro não voltar.

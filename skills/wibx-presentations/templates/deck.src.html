@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Título do deck | Wibx</title>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap">
+<style>
+%%STAGE_CSS%%
+
+/* ===========================================
+   TOKENS: Manual da Marca (wibx-brand/references/manual.md). Só HEX do manual; qa_static.py confere.
+   =========================================== */
+:root {
+  --green: #22ff7b; --green-l: #9fffc6; --green-d: #0ec95a;
+  --black: #070707; --black-l: #141414;
+  --white: #ffffff; --white-l: #f4f4f4; --white-d: #cccccc;
+  --stage-bg: #000000; --slide-bg: var(--black);
+  --ease: cubic-bezier(0.32, 0.72, 0, 1);
+}
+body { font-family: 'Clash Display', sans-serif; color: var(--white); -webkit-font-smoothing: antialiased; }
+
+/* Atmosfera do manual: brilho verde difuso vindo de um canto */
+.slide::before { content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(1100px 760px at 100% 100%, rgba(14, 201, 90, 0.22), transparent 70%); }
+.slide.glow-tl::before { background: radial-gradient(1100px 760px at 0% 0%, rgba(14, 201, 90, 0.22), transparent 70%); }
+
+/* Tipografia (escala do manual no palco 1920) */
+.eyebrow { font-weight: 500; font-size: 22px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--green);
+  display: flex; align-items: center; gap: 14px; }
+.eyebrow::before { content: ''; width: 4px; height: 26px; background: var(--green); border-radius: 2px; }
+h1 { font-weight: 600; font-size: 156px; line-height: 0.91; letter-spacing: -0.03em; margin: 0; }
+h2 { font-weight: 600; font-size: 88px; line-height: 0.95; letter-spacing: -0.025em; margin: 0; }
+.lead { font-weight: 400; font-size: 34px; line-height: 1.25; color: var(--white-d); margin: 0; max-width: 1000px; }
+.accent { color: var(--green); }
+
+/* Moldura comum do slide */
+.head { position: absolute; left: 128px; right: 128px; top: 112px; }
+.foot { position: absolute; left: 128px; right: 128px; bottom: 56px; display: flex; align-items: center; gap: 24px;
+  font-size: 18px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--white-d); }
+.foot .sym { width: 30px; height: 30px; }
+.foot .sec { flex: 1; }
+.foot .pg { color: var(--white); }
+
+/* Capa */
+.cover .logo { position: absolute; left: 128px; top: 112px; width: 360px; }
+.cover .title { position: absolute; left: 128px; bottom: 190px; max-width: 1500px; display: grid; gap: 36px; }
+
+/* Abertura de seção: número gigante + título no canto inferior esquerdo, apoio no quadrante superior direito */
+.section .num { position: absolute; left: 128px; bottom: 170px; font-size: 360px; font-weight: 600; line-height: 0.8;
+  letter-spacing: -0.05em; color: var(--green); }
+.section .title { position: absolute; left: 128px; bottom: 150px; transform: translateY(-330px); }
+.section .aside { position: absolute; right: 128px; top: 150px; width: 640px; }
+
+/* Bento de números: cards de raio grande, sem borda, sem sombra (manual) */
+.bento { position: absolute; left: 128px; right: 128px; top: 420px; display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 24px; }
+.card { background: var(--black-l); border-radius: 28px; padding: 44px 48px; display: grid; gap: 14px; align-content: end; min-height: 380px; }
+.card.hero { background: linear-gradient(90deg, #22ff7b 10%, #9fffc6 90%); color: var(--black); }
+.card .stat { font-size: 132px; font-weight: 600; line-height: 0.9; letter-spacing: -0.04em; }
+.card .unit { font-size: 48px; font-weight: 500; }
+.card .desc { font-size: 24px; line-height: 1.3; color: var(--white-d); }
+.card.hero .desc { color: var(--black); }
+
+/* Diagrama */
+.dg { position: absolute; left: 128px; right: 128px; top: 330px; height: 560px; width: auto; }
+.dg text { font-family: 'Clash Display', sans-serif; fill: var(--white); }
+.dg .t-node { font-size: 26px; font-weight: 500; }
+.dg .t-sub { font-size: 16px; font-weight: 500; letter-spacing: 0.14em; fill: var(--white-d); }
+
+/* CTA / fechamento: link com sublinhado verde + seta (manual) */
+.cta { position: absolute; left: 128px; bottom: 190px; display: grid; gap: 40px; }
+.link { font-size: 35px; font-weight: 500; color: var(--white); text-decoration: underline; text-decoration-color: var(--green);
+  text-underline-offset: 10px; text-decoration-thickness: 3px; }
+
+/* Controles, progresso e modo edição (IDs exigidos pelo controller.js) */
+.deck-controls { display: flex; align-items: center; gap: 16px; font-size: 14px; letter-spacing: 0.14em; color: var(--white-d); }
+.deck-controls button { width: 40px; height: 40px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(7, 7, 7, 0.6); color: var(--white); cursor: pointer; transition: transform 0.4s var(--ease), border-color 0.4s var(--ease); }
+.deck-controls button:hover { border-color: var(--green); transform: scale(1.06); }
+.deck-controls button:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
+.progress { position: fixed; left: 0; top: 0; height: 3px; background: var(--green); z-index: 1000; transition: width 0.6s var(--ease); }
+.edit-hotzone { position: fixed; left: 0; top: 0; width: 48px; height: 48px; z-index: 1001; }
+.edit-toggle { position: fixed; left: 16px; top: 16px; z-index: 1002; padding: 8px 16px; border-radius: 999px; border: 0;
+  background: var(--green); color: var(--black); font: 500 14px 'Clash Display', sans-serif; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+.edit-toggle.show, .edit-toggle.active { opacity: 1; pointer-events: auto; }
+body.editing [contenteditable="true"] { outline: 1px dashed rgba(34, 255, 123, 0.6); outline-offset: 6px; }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="edit-hotzone" id="editHotzone"></div>
+<button class="edit-toggle" id="editToggle">Editar texto</button>
+
+<div class="deck-viewport">
+<div class="deck-stage" id="deckStage">
+
+  <!-- 01 Capa -->
+  <section class="slide cover glow-tl">
+    <div class="logo" data-r>%%LOGO%%</div>
+    <div class="title">
+      <div class="eyebrow" data-r>Contexto do deck</div>
+      <h1 data-r>Uma frase que <span class="accent">prende</span> a sala</h1>
+    </div>
+  </section>
+
+  <!-- 02 Abertura de seção -->
+  <section class="slide section">
+    <div class="aside"><p class="lead" data-r>Texto de apoio curto no quadrante superior direito, como no manual.</p></div>
+    <h2 class="title" data-r>Nome da seção</h2>
+    <div class="num" data-r>01.</div>
+    <footer class="foot"><span class="sym">%%SYMBOL%%</span><span class="sec">Seção</span><span class="pg">00</span></footer>
+  </section>
+
+  <!-- 03 Números -->
+  <section class="slide">
+    <div class="head">
+      <div class="eyebrow" data-r>Resultado</div>
+      <h2 data-r style="margin-top:28px">O número que importa, com contexto</h2>
+    </div>
+    <div class="bento">
+      <div class="card hero" data-r><div><span class="stat" data-count="4000">4.000</span></div><p class="desc">Descrição curta do número principal.</p></div>
+      <div class="card" data-r><div><span class="stat" data-count="92">92</span><span class="unit">%</span></div><p class="desc">Métrica de apoio.</p></div>
+      <div class="card" data-r><div><span class="stat" data-count="30">30</span><span class="unit">d</span></div><p class="desc">Métrica de apoio.</p></div>
+    </div>
+    <footer class="foot"><span class="sym">%%SYMBOL%%</span><span class="sec">Seção</span><span class="pg">00</span></footer>
+  </section>
+
+  <!-- 04 Diagrama (R-FLUXO). Troque por um modelo da galeria: scripts/extract_svg.py -->
+  <section class="slide" data-step="0.4">
+    <div class="head">
+      <div class="eyebrow" data-r>Como funciona</div>
+      <h2 data-r style="margin-top:28px">Três etapas, um fluxo</h2>
+    </div>
+    <svg class="dg" viewBox="0 0 1664 560" role="img" aria-labelledby="fx-title fx-desc">
+      <title id="fx-title">Fluxo em três etapas</title>
+      <desc id="fx-desc">Entrada segue para processamento e termina em resultado, destacado em verde.</desc>
+      <defs>
+        <marker id="fx-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#cccccc"/></marker>
+        <marker id="fx-ar-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#22ff7b"/></marker>
+      </defs>
+      <g class="pop" data-seq="0"><rect x="0" y="200" width="400" height="160" rx="24" fill="#141414"/>
+        <text x="200" y="276" text-anchor="middle" class="t-node">Entrada</text><text x="200" y="312" text-anchor="middle" class="t-sub">ORIGEM</text></g>
+      <path class="draw" data-seq="1" data-packet d="M 408 280 L 624 280" stroke="#cccccc" stroke-width="2" fill="none" marker-end="url(#fx-ar)"/>
+      <g class="pop" data-seq="1"><rect x="632" y="200" width="400" height="160" rx="24" fill="#141414"/>
+        <text x="832" y="276" text-anchor="middle" class="t-node">Processamento</text><text x="832" y="312" text-anchor="middle" class="t-sub">REGRA</text></g>
+      <path class="draw" data-seq="2" data-packet d="M 1040 280 L 1256 280" stroke="#cccccc" stroke-width="2" fill="none" marker-end="url(#fx-ar-g)"/>
+      <g class="pop" data-seq="2"><rect x="1264" y="200" width="400" height="160" rx="24" fill="rgba(34,255,123,0.12)" stroke="#22ff7b" stroke-width="2"/>
+        <text x="1464" y="276" text-anchor="middle" class="t-node" style="fill:#22ff7b">Resultado</text><text x="1464" y="312" text-anchor="middle" class="t-sub">FOCO</text></g>
+    </svg>
+    <footer class="foot"><span class="sym">%%SYMBOL%%</span><span class="sec">Seção</span><span class="pg">00</span></footer>
+  </section>
+
+  <!-- 05 Fechamento -->
+  <section class="slide">
+    <div class="cta">
+      <div class="eyebrow" data-r>Próximo passo</div>
+      <h1 data-r>Uma decisão, <span class="accent">um dono</span>, uma data</h1>
+      <a class="link" data-r href="#1">wibx.io ↗</a>
+    </div>
+    <footer class="foot"><span class="sym">%%SYMBOL%%</span><span class="sec">Wibx</span><span class="pg">00</span></footer>
+  </section>
+
+</div>
+</div>
+
+<nav class="deck-controls" aria-label="Navegação">
+  <button id="prevBtn" aria-label="Slide anterior">‹</button>
+  <span id="count">01 / 05</span>
+  <button id="nextBtn" aria-label="Próximo slide">›</button>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script>
+%%CONTROLLER_JS%%
+</script>
+</body>
+</html>
