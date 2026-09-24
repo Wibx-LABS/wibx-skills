@@ -1,9 +1,9 @@
 # Catálogo de diagramas (100% da galeria diagram-design, 61 modelos)
 
-Fonte: https://cathrynlavery.github.io/diagram-design/ (v2.6.33, MIT), cópia local em `gallery/original/`.
+Fonte: https://cathrynlavery.github.io/diagram-design/ (MIT), cópia local em `vendor/diagram-design/assets/`.
 Versão na marca Wibx: gerada por `python3 scripts/brand_gallery.py <projeto>/diagramas` (nunca dentro da pasta da skill).
 Cada modelo tem `example-<modelo>.html` (claro), `-dark.html` (escuro; use em deck escuro) e `-full.html` (editorial). Modelos marcados com ◐ só têm uma variante.
-A gramática de cada tipo (orçamento de nós, conectores, legenda) está no próprio exemplo: leia o SVG `-dark` antes de adaptar. Regra geral: 5 a 9 nós por diagrama, 1 a 2 focais, grade de 4px.
+Referência de tipo (regras de layout, orçamento de nós): `vendor/diagram-design/references/type-<tipo>.md`.
 
 ## Como escolher (pergunta → modelo)
 
@@ -136,7 +136,7 @@ Regras comuns: nada anima sem motivo (hierarquia, narrativa, estado); reduced-mo
 ## Levar um modelo para o slide (passo a passo)
 
 1. Gere a galeria na marca dentro do projeto: `python3 scripts/brand_gallery.py <projeto>/diagramas` (uma vez por projeto).
-2. Abra o exemplo `-dark` gerado para ver a gramática do tipo (orçamento de nós, regras de conector).
+2. Abra o exemplo `-dark` gerado para ver a gramática; leia o `vendor/diagram-design/references/type-<tipo>.md` correspondente (orçamento de nós, regras de conector).
 3. Extraia com IDs prefixados: `python3 scripts/extract_svg.py <projeto>/diagramas/<exemplo> <prefixo> --anim`.
 4. Remova o `<rect>` de fundo de tela cheia (o slide já tem fundo), adicione `class="dg"`, posicione no palco 1920×1080.
 5. Troque o conteúdo pelos dados reais do cliente, nunca invente componente para preencher layout. Se o texto real for maior, redimensione a caixa (grid de 4px).

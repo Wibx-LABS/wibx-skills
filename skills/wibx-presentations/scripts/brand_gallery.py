@@ -4,7 +4,7 @@
 Uso:
     python3 brand_gallery.py <saida>          # ex.: <projeto>/diagramas
 
-Lê:   gallery/original/          (cópia da galeria oficial, MIT, ver gallery/LICENSE)
+Lê:   vendor/diagram-design/assets/  (galeria oficial, MIT, ver vendor/diagram-design/LICENSE)
       assets/diagram-map.json    (tokens padrão -> paleta do Manual da Marca, fontes)
 Grava: <saida>/                  (mesmos nomes de arquivo + index.html navegável)
 Nunca grave dentro da pasta da skill: o empacotamento leva tudo o que estiver nela.
@@ -20,7 +20,7 @@ import sys
 from pathlib import Path
 
 SKILL = Path(__file__).resolve().parent.parent
-SRC = SKILL / "gallery" / "original"
+SRC = SKILL / "vendor" / "diagram-design" / "assets"
 
 
 def recolor(html: str, cmap: dict) -> str:
@@ -56,6 +56,8 @@ def main() -> int:
     known = {k.lower() for mode in ("dark", "light") for k in cfg[mode]["hex"]} | {v.lower() for mode in ("dark", "light") for v in cfg[mode]["hex"].values()}
     n = 0
     for f in sorted(SRC.glob("*.html")):
+        if f.name.startswith("template"):
+            continue  # moldes em branco do diagram-design, não são modelos
         html = f.read_text()
         mode = "dark" if f.stem.endswith("-dark") else "light"
         html = refont(recolor(html, cfg[mode]), cfg["fonts"])

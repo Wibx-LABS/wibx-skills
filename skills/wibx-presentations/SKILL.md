@@ -1,100 +1,106 @@
 ---
 name: wibx-presentations
-description: Cria apresentações HTML premium da Wibx em arquivo único, no Manual da Marca (verde #22ff7b sobre #070707, Clash Display, logo oficial "wibx COMPANY"), com palco fixo 1920x1080, animação GSAP por slide, 61 modelos de diagrama e gráfico já recoloridos na marca, e QA automático (estático + navegador). Use SEMPRE que pedirem deck, slides, apresentação, pitch, keynote, palestra, retrospectiva, one-pager em slides ou storytelling visual da Wibx, inclusive a partir de markdown, de um texto solto ou para converter um PPT/PPTX para web. Também quando pedirem diagrama ou gráfico para um slide.
+description: APTHTML (Apresentação HTML) da Wibx. Orquestra o stack de apresentações HTML premium com animação. Use SEMPRE que o usuário pedir apresentação, deck, slides, pitch, keynote, palestra, retrospectiva ou storytelling visual em HTML (ou converter PPT/PPTX para web), especialmente com animações, diagramas ou identidade de marca. Lê frontend-slides, frontend-design, design-taste-frontend, high-end-visual-design, diagram-design e gsap-skills (cópias em vendor/) na ordem certa, com catálogo dos 61 diagramas, Manual da Marca Wibx e QA automático.
 compatibility: python3 (stdlib; Pillow só para recorte de imagem com alfa). Navegador Chromium para o QA visual. CDN em runtime do deck (Fontshare, jsDelivr/GSAP). Depende da skill wibx-brand instalada ao lado.
 ---
 
-# Wibx Presentations
+# APTHTML: Apresentação HTML (stack orquestrado)
 
-Deck HTML de arquivo único, no nível de agência, dentro do Manual da Marca. Esta skill diz
-**o que fazer em que ordem**; as regras detalhadas moram em `references/` e o código pronto
-em `templates/` e `scripts/`. Caminhos abaixo são relativos à pasta desta skill.
+Base: pacote apthtml (colega, 2026-09-23), portado para este repo. Este skill define QUAIS skills
+ler, em QUE ordem, quem manda em cada decisão, e traz as ferramentas e lições que já foram
+validadas. As skills do stack estão copiadas em `vendor/` (origem e commit em `vendor/SOURCES.md`):
+leia o `SKILL.md` de cada uma **inteiro** no momento indicado, como se tivesse carregado a skill.
+Caminhos abaixo são relativos à pasta desta skill.
 
-| Arquivo | Para quê |
+**Arquivos deste skill:**
+| Caminho | Para quê |
 |---|---|
-| `../wibx-brand/references/manual.md` | Lei da marca: cores, fonte, logo, proibições. Leia inteiro na Fase 0. |
-| `references/design.md` | Design read, dials, tese visual, proibições, pre-flight. |
-| `references/diagramas.md` | Catálogo dos 61 modelos: qual usar para quê, receita de animação. |
-| `references/licoes.md` | Erros reais já corrigidos. Leia antes da Fase 4. |
-| `templates/deck.src.html` | Esqueleto: tokens do manual, capa, abertura de seção, bento, diagrama, fechamento. |
-| `templates/build.py` | Monta o arquivo único (CSS/JS do palco, logo, `parts.py`, numeração). |
-| `templates/controller.js`, `templates/stage.css` | Palco 16:9 escalável, navegação, timeline GSAP, modo edição, print. Embutidos pelo build. |
-| `templates/diagrams.py` | Geometria paramétrica (loop radial). |
-| `scripts/brand_gallery.py` | Recolore a galeria inteira na marca, dentro do projeto. |
-| `scripts/extract_svg.py` | Tira o SVG de um modelo com ids prefixados e marcação de animação. |
-| `scripts/qa_static.py`, `scripts/qa_browser.js` | QA do HTML final. |
-| `gallery/original/` | Galeria diagram-design (MIT, `gallery/LICENSE`). Fonte do recolor; não use direto no deck. |
+| `references/licoes.md` | Erros reais já cometidos e corrigidos. **Leia antes da Fase 4.** |
+| `references/diagramas.md` | Catálogo dos 61 modelos do diagram-design: quando usar, tipo, receita de animação |
+| `vendor/diagram-design/assets/` | Galeria oficial (61 modelos × variantes) |
+| `templates/` | `build.py`, `deck.src.html` (esqueleto na marca), `diagrams.py` (geometria paramétrica), `controller.js` (palco, navegação, GSAP, edição), `stage.css` |
+| `scripts/qa_static.py` | QA do HTML final: travessões, placeholders, ids duplicados, paleta, a11y dos SVGs |
+| `scripts/qa_browser.js` | QA no navegador: fora do palco, texto estourando, títulos longos, sobreposição, rótulos x círculos |
+| `scripts/brand_gallery.py` | Gera a galeria inteira na marca Wibx |
+| `scripts/extract_svg.py` | Tira o SVG de um modelo com ids prefixados (e marcação de animação) |
 
-Escopo de marca: deck usa o **Manual da Marca**, nunca o tema Admin Dashboard (`#00ff70`,
-Red Hat Display), que é de UI de produto. Decisão de 2026-09-24.
+Exemplo de referência completo e aprovado: deck Cash Management (WiBX, 14 slides). Não vem neste pacote; peça ao autor se precisar.
+
+## Papéis (quem decide o quê)
+
+| Camada | Skill (leia) | Autoridade |
+|---|---|---|
+| Esqueleto do deck | `vendor/frontend-slides/SKILL.md` | Fluxo, fixed stage 1920×1080, navegação, densidade, export PDF, conversão PPT |
+| Direção estética | `vendor/frontend-design/SKILL.md` | Tese visual, tipografia, risco estético justificado |
+| Anti-slop / dials | `vendor/taste-skill/design-taste-frontend/SKILL.md` | Dials `DESIGN_VARIANCE`, `MOTION_INTENSITY`, `VISUAL_DENSITY` e pre-flight |
+| Acabamento premium | `vendor/taste-skill/high-end-visual-design/SKILL.md` | Espaçamento, double-bezel, física de mola |
+| Diagramas | `vendor/diagram-design/SKILL.md` | Tudo dentro de cada diagrama (61 modelos; ver catálogo) |
+| Animação | `vendor/gsap-skills/gsap-core/SKILL.md`, `vendor/gsap-skills/gsap-timeline/SKILL.md` (+ `gsap-plugins`, `gsap-performance`) | Coreografia por slide |
+| Deck existente | `vendor/taste-skill/redesign-existing-projects/SKILL.md` | Só quando o usuário traz um HTML/deck pronto |
+
+Conflito: Manual da Marca > `frontend-slides` (estrutura) > `frontend-design` + `high-end-visual-design` (visual) > `diagram-design` (dentro do diagrama) > GSAP (movimento).
 
 ## Fase 0: Briefing
 
-1. Leia `../wibx-brand/references/manual.md` inteiro.
-2. Descubra: objetivo, público (engenharia / misto / executivo), modo (palestra ao vivo ou leitura
-   enviada), duração ou número de slides, conteúdo-fonte (markdown, texto, PPTX, dados).
-   Pergunte só o que não dá para inferir, uma pergunta por vez.
-3. Markdown com `---` entre slides é aceito como conteúdo; a skill escolhe o layout de cada slide.
-   PPTX: extraia texto e números (skill `docling-parser` ou `anthropic-skills:pptx`), depois redesenhe; nunca copie o layout do PPT.
-4. Declare em uma linha o design read e os dials (`references/design.md` §1).
+1. Leia `vendor/frontend-slides/SKILL.md`, siga Phase 0/1 (modo A/B/C, conteúdo, público, densidade). Deck com muito texto = leitura (densidade alta); palestra = baixa.
+2. Infira público (engineer / mixed / executive) e nível de animação.
+3. Declare em uma linha o "design read" e os dials. Padrão corporativo premium: `VARIANCE 6 · MOTION 6 · DENSITY 3` (leitura: DENSITY 5).
 
-## Fase 1: Roteiro e direção
+## Fase 0.5: Marca
 
-1. Escreva o roteiro: um título-afirmação por slide (a frase que o slide prova), não um rótulo.
-   Mostre ao usuário antes de gerar HTML se o deck tiver mais de 6 slides.
-2. Para cada slide, escolha a estrutura: capa, abertura de seção, statement, bento de números,
-   diagrama, comparação, fechamento. Varie (design.md §2).
-3. Slide que explica sistema, processo, tempo, hierarquia, comparação ou números vira diagrama:
-   escolha o modelo pela tabela "O slide precisa mostrar..." de `references/diagramas.md`.
-   Diagrama só quando ensina mais que o parágrafo.
+Deck Wibx usa o **Manual da Marca** (escopo de decks da skill `wibx-brand`), nunca o tema Admin Dashboard (`#00ff70`, Red Hat Display), que é de UI de produto.
 
-## Fase 2: Diagramas
+1. Leia `../wibx-brand/references/manual.md` INTEIRO: é lei (cores, fontes, logo, área de segurança, proibições).
+2. Logo oficial sempre (nunca redesenhe): `../wibx-brand/assets/manual/logo-light.svg`, embutido pelo `build.py` como `%%LOGO%%`. Símbolo isolado: mesmo SVG com `viewBox` recortado (`%%SYMBOL%%`). Clash Display pela CDN da Fontshare (os woff2 não são redistribuídos).
+3. Diagramas na marca: `python3 scripts/brand_gallery.py <projeto>/diagramas` (mapa em `assets/diagram-map.json`). O script lista HEX sem mapeamento: complete até zerar. Nunca grave dentro da pasta da skill.
+4. Outra marca que não a Wibx: fora do escopo desta skill; o `build.py` e o `qa_static.py` estão presos ao Manual Wibx.
 
-1. `python3 scripts/brand_gallery.py <projeto>/diagramas`. Nunca gere dentro da pasta da skill.
-2. Abra o exemplo `-dark` do modelo, extraia: `python3 scripts/extract_svg.py <projeto>/diagramas/example-<modelo>-dark.html <prefixo> --anim`.
-3. Remova o `<rect>` de fundo de tela cheia, adicione `class="dg"`, troque pelos dados reais
-   (nunca invente componente para encher layout). Grade de 4px.
-4. Geometria calculada (loop, radial, interseção): gere com `templates/diagrams.py` em
-   `<projeto>/parts.py`, nunca chute coordenadas.
-5. Contrato: `<svg role="img" aria-labelledby="<p>-title <p>-desc">`, `<title>` primeiro filho,
-   ids prefixados, 1 a 2 focais em verde, conectores ortogonais, legenda em faixa inferior.
+## Fase 1: Direção estética
+
+1. Leia `vendor/frontend-design/SKILL.md` e `vendor/taste-skill/high-end-visual-design/SKILL.md`; tese visual específica ao assunto, dentro do Manual da Marca.
+2. Leia `vendor/taste-skill/design-taste-frontend/SKILL.md` como filtro (sem Inter, sem roxo genérico, sem 3 cards iguais, zero travessões).
+3. Com o Manual da Marca: declare a direção em uma linha e siga (previews do frontend-slides só se houver liberdade real).
+
+## Fase 2: Diagramas (61 modelos disponíveis)
+
+1. Leia `vendor/diagram-design/SKILL.md` e `references/diagramas.md`. O onboarding de estilo do diagram-design não se aplica: a marca já vem do `brand_gallery.py`.
+2. Para cada slide que explica sistema, processo, tempo, hierarquia, comparação ou números, escolha o modelo pela tabela "O slide precisa mostrar...". Prefira diagrama a bullet quando ele ensina mais que o parágrafo. Varie os modelos ao longo do deck (não repita a mesma família em slides seguidos).
+3. Leia o `vendor/diagram-design/references/type-<tipo>.md` do modelo (orçamento de nós, regras de conector). Parta do exemplo `-dark` da galeria na marca: `python3 scripts/extract_svg.py <projeto>/diagramas/<exemplo> <prefixo> --anim`.
+4. Geometria paramétrica (loop, radial, qualquer coisa com interseção calculada): gere por script (`templates/diagrams.py`, chamado de `<projeto>/parts.py`), nunca chute coordenadas.
+5. Regras: 1 a 2 focais em verde/acento; conectores ortogonais com cotovelo r=8; rótulo de seta com máscara e folga de 6 a 10px; legenda em faixa inferior; `<svg role="img">` com `<title>`/`<desc>` prefixados; ids prefixados por diagrama.
 
 ## Fase 3: Animação
 
-- Convenções do `controller.js`: `[data-r]` reveal de leitura; `[data-seq]` + `.draw` / `.pop` /
-  `.fade` ordem do diagrama; `data-step` no `<section>` = ritmo; `[data-count]` contador (o texto
-  no fonte já é o valor final); `data-packet` no conector = pacote percorrendo o caminho real.
-- Receita por família em `references/diagramas.md` (R-FLUXO, R-SEQ, R-BARRA...).
-- MOTION ≤ 4: remova a tag do GSAP; o deck fica estático com reveal só por CSS se quiser.
-- Objeto animado e sua moldura/brilho no mesmo wrapper (lições C1). Toda animação precisa de motivo.
+- `MOTION_INTENSITY` ≤ 4: CSS/WAAPI (`vendor/frontend-slides/animation-patterns.md`).
+- ≥ 5 ou diagramas que se desenham: leia `vendor/gsap-skills/gsap-core/SKILL.md` + `vendor/gsap-skills/gsap-timeline/SKILL.md`. GSAP via uma tag CDN (jsDelivr, já no esqueleto). `templates/controller.js`:
+  - `[data-r]` reveal de leitura; `[data-seq]` + `.draw` / `.pop` / `.fade` ordem do diagrama; `data-step` no `<section>` = ritmo; `[data-count]` contador (texto no fonte já é o valor final; lições E5).
+  - Ponta de seta só aparece quando a linha chega (implementado; lições A2).
+  - Pacotes de dados: marque o conector com `data-packet`; o controller faz a bolinha percorrer o caminho real (cotovelos inclusive). Todos os conectores do mesmo caminho recebem `data-packet`. Nunca círculo avulso com `translateX` (lições A7).
+  - Receita por família em `references/diagramas.md` (R-FLUXO, R-SEQ, R-BARRA...).
+- Objeto animado + sua moldura/brilho no MESMO wrapper; translação no wrapper, rotação só no objeto (lições C1). Objeto recortável vira asset com alfa no build (C2).
+- Reduced-motion: quadro final estático. Toda animação precisa de motivo (hierarquia, narrativa, estado).
 
 ## Fase 4: Geração e QA (obrigatório, nesta ordem)
 
-Projeto (fora da pasta da skill, p.ex. no diretório de trabalho do usuário):
+**Esqueleto do projeto** (fora da pasta da skill):
 ```
-<projeto>/deck.src.html   copiado de templates/deck.src.html e editado (Edit/Write)
-<projeto>/parts.py        opcional: PARTS = {"NOME": "<svg ou base64>"} para %%NOME%%
+<projeto>/deck.src.html   copiado de templates/deck.src.html (placeholders %%STAGE_CSS%%, %%CONTROLLER_JS%%, %%LOGO%%, %%SYMBOL%%...)
+<projeto>/parts.py        opcional: PARTS = {"NOME": ...} para %%NOME%% (diagramas paramétricos, imagens com alfa)
 <projeto>/assets/         imagens de origem
-<projeto>/diagramas/      galeria na marca (Fase 2)
-<projeto>/deck.html       saída de arquivo único: é o que se entrega
+<projeto>/diagramas/      galeria na marca (Fase 0.5)
+<projeto>/deck.html       saída arquivo único (é o que se entrega)
 ```
+Fonte só com Edit/Write; scripts só leem o fonte e geram a saída.
 
 1. Leia `references/licoes.md`.
-2. `python3 templates/build.py <projeto>` e `python3 scripts/qa_static.py <projeto>/deck.html` precisa dar `OK`.
-3. Navegador no HTML **final** (sirva com `python3 -m http.server`), viewport 1920x1080, cole o
-   conteúdo de `scripts/qa_browser.js` e rode `apthtmlQA.run()`, que precisa dar `[]`.
-   Venn/zonas: `apthtmlQA.labelsInCircles(...)` com folga ≥ 16px.
-   Sem Claude in Chrome: Chromium headless com `--dump-dom` num clone do deck que injeta o
-   script e escreve o resultado num `<pre>`; screenshot com `--screenshot` (lições E6, E7).
-4. Para cada slide animado: captura no meio (≈1,2 s) e no fim (≈4 s ou `--force-prefers-reduced-motion`).
-   Confira pontas de seta, pacotes, alinhamento em card estreito, espaço morto.
-5. Pre-flight de `references/design.md` §5. Console sem erro. Teste de celular (o palco só escala).
+2. `python3 templates/build.py <projeto>` e depois `python3 scripts/qa_static.py <projeto>/deck.html` → precisa dar OK.
+3. No navegador: abra o HTML **final** (sirva com `python3 -m http.server`), viewport 1920x1080, injete `scripts/qa_browser.js` via `javascript_tool` e rode `apthtmlQA.run()` → `[]`. Para Venn/zonas: `apthtmlQA.labelsInCircles(...)` com folga ≥ 16px. Sem Claude in Chrome: Chromium headless (lições E6, E7).
+4. Para cada slide: captura no meio da animação (≈1,2 s) e no fim (≈4 s). Confira pontas de seta, objetos animados, alinhamento em cards estreitos, espaço morto.
+5. Pre-flight do `design-taste-frontend` + checagem de marca (só paleta oficial, fonte oficial, logo oficial, sem uso proibido). Console sem erros. Um teste em viewport de celular (o palco só escala).
 
 ## Fase 5: Entrega
 
-- Entregue o caminho do `deck.html`. Liste o que foi decidido e **pergunte** sobre divergência
-  de conteúdo ou marca encontrada (nunca corrija fato em silêncio).
-- PDF só se pedido: imprimir no Chrome, paisagem, sem margens (o `@media print` do palco já pagina 1 slide por folha).
-- Nunca publique (Vercel, Artifact, link público) sem confirmação explícita naquele momento.
-- Quando o usuário corrigir algo, registre em `references/licoes.md` (aconteceu, por quê, regra,
-  como verificar) e, se couber, automatize em `qa_static.py` ou `qa_browser.js`.
+- Entregue o caminho do HTML final. Liste o que mudou e **pergunte** sobre divergências de conteúdo/marca encontradas (nunca corrija fato em silêncio).
+- Export PDF (Phase 6B do frontend-slides, `vendor/frontend-slides/scripts/export-pdf.sh`) só se pedido.
+- NUNCA publique (Vercel, Artifact, URL pública) sem confirmação explícita naquele momento. O `deploy.sh` do frontend-slides não vem neste pacote de propósito.
+- Quando o usuário corrigir algo, registre em `references/licoes.md` (o que aconteceu, por quê, regra, como verificar) e, se couber, automatize no QA.
