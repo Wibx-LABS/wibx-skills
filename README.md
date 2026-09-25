@@ -51,7 +51,7 @@ Cada skill vive em `skills/<nome>/SKILL.md`. O frontmatter YAML (`name` + `descr
 | **Tandera Audit** | [`skills/tandera-audit`](./skills/tandera-audit) | Auditoria técnica GEO/AEO de qualquer site (score T/G/C, gate de auditabilidade, metodologia Olho de Tandera v2.0). | `Ativo` |
 | **Tandera SoV** | [`skills/tandera-sov`](./skills/tandera-sov) | Share of voice em LLMs com protocolo estatístico (n≥5 runs, roster 2026 c/ Meta AI, mapa de fontes citadas). | `Ativo` |
 | **Tandera Conteúdo** | [`skills/tandera-conteudo`](./skills/tandera-conteudo) | Conteúdo citável por LLMs (narrativa própria, Q&A people-first) com gate de compliance WBX obrigatório. | `Ativo` |
-| **Wibx Presentations** | [`skills/wibx-presentations`](./skills/wibx-presentations) | Gera apresentações HTML self-contained no design system da Wibx. | `Ativo` |
+| **Wibx Presentations** | [`skills/wibx-presentations`](./skills/wibx-presentations) | Gera decks HTML de arquivo único no Manual da Marca: palco 1920×1080, GSAP, 61 diagramas na marca e QA automático. | `Ativo` |
 | **Prompt Engineer** | [`skills/prompt-engineer`](./skills/prompt-engineer) | Estrutura sistemática para criar e otimizar prompts de alta performance. | `Ativo` |
 | **ToT-H** | [`skills/tot-h`](./skills/tot-h) | Painel de 16 personas (engenharia + produto) em Tree of Thought sob disciplina PRISMA. | `Ativo` |
 | **Skill Creator** | [`skills/skill-creator`](./skills/skill-creator) | Cria, edita, testa e mede a performance de skills. | `Ativo` |
@@ -70,7 +70,7 @@ Cada skill vive em `skills/<nome>/SKILL.md`. O frontmatter YAML (`name` + `descr
 | **Handoff** | [`skills/handoff`](./skills/handoff) | Gera um documento de handoff de sessão pra outra sessão retomar sem perda quando o contexto acaba: captura o estado VIVO (branch, PRs, processos em background, cwd, arquivos temporários), o próximo passo executável e as pegadinhas — grava num lugar durável + ponteiro na memória. | `Ativo` |
 | **Security Audit** | [`skills/security-audit`](./skills/security-audit) | Varre um repo clonado atrás de malware, ataque de supply chain e ameaças à máquina host, antes de rodar código de terceiro. | `Ativo` |
 | **Espolio** | [`skills/espolio`](./skills/espolio) | Intake de repo de terceiro: gates eliminatórios de licença, segurança e saúde, clone em quarentena com regras de opsec, e veredito ordenado por custo (descartar → canibalizar → vendorizar → forkar). | `Ativo` |
-| **Wibx Brand** | [`skills/wibx-brand`](./skills/wibx-brand) | Fonte canônica dos tokens de marca da Wibx: cores do tema Admin Dashboard, tipografia e regras de uso. | `Ativo` |
+| **Wibx Brand** | [`skills/wibx-brand`](./skills/wibx-brand) | Fonte canônica da marca Wibx em dois escopos: tema Admin Dashboard (UI de produto) e Manual da Marca (decks e peças), com logos oficiais. | `Ativo` |
 | **Trim CoT Leakage** | [`skills/trim-cot-leakage`](./skills/trim-cot-leakage) | Auditoria de prosa que soa a transcrição de raciocínio — narração de mudança, citações mortas de sessão, vantagem de PR/review. Traz keep-list que protege medições, justificativas de suppression e marcadores epistêmicos. | `Ativo` |
 
 ### 🎧 CS Suite (Customer Success / Suporte)

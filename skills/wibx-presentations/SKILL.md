@@ -1,358 +1,106 @@
 ---
 name: wibx-presentations
-description: Create self-contained HTML presentations following Wibx brand guidelines. Use this skill whenever the user asks for decks, slide presentations, retrospectives, pitches, or any visual presentation material. Supports markdown input, natural language descriptions, interactive navigation, charts, animations, and embedded SVG assets. Generates a single self-contained HTML file with all styling and interactivity built in (images/external assets provided separately).
-compatibility: None (vanilla HTML/CSS/JS)
+description: APTHTML (Apresentação HTML) da Wibx. Orquestra o stack de apresentações HTML premium com animação. Use SEMPRE que o usuário pedir apresentação, deck, slides, pitch, keynote, palestra, retrospectiva ou storytelling visual em HTML (ou converter PPT/PPTX para web), especialmente com animações, diagramas ou identidade de marca. Lê frontend-slides, frontend-design, design-taste-frontend, high-end-visual-design, diagram-design e gsap-skills (cópias em vendor/) na ordem certa, com catálogo dos 61 diagramas, Manual da Marca Wibx e QA automático.
+compatibility: python3 (stdlib; Pillow só para recorte de imagem com alfa). Navegador Chromium para o QA visual. CDN em runtime do deck (Fontshare, jsDelivr/GSAP). Depende da skill wibx-brand instalada ao lado.
 ---
 
-# Wibx HTML Presentations Skill
+# APTHTML: Apresentação HTML (stack orquestrado)
 
-Create professional, interactive HTML slide decks that follow Wibx's Admin Dashboard design system.
+Base: pacote apthtml (colega, 2026-09-23), portado para este repo. Este skill define QUAIS skills
+ler, em QUE ordem, quem manda em cada decisão, e traz as ferramentas e lições que já foram
+validadas. As skills do stack estão copiadas em `vendor/` (origem e commit em `vendor/SOURCES.md`):
+leia o `SKILL.md` de cada uma **inteiro** no momento indicado, como se tivesse carregado a skill.
+Caminhos abaixo são relativos à pasta desta skill.
 
----
+**Arquivos deste skill:**
+| Caminho | Para quê |
+|---|---|
+| `references/licoes.md` | Erros reais já cometidos e corrigidos. **Leia antes da Fase 4.** |
+| `references/diagramas.md` | Catálogo dos 61 modelos do diagram-design: quando usar, tipo, receita de animação |
+| `vendor/diagram-design/assets/` | Galeria oficial (61 modelos × variantes) |
+| `templates/` | `build.py`, `deck.src.html` (esqueleto na marca), `diagrams.py` (geometria paramétrica), `controller.js` (palco, navegação, GSAP, edição), `stage.css` |
+| `scripts/qa_static.py` | QA do HTML final: travessões, placeholders, ids duplicados, paleta, a11y dos SVGs |
+| `scripts/qa_browser.js` | QA no navegador: fora do palco, texto estourando, títulos longos, sobreposição, rótulos x círculos |
+| `scripts/brand_gallery.py` | Gera a galeria inteira na marca Wibx |
+| `scripts/extract_svg.py` | Tira o SVG de um modelo com ids prefixados (e marcação de animação) |
 
-## When to Use This Skill
+Exemplo de referência completo e aprovado: deck Cash Management (WiBX, 14 slides). Não vem neste pacote; peça ao autor se precisar.
 
-Trigger whenever the user requests:
-- Slide decks or presentations (pitch decks, retrospectives, internal stakeholder meetings)
-- Markdown-based slide content to be rendered as interactive HTML
-- Natural language descriptions of presentation structure
-- Presentations that need charts, animations, or navigation interactivity
+## Papéis (quem decide o quê)
 
-**Key constraint**: Output is a self-contained HTML file with all CSS/JS embedded. External images/assets are referenced by path but not bundled.
+| Camada | Skill (leia) | Autoridade |
+|---|---|---|
+| Esqueleto do deck | `vendor/frontend-slides/SKILL.md` | Fluxo, fixed stage 1920×1080, navegação, densidade, export PDF, conversão PPT |
+| Direção estética | `vendor/frontend-design/SKILL.md` | Tese visual, tipografia, risco estético justificado |
+| Anti-slop / dials | `vendor/taste-skill/design-taste-frontend/SKILL.md` | Dials `DESIGN_VARIANCE`, `MOTION_INTENSITY`, `VISUAL_DENSITY` e pre-flight |
+| Acabamento premium | `vendor/taste-skill/high-end-visual-design/SKILL.md` | Espaçamento, double-bezel, física de mola |
+| Diagramas | `vendor/diagram-design/SKILL.md` | Tudo dentro de cada diagrama (61 modelos; ver catálogo) |
+| Animação | `vendor/gsap-skills/gsap-core/SKILL.md`, `vendor/gsap-skills/gsap-timeline/SKILL.md` (+ `gsap-plugins`, `gsap-performance`) | Coreografia por slide |
+| Deck existente | `vendor/taste-skill/redesign-existing-projects/SKILL.md` | Só quando o usuário traz um HTML/deck pronto |
 
----
+Conflito: Manual da Marca > `frontend-slides` (estrutura) > `frontend-design` + `high-end-visual-design` (visual) > `diagram-design` (dentro do diagrama) > GSAP (movimento).
 
-## Design System Reference
+## Fase 0: Briefing
 
-All presentations follow the **Admin Dashboard Theme** from Wibx brand guidelines:
+1. Leia `vendor/frontend-slides/SKILL.md`, siga Phase 0/1 (modo A/B/C, conteúdo, público, densidade). Deck com muito texto = leitura (densidade alta); palestra = baixa.
+2. Infira público (engineer / mixed / executive) e nível de animação.
+3. Declare em uma linha o "design read" e os dials. Padrão corporativo premium: `VARIANCE 6 · MOTION 6 · DENSITY 3` (leitura: DENSITY 5).
 
-### Color Palette
-- **Background**: `#0c0c0c` (deep black)
-- **Surface/Cards**: `#141414` (elevated dark gray)
-- **Primary Interactive**: `#00ff70` (neon green)
-- **Text Primary**: `#ebf7ee` (off-white with green tint)
-- **Borders/Secondary**: `#2e2e2e`
-- **Muted Text**: `#ababab`
-- **Destructive/Error**: `#f06a6f`
+## Fase 0.5: Marca
 
-### Typography
-- **Font Family**: `Red Hat Display`, `Helvetica Neue`, `Arial`, sans-serif
-- **Characteristics**: Clean, geometric, modern technical appearance
-- **Headers**: Bold, high-impact sizing
-- **Body**: Readable at all sizes, use `clamp()` for responsive scaling
+Deck Wibx usa o **Manual da Marca** (escopo de decks da skill `wibx-brand`), nunca o tema Admin Dashboard (`#00ff70`, Red Hat Display), que é de UI de produto.
 
-### Visual Principles
-1. **Darkness = Premium**: Deep blacks and dark grays create a sleek, elevated aesthetic
-2. **Selective Saturation**: Grayscale structure with neon green only for:
-   - Primary call-to-action buttons
-   - Active/focus states
-   - Data highlights
-   - Visual emphasis
-3. **Subtle Elevation**: Soft drop shadows + 1px semi-transparent white borders for glass-like panel effect
-4. **Border Radius**: `10px` for most UI elements, fully rounded (`999px`) for pill-shaped buttons
-5. **Fluid Typography**: Use `clamp()` for responsive header sizing (e.g., `clamp(24px, 5vw, 44px)`)
+1. Leia `../wibx-brand/references/manual.md` INTEIRO: é lei (cores, fontes, logo, área de segurança, proibições).
+2. Logo oficial sempre (nunca redesenhe): `../wibx-brand/assets/manual/logo-light.svg`, embutido pelo `build.py` como `%%LOGO%%`. Símbolo isolado: mesmo SVG com `viewBox` recortado (`%%SYMBOL%%`). Clash Display pela CDN da Fontshare (os woff2 não são redistribuídos).
+3. Diagramas na marca: `python3 scripts/brand_gallery.py <projeto>/diagramas` (mapa em `assets/diagram-map.json`). O script lista HEX sem mapeamento: complete até zerar. Nunca grave dentro da pasta da skill.
+4. Outra marca que não a Wibx: fora do escopo desta skill; o `build.py` e o `qa_static.py` estão presos ao Manual Wibx.
 
----
+## Fase 1: Direção estética
 
-## Input Formats
+1. Leia `vendor/frontend-design/SKILL.md` e `vendor/taste-skill/high-end-visual-design/SKILL.md`; tese visual específica ao assunto, dentro do Manual da Marca.
+2. Leia `vendor/taste-skill/design-taste-frontend/SKILL.md` como filtro (sem Inter, sem roxo genérico, sem 3 cards iguais, zero travessões).
+3. Com o Manual da Marca: declare a direção em uma linha e siga (previews do frontend-slides só se houver liberdade real).
 
-### Markdown-Based Slides
+## Fase 2: Diagramas (61 modelos disponíveis)
 
-Structure slides using `---` as a slide delimiter:
+1. Leia `vendor/diagram-design/SKILL.md` e `references/diagramas.md`. O onboarding de estilo do diagram-design não se aplica: a marca já vem do `brand_gallery.py`.
+2. Para cada slide que explica sistema, processo, tempo, hierarquia, comparação ou números, escolha o modelo pela tabela "O slide precisa mostrar...". Prefira diagrama a bullet quando ele ensina mais que o parágrafo. Varie os modelos ao longo do deck (não repita a mesma família em slides seguidos).
+3. Leia o `vendor/diagram-design/references/type-<tipo>.md` do modelo (orçamento de nós, regras de conector). Parta do exemplo `-dark` da galeria na marca: `python3 scripts/extract_svg.py <projeto>/diagramas/<exemplo> <prefixo> --anim`.
+4. Geometria paramétrica (loop, radial, qualquer coisa com interseção calculada): gere por script (`templates/diagrams.py`, chamado de `<projeto>/parts.py`), nunca chute coordenadas.
+5. Regras: 1 a 2 focais em verde/acento; conectores ortogonais com cotovelo r=8; rótulo de seta com máscara e folga de 6 a 10px; legenda em faixa inferior; `<svg role="img">` com `<title>`/`<desc>` prefixados; ids prefixados por diagrama.
 
-```markdown
-# Slide 1: Title
+## Fase 3: Animação
 
-Content here.
+- `MOTION_INTENSITY` ≤ 4: CSS/WAAPI (`vendor/frontend-slides/animation-patterns.md`).
+- ≥ 5 ou diagramas que se desenham: leia `vendor/gsap-skills/gsap-core/SKILL.md` + `vendor/gsap-skills/gsap-timeline/SKILL.md`. GSAP via uma tag CDN (jsDelivr, já no esqueleto). `templates/controller.js`:
+  - `[data-r]` reveal de leitura; `[data-seq]` + `.draw` / `.pop` / `.fade` ordem do diagrama; `data-step` no `<section>` = ritmo; `[data-count]` contador (texto no fonte já é o valor final; lições E5).
+  - Ponta de seta só aparece quando a linha chega (implementado; lições A2).
+  - Pacotes de dados: marque o conector com `data-packet`; o controller faz a bolinha percorrer o caminho real (cotovelos inclusive). Todos os conectores do mesmo caminho recebem `data-packet`. Nunca círculo avulso com `translateX` (lições A7).
+  - Receita por família em `references/diagramas.md` (R-FLUXO, R-SEQ, R-BARRA...).
+- Objeto animado + sua moldura/brilho no MESMO wrapper; translação no wrapper, rotação só no objeto (lições C1). Objeto recortável vira asset com alfa no build (C2).
+- Reduced-motion: quadro final estático. Toda animação precisa de motivo (hierarquia, narrativa, estado).
 
----
+## Fase 4: Geração e QA (obrigatório, nesta ordem)
 
-# Slide 2: Two-Column Layout
-
-::left::
-Left column content
-
-::right::
-Right column content
-
----
-
-# Slide 3: With Chart
-
-::chart::
-{
-  "type": "bar",
-  "data": {
-    "labels": ["Q1", "Q2", "Q3", "Q4"],
-    "datasets": [{
-      "label": "Revenue",
-      "data": [10, 15, 12, 20],
-      "backgroundColor": "#00ff70"
-    }]
-  }
-}
+**Esqueleto do projeto** (fora da pasta da skill):
 ```
-
-### Natural Language
-
-Example: _"Create a 4-slide retrospective: title, what went well, what didn't, action items"_
-
-Claude converts this to structured slide content + markdown.
-
----
-
-## Slide Layout Patterns
-
-### 1. Title Slide
-- Large headline
-- Optional subtitle
-- Optional background gradient or accent bar
-
-### 2. Title + Content
-- Left-aligned heading
-- Body text with optional bullet points
-- Neon green accent bar on left edge
-
-### 3. Two-Column
-- Split layout with divider
-- Use `::left::` and `::right::` markers
-- Useful for comparisons, before/after, team bios
-
-### 4. Quote / Statement
-- Large, centered text
-- Minimal decoration
-- Full-width neon green accent bar at bottom
-
-### 5. Chart / Data
-- Full-width visualization
-- Chart libraries embedded (Chart.js or similar)
-- Interactive hover states
-
-### 6. Media (Image/SVG)
-- Full-bleed image with text overlay option
-- SVG assets (logo, icons) embedded directly
-- Aspect ratio preserved
-
-### 7. Agenda / Bullet List
-- Structured bullet points
-- Optional numbering
-- Each item has subtle hover animation
-
-### 8. Action Items / Call-to-Action
-- Bold headline
-- Compact list of next steps
-- Optional CTA button (neon green)
-
----
-
-## HTML Output Structure
-
-The generated HTML file includes:
-
-1. **Embedded CSS**: Complete styling in `<style>` block
-   - Dark mode defaults
-   - Responsive design with `clamp()`
-   - Animation keyframes
-   - Glass-morphism effects
-
-2. **Navigation**: 
-   - Previous/Next buttons (bottom-right, fixed position)
-   - Keyboard support (arrow keys, Space)
-   - Slide counter (current / total)
-   - Optional slide jump dropdown
-
-3. **Chart Support**: 
-   - Chart.js library via CDN or inline
-   - Common chart types: bar, line, pie, doughnut
-   - Neon green color scheme applied automatically
-
-4. **Animations**: 
-   - Slide transitions (fade or subtle zoom)
-   - Button hover effects (scale + glow)
-   - Text reveal on entry (optional stagger)
-
-5. **SVG/Logo**: 
-   - Embedded inline if provided
-   - Scales responsively
-   - Colors extracted from brand palette
-
----
-
-## Generation Process
-
-### Step 1: Parse Input
-- If markdown: split on `---`, identify layout patterns (two-column, chart, etc.)
-- If natural language: generate appropriate markdown structure
-
-### Step 2: Build Slide Objects
-- Title
-- Content (HTML-safe)
-- Layout type (title, two-column, chart, etc.)
-- Metadata (background color, accent, animation)
-
-### Step 3: Generate HTML
-- Wrap slides in a container with absolute positioning
-- Add navigation controls (fixed position)
-- Inject CSS for all brand colors, typography, shadows
-- Add JS for keyboard/click navigation
-- Embed Chart.js if charts detected
-
-### Step 4: Self-Contain
-- All CSS inline in `<style>`
-- All JS inline in `<script>`
-- External resources (fonts, Chart.js) via CDN with fallbacks
-- Images/SVGs referenced by path (user provides separately if needed)
-
----
-
-## Example Markdown Input
-
-```markdown
-# Internal Retrospective — Q1 2026
-
-Wibx Labs Learnings
-
----
-
-## What Went Well
-
-- Shipped Home Configurator beta in 6 weeks
-- Team collaboration exceeded baseline
-- Zero critical production incidents
-
----
-
-## What Didn't
-
-::left::
-**Scope Creep**
-- Feature requests outpaced capacity
-- Unclear prioritization framework
-
-::right::
-**Technical Debt**
-- Skipped unit tests on two modules
-- Database queries need optimization
-
----
-
-## Action Items
-
-1. Implement RFC process before Q2 kickoff
-2. Dedicate 20% sprint capacity to debt paydown
-3. Weekly stakeholder sync (Tuesdays, 2pm)
-
----
-
-# Thank You
-
-Questions?
+<projeto>/deck.src.html   copiado de templates/deck.src.html (placeholders %%STAGE_CSS%%, %%CONTROLLER_JS%%, %%LOGO%%, %%SYMBOL%%...)
+<projeto>/parts.py        opcional: PARTS = {"NOME": ...} para %%NOME%% (diagramas paramétricos, imagens com alfa)
+<projeto>/assets/         imagens de origem
+<projeto>/diagramas/      galeria na marca (Fase 0.5)
+<projeto>/deck.html       saída arquivo único (é o que se entrega)
 ```
+Fonte só com Edit/Write; scripts só leem o fonte e geram a saída.
 
----
+1. Leia `references/licoes.md`.
+2. `python3 templates/build.py <projeto>` e depois `python3 scripts/qa_static.py <projeto>/deck.html` → precisa dar OK.
+3. No navegador: abra o HTML **final** (sirva com `python3 -m http.server`), viewport 1920x1080, injete `scripts/qa_browser.js` via `javascript_tool` e rode `apthtmlQA.run()` → `[]`. Para Venn/zonas: `apthtmlQA.labelsInCircles(...)` com folga ≥ 16px. Sem Claude in Chrome: Chromium headless (lições E6, E7).
+4. Para cada slide: captura no meio da animação (≈1,2 s) e no fim (≈4 s). Confira pontas de seta, objetos animados, alinhamento em cards estreitos, espaço morto.
+5. Pre-flight do `design-taste-frontend` + checagem de marca (só paleta oficial, fonte oficial, logo oficial, sem uso proibido). Console sem erros. Um teste em viewport de celular (o palco só escala).
 
-## Output Example
+## Fase 5: Entrega
 
-The generated HTML includes:
-
-- Full-viewport slide container
-- Dark background (`#0c0c0c`)
-- Navigation controls (previous/next, slide counter)
-- Keyboard support (arrows, Space to advance)
-- Responsive typography with `clamp()`
-- Neon green accents on interactive elements
-- Smooth transitions between slides
-- Optional: embedded charts with reactive styling
-
----
-
-## Key Constraints
-
-1. **No external stylesheets**: Everything in `<style>` block
-2. **CDN dependencies only**: Chart.js, Google Fonts (Red Hat Display) via CDN
-3. **Images provided separately**: External image paths referenced but not bundled
-4. **Self-contained JS**: All interaction logic inline, no build step required
-5. **Mobile-responsive**: Works on mobile, tablet, desktop
-6. **Keyboard accessible**: Arrow keys, Space, Enter all supported
-7. **No frameworks**: Vanilla HTML/CSS/JS only
-
----
-
-## Logo Integration
-
-The Wibx logo (green icon + white wordmark) is embedded as inline SVG on title slides. Logo scales responsively:
-- **Desktop**: 120px tall
-- **Mobile**: 80px tall
-- **Placement**: Top-left or center-top of title slide
-
-SVG is embedded directly in HTML (no image files needed). Colors:
-- Icon mark: `#00ff70` (neon green)
-- Wordmark: `#ffffff` (white)
-
-Logo auto-inherits dark background styling; no additional styling required.
-
-### SVG Code (Embed in Title Slides)
-
-```html
-<svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 222 64.69" aria-label="WIBX">
-  <!-- Icon mark -->
-  <path fill="#00ff70" d="M33.79,64.64h-2.94C5.62,64.64,0,59.02,0,33.79v-2.94C0,5.62,5.62,0,30.85,0h2.94c25.23,0,30.85,5.62,30.85,30.85v2.94c0,25.23-5.62,30.85-30.85,30.85Z"/>
-  <circle fill="#141414" cx="19.09" cy="24.98" r="2.94"/>
-  <circle fill="#141414" cx="45.52" cy="24.98" r="2.94"/>
-  <path fill="#141414" d="M53.16,29.97c1.2-1.6,1.91-3.58,1.91-5.73,0-5.27-4.27-9.54-9.54-9.54-3.97,0-7.37,2.42-8.81,5.87-1.23.92-2.75,1.47-4.4,1.47s-3.18-.55-4.4-1.47c-1.44-3.45-4.84-5.87-8.81-5.87-5.27,0-9.54,4.27-9.54,9.54,0,2.15.71,4.14,1.91,5.73-3.68,3.46-2.65,7.15-2,8.58,0,0,.66,1.26,1.62,2.35,8.39,9.52,20.94,9.04,21.22,9.04h0c.28,0,12.83.48,21.22-9.04.96-1.09,1.62-2.34,1.62-2.35.65-1.43,1.69-5.12-2-8.58ZM45.52,19.1c2.84,0,5.14,2.3,5.14,5.14s-2.3,5.14-5.14,5.14-5.14-2.3-5.14-5.14,2.3-5.14,5.14-5.14ZM19.09,19.1c2.84,0,5.14,2.3,5.14,5.14s-2.3,5.14-5.14,5.14-5.14-2.3-5.14-5.14,2.3-5.14,5.14-5.14ZM50.59,37.86s-.3.33-.3.34c-6.89,7.61-17.62,7.29-17.99,7.29,0,0,0,0,0,0s0,0,0,0c-.37,0-11.1.32-17.99-7.29,0,0-.29-.33-.3-.34-1.25-1.58-1-3.83.64-5.17,1.32.7,2.83,1.09,4.43,1.09,4.79,0,8.75-3.52,9.44-8.12,1.16.5,2.44.78,3.78.78s2.62-.28,3.78-.78c.69,4.6,4.65,8.12,9.44,8.12,1.6,0,3.11-.4,4.43-1.09,1.64,1.34,1.89,3.59.64,5.17Z"/>
-  <!-- Wordmark -->
-  <path fill="white" d="M127.81,4.41c0-.81-.66-1.47-1.47-1.47h-8.81c-.66,0-1.22.45-1.41,1.05l-7.58,25.26-4.31-13.53c-.19-.59-.75-1.02-1.4-1.02h-8.81c-.65,0-1.21.43-1.4,1.02l-4.31,13.53-3.17-10.57c-.18-.6-.75-1.05-1.41-1.05h-8.81c-.81,0-1.47.66-1.47,1.47,0,.15.02.29.06.42l8.81,29.38c.18.6.75,1.05,1.41,1.05h8.81c.06,0,.13,0,.2-.01.58-.08,1.04-.49,1.21-1.01l4.48-14.07,4.48,14.07c.19.6.76,1.02,1.4,1.02h8.82c.66,0,1.22-.45,1.41-1.05l13.22-44.07c.04-.13.06-.28.06-.42Z"/>
-  <circle fill="white" cx="135.15" cy="8.81" r="5.88"/>
-  <rect fill="white" x="129.28" y="17.63" width="11.75" height="32.32" rx="1.47" ry="1.47"/>
-  <path fill="white" d="M166,14.69c-2.65,0-5.14.7-7.35,1.93V4.41c0-.81-.66-1.47-1.47-1.47h-8.81c-.81,0-1.47.66-1.47,1.47v44.07c0,.81.66,1.47,1.47,1.47h8.81c.81,0,1.47-.66,1.47-1.47v-.46c2.2,1.23,4.7,1.93,7.35,1.93,8.92,0,16.16-7.89,16.16-17.63s-7.24-17.63-16.16-17.63ZM164.53,39.67c-3.24,0-5.87-3.28-5.88-7.33v-.04c0-4.05,2.64-7.33,5.88-7.33s5.88,3.29,5.88,7.35-2.63,7.35-5.88,7.35Z"/>
-  <path fill="white" d="M207.57,32.32l12.46,15.23c.21.25.33.58.33.93,0,.81-.66,1.47-1.47,1.47h-10.28c-.45,0-.87-.22-1.14-.54l-6.94-8.49-6.94,8.49c-.27.32-.68.54-1.14.54h-10.28c-.81,0-1.47-.66-1.47-1.47,0-.35.13-.68.33-.93l12.46-15.23-12.46-15.23c-.21-.25-.33-.58-.33-.93,0-.81.66-1.47,1.47-1.47h10.28c.45,0,.87.22,1.14.54l6.94,8.49,6.94-8.49c.27-.32.68-.54,1.14-.54h10.28c.81,0,1.47.66,1.47,1.47,0,.35-.13.68-.33.93l-12.46,15.23Z"/>
-</svg>
-```
-
-### CSS for Logo
-
-```css
-.logo {
-    height: clamp(60px, 10vw, 120px);
-    margin-bottom: 40px;
-    display: block;
-}
-```
-
----
-
-## Common Patterns
-
-### Adding a Chart
-```
-::chart::
-{"type": "bar", "data": {...}}
-```
-
-### Two-Column Text
-```
-::left::
-Content A
-
-::right::
-Content B
-```
-
-### Full-Width Image
-```
-::image::
-path/to/image.jpg
-```
-
-### Neon Green Emphasis
-Wrap text in backticks or use `<span class="accent">text</span>` in HTML slides.
-
----
-
-## Troubleshooting
-
-- **Fonts not loading**: Red Hat Display falls back to Helvetica Neue, then Arial
-- **Charts not rendering**: Ensure Chart.js CDN is accessible; check browser console
-- **Mobile layout broken**: Use `clamp()` for responsive sizing; test at 375px width
-- **SVG colors wrong**: Ensure SVG uses inheritable `fill` attributes, not hardcoded colors
-
+- Entregue o caminho do HTML final. Liste o que mudou e **pergunte** sobre divergências de conteúdo/marca encontradas (nunca corrija fato em silêncio).
+- Export PDF (Phase 6B do frontend-slides, `vendor/frontend-slides/scripts/export-pdf.sh`) só se pedido.
+- NUNCA publique (Vercel, Artifact, URL pública) sem confirmação explícita naquele momento. O `deploy.sh` do frontend-slides não vem neste pacote de propósito.
+- Quando o usuário corrigir algo, registre em `references/licoes.md` (o que aconteceu, por quê, regra, como verificar) e, se couber, automatize no QA.

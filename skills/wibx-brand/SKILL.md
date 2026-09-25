@@ -1,6 +1,6 @@
 ---
 name: wibx-brand
-description: Canonical source of Wibx brand tokens — the Admin Dashboard theme colors (neon green #00ff70 on deep black), Red Hat Display type scale, radii/elevation rules, and the official Wibx logo SVG. Use this skill WHENEVER you apply Wibx branding to anything — websites, dashboards, decks, docs, emails, READMEs, components — or when the user mentions "Wibx brand", "brand colors/tokens/palette", "Wibx green", "#00ff70", brand guidelines, the Wibx logo, or asks to generate an accessible color ramp/theme from the brand colors. Other Wibx skills should reference this instead of hardcoding hex values.
+description: Canonical source of Wibx brand tokens, in two scopes. The Admin Dashboard theme for product UI (neon green #00ff70 on deep black, Red Hat Display) and the official Brand Manual for decks and brand pieces (#22ff7b on #070707, Clash Display, logo rules, gradients, complementary palette), plus the official logo SVGs. Use this skill WHENEVER you apply Wibx branding to anything — websites, dashboards, decks, docs, emails, READMEs, components — or when the user mentions "Wibx brand", "brand colors/tokens/palette", "Wibx green", "#00ff70", brand guidelines, the Wibx logo, or asks to generate an accessible color ramp/theme from the brand colors. Other Wibx skills should reference this instead of hardcoding hex values.
 compatibility: None (reference tokens + python3 stdlib script)
 ---
 
@@ -21,6 +21,20 @@ Trigger whenever you (or another skill) are:
 - Generating a tonal color ramp or theme from the brand colors, or checking brand contrast for accessibility
 
 If you're about to hardcode a Wibx hex value, stop and pull it from here.
+
+---
+
+## Two Scopes: pick one per surface
+
+| Surface | Scope | Source |
+|---|---|---|
+| Product UI: web app, dashboard, component, email template | Admin Dashboard theme | `references/tokens.md` (quick reference below) |
+| Deck, pitch, keynote, one-pager, institutional piece | Brand Manual | `references/manual.md` + `assets/manual/*.svg` |
+
+Brand Manual core: Wibx Green `#22ff7b`, Wibx Black `#070707`, White `#ffffff`, font
+Clash Display (Fontshare CDN), "wibx COMPANY" signature logo. Read `references/manual.md`
+in full before producing a brand piece: logo rules, forbidden uses, gradients and the
+complementary palette live there. Never mix scopes on one surface.
 
 ---
 
@@ -81,7 +95,9 @@ Pure python3 stdlib — no install. Targets: WCAG AA ≥ 4.5 (body text), ≥ 3.
 
 ## For Other Skills
 
-- **wibx-presentations** and any UI/design skill: read core tokens above (or
-  `references/tokens.md`) and embed `assets/wibx-logo.svg` rather than duplicating.
+- **wibx-presentations**: Brand Manual scope (`references/manual.md`, `assets/manual/`).
+  Its `qa_static.py` reads the manual's hex values as the allowed palette.
+- Any UI/design skill: read core tokens above (or `references/tokens.md`) and embed
+  `assets/wibx-logo.svg` rather than duplicating.
 - Need a shade not in the seven tokens? Generate it with `scripts/color_ramp.py` so
   it stays on-hue and contrast-checked — don't invent ad-hoc hex values.
