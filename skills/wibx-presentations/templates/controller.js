@@ -92,7 +92,10 @@ class SlidePresentation {
       if (el.classList.contains('draw')) {
         const len = el.getTotalLength ? Math.ceil(el.getTotalLength()) + 2 : 100;
         const dur = Number(el.dataset.dur || 0.55);
-        tl.fromTo(el, { strokeDasharray: len, strokeDashoffset: len }, { strokeDashoffset: 0, duration: dur, ease: 'power2.inOut', clearProps: 'strokeDasharray,strokeDashoffset' }, at);
+        /* Dasharray com DOIS valores (traço e vão = len). Com um valor só, o GSAP troca apenas o primeiro
+           número de um tracejado existente ("6 5" vira "len 5") e a linha aparece antes da hora (lições A8).
+           O clearProps devolve o tracejado original do atributo quando o desenho termina. */
+        tl.fromTo(el, { strokeDasharray: `${len} ${len}`, strokeDashoffset: len }, { strokeDashoffset: 0, duration: dur, ease: 'power2.inOut', clearProps: 'strokeDasharray,strokeDashoffset' }, at);
         /* Ponta da seta só aparece quando a linha chega ao destino */
         const mk = el.getAttribute('marker-end') || el.dataset.marker;
         if (mk) {
