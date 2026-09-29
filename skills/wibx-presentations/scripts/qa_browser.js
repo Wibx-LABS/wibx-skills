@@ -3,9 +3,11 @@
      apthtmlQA.run()                       -> lista de problemas por slide ("[]" = ok)
      apthtmlQA.labelsInCircles(sel, circles, labels, gap)
        sel: seletor do <svg>; circles: {k:[cx,cy,r]}; labels: [[texto, k_do_próprio]]
-   Regras em references/licoes.md (B2, B3, B4, A1). */
+   Regras em references/licoes.md (B2, B3, B4, B8, B9, D4, A1).
+   Sem Claude in Chrome: scripts/qa_headless.mjs roda este mesmo arquivo num Chromium local (lições E9). */
 window.apthtmlQA = (() => {
   const W = 1920, H = 1080;
+  const BRAND_FONT = 'Clash Display'; // família única do Manual da Marca Wibx (D4)
   const rel = (r, sr, k) => ({ l: (r.left - sr.left) / k, t: (r.top - sr.top) / k, r: (r.right - sr.left) / k, b: (r.bottom - sr.top) / k });
   const inter = (a, b) => Math.max(0, Math.min(a.r, b.r) - Math.max(a.l, b.l)) * Math.max(0, Math.min(a.b, b.b) - Math.max(a.t, b.t));
 
@@ -49,6 +51,35 @@ window.apthtmlQA = (() => {
     if (foot) s.querySelectorAll('.dg').forEach(d => {
       if (d.getBoundingClientRect().bottom > foot.getBoundingClientRect().top + 2) out.push(`${n}: diagrama sobre o rodapé`);
     });
+    // B8: qualquer bloco (painel, card, tabela) passando do topo do rodapé. Só o mais externo é reportado.
+    // Pega o caso que o B4 não vê: filho de .body com height:100% + padding em content-box (lições B7).
+    if (foot) {
+      const fy = rel(foot.getBoundingClientRect(), sr, k).t;
+      const hit = [];
+      s.querySelectorAll('*').forEach(el => {
+        if (el === foot || foot.contains(el) || el.contains(foot) || (el.closest('svg') && el.tagName !== 'svg')) return;
+        const cs = getComputedStyle(el);
+        if (cs.display === 'inline' || cs.pointerEvents === 'none') return;
+        const r = el.getBoundingClientRect(); if (!r.height) return;
+        if (rel(r, sr, k).b > fy - 4 && !hit.some(h => h.contains(el))) {
+          hit.push(el); out.push(`${n}: .${name(el)} passa do rodapé (termina em ${Math.round(rel(r, sr, k).b)}, rodapé em ${Math.round(fy)})`);
+        }
+      });
+    }
+    // B9: conteúdo maior que a caixa na vertical (texto que vaza por baixo do painel).
+    // Folga de 12px: descendente de letra (ç, g, q) passa alguns px da caixa de linha e não é layout quebrado.
+    s.querySelectorAll('div,section > *').forEach(el => {
+      if (el.closest('svg') || el.classList.contains('slide')) return;
+      if (el.clientHeight > 0 && el.scrollHeight > el.clientHeight + 12) out.push(`${n}: .${name(el)} estoura na vertical (${el.scrollHeight}>${el.clientHeight})`);
+    });
+    // D4: texto fora da família do manual (pre/code/kbd herdam monospace do navegador)
+    const bad = new Set();
+    s.querySelectorAll('*').forEach(el => {
+      if (el.closest('svg') && el.tagName !== 'text' && el.tagName !== 'tspan') return;
+      const own = [...el.childNodes].some(c => c.nodeType === 3 && c.textContent.trim());
+      if (own && !getComputedStyle(el).fontFamily.includes(BRAND_FONT)) bad.add(`${el.tagName.toLowerCase()} (${getComputedStyle(el).fontFamily.slice(0, 40)})`);
+    });
+    bad.forEach(b => out.push(`${n}: texto fora da fonte do manual: ${b}`));
     return out;
   }
 

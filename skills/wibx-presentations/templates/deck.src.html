@@ -20,6 +20,8 @@
   --ease: cubic-bezier(0.32, 0.72, 0, 1);
 }
 body { font-family: 'Clash Display', sans-serif; color: var(--white); -webkit-font-smoothing: antialiased; }
+/* pre/code/kbd/samp herdam monospace do navegador: o manual tem família única (lições D4) */
+pre, code, kbd, samp { font-family: 'Clash Display', sans-serif; }
 
 /* Atmosfera do manual: brilho verde difuso vindo de um canto */
 .slide::before { content: ''; position: absolute; inset: 0; pointer-events: none;

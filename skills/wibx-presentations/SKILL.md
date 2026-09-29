@@ -20,7 +20,8 @@ Caminhos abaixo são relativos à pasta desta skill.
 | `vendor/diagram-design/assets/` | Galeria oficial (61 modelos × variantes) |
 | `templates/` | `build.py`, `deck.src.html` (esqueleto na marca), `diagrams.py` (geometria paramétrica), `controller.js` (palco, navegação, GSAP, edição), `stage.css` |
 | `scripts/qa_static.py` | QA do HTML final: travessões, placeholders, ids duplicados, paleta, a11y dos SVGs |
-| `scripts/qa_browser.js` | QA no navegador: fora do palco, texto estourando, títulos longos, sobreposição, rótulos x círculos |
+| `scripts/qa_browser.js` | QA no navegador: fora do palco, texto estourando, títulos longos, sobreposição, bloco passando do rodapé, estouro vertical, fonte fora do manual, rótulos x círculos |
+| `scripts/qa_headless.mjs` | Roda o `qa_browser.js` e as capturas do meio e do fim num Chromium local, quando o Claude in Chrome não está conectado |
 | `scripts/brand_gallery.py` | Gera a galeria inteira na marca Wibx |
 | `scripts/extract_svg.py` | Tira o SVG de um modelo com ids prefixados (e marcação de animação) |
 
@@ -94,7 +95,7 @@ Fonte só com Edit/Write; scripts só leem o fonte e geram a saída.
 
 1. Leia `references/licoes.md`.
 2. `python3 templates/build.py <projeto>` e depois `python3 scripts/qa_static.py <projeto>/deck.html` → precisa dar OK.
-3. No navegador: abra o HTML **final** (sirva com `python3 -m http.server`), viewport 1920x1080, injete `scripts/qa_browser.js` via `javascript_tool` e rode `apthtmlQA.run()` → `[]`. Para Venn/zonas: `apthtmlQA.labelsInCircles(...)` com folga ≥ 16px. Sem Claude in Chrome: Chromium headless (lições E6, E7).
+3. No navegador: abra o HTML **final** (sirva com `python3 -m http.server`), viewport 1920x1080, injete `scripts/qa_browser.js` via `javascript_tool` e rode `apthtmlQA.run()` → `[]`. Para Venn/zonas: `apthtmlQA.labelsInCircles(...)` com folga ≥ 16px. Sem Claude in Chrome: `cd "$(mktemp -d)" && npm i puppeteer-core && node <skill>/scripts/qa_headless.mjs <projeto>/deck.html <pasta_capturas>`, que roda o mesmo QA e as capturas (lições E6, E7, E9). QA verde não basta: revise as capturas (lições B8).
 4. Para cada slide: captura no meio da animação (≈1,2 s) e no fim (≈4 s). Confira pontas de seta, objetos animados, alinhamento em cards estreitos, espaço morto.
 5. Pre-flight do `design-taste-frontend` + checagem de marca (só paleta oficial, fonte oficial, logo oficial, sem uso proibido). Console sem erros. Um teste em viewport de celular (o palco só escala).
 

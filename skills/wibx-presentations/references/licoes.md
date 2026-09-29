@@ -36,6 +36,12 @@ Cada item: o que aconteceu, por que, a regra, e como verificar. Leia antes da Fa
 - **Regra:** pacote nunca é um elemento avulso. Marque o conector com `data-packet` e o controller gera a bolinha percorrendo o path real (`getPointAtLength`), depois que a linha se desenha. Todos os conectores do mesmo caminho (mesma cor/papel) recebem `data-packet`, inclusive os com cotovelo. Proibido `translateX`/`--d` para mover pacote.
 - **Verificar:** `qa_static.py` acusa caminho parcial (um conector com `data-packet` e outro irmão da mesma cor sem) e pacote legado (`class="packet"`, `translateX`). No navegador, amostre `cx/cy` das `.packet-dot` por 3 s: cada uma deve cobrir o path inteiro (passar pelos cotovelos).
 
+### A8. Conector tracejado aparece inteiro antes da hora
+- **Aconteceu:** no deck Maestro (2026-09-29), conectores com `stroke-dasharray="6 5"` e classe `.draw` apareciam desenhados no primeiro quadro, segundos antes da vez deles.
+- **Por quê:** o controller escrevia `strokeDasharray: len` (um valor só). Com tracejado já no atributo, o GSAP troca só o primeiro número: `"6 5"` vira `"702px, 5px"`. Com deslocamento 702, o traço aparece depois de um vão de 5px. Reproduzido num deck mínimo: o path sólido fica oculto, o tracejado não.
+- **Regra:** o controller escreve `strokeDasharray: \`${len} ${len}\`` (dois valores). O `clearProps` devolve o tracejado original quando o desenho termina. Já implementado em `templates/controller.js`.
+- **Verificar:** captura no meio da animação (E2) de slide com conector tracejado; nada tracejado antes do seu `data-seq`.
+
 ### A6. Galeria recolorida: fonte da marca pode ser mais larga que a Geist
 - **Regra:** depois de `brand_gallery.py`, sirva a pasta por HTTP (`python3 -m http.server`) e meça em iframes (mesma origem) se cada `<text>` cabe no menor `<rect>` que o contém, após `document.fonts.ready`. Confirme que a fonte da marca carregou (`document.fonts.check`) antes de confiar no resultado. WiBX/Clash Display: 1 estouro em 61 modelos, e ele já existia no original (texto mono).
 - **Ao extrair um modelo para o slide:** remova o `<rect>` de fundo de tela cheia do exemplo (o slide já tem fundo e brilho).
@@ -63,6 +69,16 @@ Cada item: o que aconteceu, por que, a regra, e como verificar. Leia antes da Fa
 ### B6. Espaço morto em slide (pilares pequenos, vão entre blocos)
 - **Regra:** se sobrar > 180px vertical vazio entre o último bloco e o rodapé, aumente escala do conteúdo (statement, texto de apoio) ou redistribua. Texto de apoio mínimo 18px no palco.
 
+### B7. Painel passando do rodapé (content-box)
+- **Aconteceu:** no deck Maestro, painéis com `height: 100%` dentro do corpo do slide terminavam 68px abaixo do previsto, por cima do rodapé.
+- **Por quê:** sem `box-sizing: border-box`, `height: 100%` soma o padding (34px em cima e embaixo). O B4 não pega: o painel não é filho direto do slide.
+- **Regra:** `*, *::before, *::after { box-sizing: border-box; }` no `templates/stage.css` (já está).
+- **Verificar:** `qa_browser.js` checa B8 (qualquer bloco passando do topo do rodapé) e B9 (conteúdo maior que a caixa na vertical, com 12px de folga para descendente de letra).
+
+### B8. O QA automático passou e o slide estava quebrado
+- **Aconteceu:** `qa_static.py` e `apthtmlQA.run()` deram OK com painel sobre o rodapé, árvore em fonte mono e rótulo cruzado por linha. Só a revisão das capturas achou.
+- **Regra:** revisar TODAS as capturas do fim (e as do meio nos slides com diagrama) antes de entregar, mesmo com QA verde. Cada erro achado no olho vira checagem no QA quando for mecânico (B8, B9 e D4 nasceram assim).
+
 ---
 
 ## C. Imagens e animação de objetos
@@ -87,6 +103,11 @@ Cada item: o que aconteceu, por que, a regra, e como verificar. Leia antes da Fa
 
 ### D3. Divergências do material do cliente
 - **Regra:** quando o arquivo oficial diverge do manual (ex.: SVG `#00ff70` x manual `#22ff7b`) ou o conteúdo é inconsistente (ex.: "D+30" x "30 minutos"), aplique o manual e **pergunte** no fim da entrega. Nunca corrija conteúdo factual em silêncio.
+
+### D4. Texto fora da família do manual (pre, code, kbd)
+- **Aconteceu:** no deck Maestro, uma árvore de pastas em `<pre>` e identificadores em `<code>` saíram em monospace do navegador. O manual tem família única (Clash Display).
+- **Regra:** o `templates/deck.src.html` fixa `pre, code, kbd, samp` em Clash Display. Alinhamento em colunas se faz com grid, não com espaços dentro de `<pre>`.
+- **Verificar:** `qa_browser.js` checa D4: todo elemento com texto próprio precisa ter Clash Display no `font-family` computado.
 
 ---
 
@@ -113,6 +134,11 @@ Cada item: o que aconteceu, por que, a regra, e como verificar. Leia antes da Fa
 ### E6. Screenshot headless no meio da animação
 - **Aconteceu:** `--screenshot` do Chrome headless capturou os `[data-r]` ainda transparentes; o tempo virtual não avança a timeline do GSAP.
 - **Regra:** quadro final: `--force-prefers-reduced-motion`. Quadro do meio (E2): navegador real (Claude in Chrome) ou `--virtual-time-budget` curto, conferindo à mão.
+
+### E9. QA de navegador sem Claude in Chrome
+- **Aconteceu:** no deck Maestro a extensão não estava conectada. `--screenshot` do Chrome headless não roda o `qa_browser.js` nem avança o GSAP (E6).
+- **Regra:** `scripts/qa_headless.mjs` roda o mesmo `qa_browser.js` num Chromium local (Chrome, Chromium, Brave ou Edge, ou `CHROME_PATH`) via puppeteer-core, e tira as capturas do meio e do fim em tempo real. Instale o puppeteer-core numa pasta temporária, nunca na skill: `cd "$(mktemp -d)" && npm i puppeteer-core`.
+- **Verificar:** sai com código 1 se houver problema, fonte do manual não carregada ou erro de console (favicon ignorado).
 
 ### E7. Viewport de celular em headless
 - **Aconteceu:** `--window-size=390,...` parecia cortar o palco; o headless impõe largura mínima de 500px e o screenshot recorta em 390.
