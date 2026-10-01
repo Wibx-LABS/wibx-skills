@@ -3,8 +3,11 @@ set -e
 
 WORKFLOW_FILE=$1
 
+# Credentials: ./.env next to this script, or the stable per-user file (survives plugin cache updates)
 if [ -f .env ]; then
   export $(grep -v '^#' .env | xargs)
+elif [ -f "$HOME/.config/wibx/n8n.env" ]; then
+  export $(grep -v '^#' "$HOME/.config/wibx/n8n.env" | xargs)
 fi
 
 N8N_API_URL="${N8N_API_URL:-http://localhost:5678/api/v1}"
@@ -37,11 +40,25 @@ WORKFLOW_NAME=$(echo "$PAYLOAD" | jq -r '.name')
 # causes n8n to keep the existing activeVersion unchanged — only this minimal set works.
 PUT_PAYLOAD=$(echo "$PAYLOAD" | jq '{name, nodes, connections, settings: {"executionOrder": "v1"}}')
 
-# Check if workflow with this name already exists
-WORKFLOW_NAME_LOWER=$(echo "$WORKFLOW_NAME" | tr '[:upper:]' '[:lower:]')
-EXISTING_ID=$(curl -s "$N8N_API_URL/workflows?limit=100" \
-  -H "X-N8N-API-KEY: $N8N_API_KEY" \
-  | jq -r --arg name "$WORKFLOW_NAME_LOWER" '.data[] | select((.name | ascii_downcase) == $name) | .id' | head -1)
+# Check if a workflow with this exact name already exists. The list endpoint is
+# paginated (100 per page): instances with >100 workflows need the cursor loop,
+# otherwise a workflow beyond page 1 is not found and gets created twice.
+find_workflow_ids() {
+  local cursor="" page ids
+  while :; do
+    page=$(curl -s "$N8N_API_URL/workflows?limit=100${cursor:+&cursor=$cursor}" -H "X-N8N-API-KEY: $N8N_API_KEY")
+    ids=$(echo "$page" | jq -r --arg name "$WORKFLOW_NAME" '.data[] | select(.name == $name) | .id')
+    if [ -n "$ids" ]; then echo "$ids"; return 0; fi
+    cursor=$(echo "$page" | jq -r '.nextCursor // empty')
+    [ -n "$cursor" ] || return 0
+  done
+}
+MATCHES=$(find_workflow_ids)
+EXISTING_ID=$(echo "$MATCHES" | head -1)
+MATCH_COUNT=$(echo "$MATCHES" | grep -c . || true)
+if [ "$MATCH_COUNT" -gt 1 ]; then
+  echo "[!] $MATCH_COUNT workflows share the name '$WORKFLOW_NAME' — updating $EXISTING_ID; delete the duplicates in n8n"
+fi
 
 if [ -n "$EXISTING_ID" ] && [ "$EXISTING_ID" != "null" ]; then
   echo "[~] Workflow '$WORKFLOW_NAME' exists (ID: $EXISTING_ID). Updating..."
@@ -70,6 +87,7 @@ echo "[+] Deployed. Workflow ID: $WORKFLOW_ID"
 
 echo "=== Stage 3: Remote Test Execution ==="
 WEBHOOK_PATH=$(echo "$PAYLOAD" | jq -r '[.nodes[] | select(.type == "n8n-nodes-base.webhook") | .parameters.path] | first // empty')
+WEBHOOK_AUTH=$(echo "$PAYLOAD" | jq -r '[.nodes[] | select(.type == "n8n-nodes-base.webhook") | .parameters.authentication // "none"] | first // "none"')
 IS_ACTIVE=$(curl -s "$N8N_API_URL/workflows/$WORKFLOW_ID" \
   -H "X-N8N-API-KEY: $N8N_API_KEY" | jq -r '.active')
 
@@ -80,6 +98,12 @@ if [ -z "$WEBHOOK_PATH" ] || [ "$WEBHOOK_PATH" == "null" ]; then
 fi
 
 WEBHOOK_URL="$N8N_BASE_URL/webhook/$WEBHOOK_PATH"
+
+if [ "$WEBHOOK_AUTH" != "none" ]; then
+  echo "[!] Webhook requires authentication ($WEBHOOK_AUTH) — Stage 3 skipped (an unauthenticated POST would be rejected"
+  echo "    and the poll would report an unrelated execution). Trigger it with the credential, then check /executions."
+  exit 0
+fi
 
 if [ "$IS_ACTIVE" != "true" ]; then
   echo "[!] Workflow not active — webhook won't fire."
