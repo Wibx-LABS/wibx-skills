@@ -4,10 +4,10 @@
 
 #### 🇺🇸 English
 **What it does:**
-This skill plays maintainer over the open PRs of the configured `Wibx-LABS` repos. One invocation is one full deterministic sweep: collect, classify, act, report. It merges on its own only what is provably safe, and comments on everything else telling whoever opened the PR — human or agent — exactly what to do next. It solves the case where several agent instances open PRs on the same repo and start colliding with each other.
+This skill plays maintainer over the open PRs of the configured repos, in the orgs of a closed allowlist (`orgs` in the config; `Wibx-LABS` when absent). One invocation is one full deterministic sweep: collect, classify, act, report. It merges on its own only what is provably safe, and comments on everything else telling whoever opened the PR — human or agent — exactly what to do next. It solves the case where several agent instances open PRs on the same repo and start colliding with each other.
 
 **Key Features:**
-- **Pinned Org:** `Wibx-LABS` is hardcoded. Any slug from another owner aborts the whole sweep. That lock is what makes self-merging safe.
+- **Org Allowlist:** only orgs listed in `orgs` (default `["Wibx-LABS"]`) are touched; the first one is the default for short repo names. A slug from any other owner aborts the sweep (argument) or is skipped (config). That lock is what makes self-merging safe.
 - **Five Bands:** Every PR falls into exactly one of `HOLD`, `CONFLICT`, `CI_RED`, `WAIT`, `MERGE` — first matching condition wins.
 - **Merge Order Is the Value:** The `MERGE` band is sorted smallest-first, and two PRs sharing >50% of their files never merge in the same sweep. Wrong order is what creates the conflict queue in the first place.
 - **Reclassify After Each Merge:** Re-reads the PR list after every merge instead of polling, so `mergeable` recalculation on GitHub's side resolves on the next sweep.
@@ -15,7 +15,7 @@ This skill plays maintainer over the open PRs of the configured `Wibx-LABS` repo
 - **Never Merges Blind:** No CI configured is absence of signal, not a green light — it lands in `HOLD`. Drafts, `CHANGES_REQUESTED`, and >1000-line PRs (except upstream syncs) are held for you.
 - **Loop-Safe:** Never calls `AskUserQuestion` mid-sweep. Pending decisions go to an "Aguardando você" list and come back next pass.
 - **Dry Mode:** `/maintainer dry` classifies and reports with zero merges and zero comments. Use it the first time.
-- **Owner Policy, Enforced:** per-repo `require_label` (only PRs carrying it can auto-merge — agent PRs and human PRs share the same gh account, so a label is the only reliable marker) and `hold_paths` (PRs touching gate/deploy/schema paths always wait for a human).
+- **Owner Policy, Enforced:** per-repo `require_label` (only PRs carrying it can auto-merge — agent PRs and human PRs share the same gh account, so a label is the only reliable marker) and `hold_paths` (prefixes, or globs with `**`; PRs touching gate/deploy/schema paths always wait for a human).
 - **Watch Mode, Not Cron:** `/maintainer watch` arms a single event-driven `Monitor` across all configured repos. It only re-sweeps a repo when its PR state actually changed (new PR, new push, CI finished, mergeable flipped) — never on a blind fixed-interval timer. No `CronCreate`, no `/loop`.
 
 **Usage:**
@@ -25,10 +25,10 @@ This skill plays maintainer over the open PRs of the configured `Wibx-LABS` repo
 
 #### 🇧🇷 Português
 **O que faz:**
-Esta skill faz o papel de mantenedor sobre as PRs abertas dos repos configurados da org `Wibx-LABS`. Uma invocação é uma varredura determinística completa: coletar, classificar, agir, reportar. Mergeia sozinha só o que é comprovadamente seguro, e comenta em todo o resto instruindo quem abriu a PR — humano ou agente — sobre o próximo passo. Resolve o caso em que várias instâncias de agente abrem PR no mesmo repo e começam a colidir entre si.
+Esta skill faz o papel de mantenedor sobre as PRs abertas dos repos configurados, nas orgs de uma allowlist fechada (`orgs` na config; `Wibx-LABS` quando ausente). Uma invocação é uma varredura determinística completa: coletar, classificar, agir, reportar. Mergeia sozinha só o que é comprovadamente seguro, e comenta em todo o resto instruindo quem abriu a PR — humano ou agente — sobre o próximo passo. Resolve o caso em que várias instâncias de agente abrem PR no mesmo repo e começam a colidir entre si.
 
 **Principais Recursos:**
-- **Org Fixa:** `Wibx-LABS` é hardcoded. Slug de qualquer outro owner aborta a varredura inteira. Essa trava é o que torna o auto-merge seguro.
+- **Allowlist de Orgs:** só as orgs de `orgs` (default `["Wibx-LABS"]`) são tocadas; a primeira é a padrão para nome curto. Slug de qualquer outro owner aborta a varredura (argumento) ou é ignorado (config). Essa trava é o que torna o auto-merge seguro.
 - **Cinco Faixas:** Toda PR cai em exatamente uma de `HOLD`, `CONFLICT`, `CI_RED`, `WAIT`, `MERGE` — vence a primeira condição que casar.
 - **A Ordem de Merge É o Valor:** A faixa `MERGE` é ordenada da menor para a maior, e duas PRs que compartilham >50% dos arquivos nunca mergeiam na mesma passada. Ordem errada é justamente o que cria a fila de conflito.
 - **Reclassifica a Cada Merge:** Relê a lista de PRs depois de cada merge em vez de fazer polling, então o recálculo do `mergeable` no lado do GitHub resolve na passada seguinte.
@@ -36,7 +36,7 @@ Esta skill faz o papel de mantenedor sobre as PRs abertas dos repos configurados
 - **Nunca Mergeia às Cegas:** Sem CI configurado é ausência de sinal, não sinal verde — cai em `HOLD`. Drafts, `CHANGES_REQUESTED` e PRs acima de 1000 linhas (exceto syncs de upstream) ficam segurados para você.
 - **Seguro em Loop:** Nunca chama `AskUserQuestion` no meio da varredura. Decisões pendentes vão para a lista "Aguardando você" e reaparecem na próxima passada.
 - **Modo Dry:** `/maintainer dry` classifica e reporta sem nenhum merge e nenhum comentário. Use assim na primeira vez.
-- **Política do Dono, Executada:** `require_label` por repo (só PR com o label pode auto-mergear — PR de agente e de humano saem da mesma conta gh, então label é o único marcador confiável) e `hold_paths` (PR tocando caminho de gate/deploy/schema sempre espera humano).
+- **Política do Dono, Executada:** `require_label` por repo (só PR com o label pode auto-mergear — PR de agente e de humano saem da mesma conta gh, então label é o único marcador confiável) e `hold_paths` (prefixo, ou glob com `**`; PR tocando caminho de gate/deploy/schema sempre espera humano).
 - **Modo Watch, Não Cron:** `/maintainer watch` arma um único `Monitor` orientado a evento cobrindo todos os repos configurados. Só refaz a varredura de um repo quando o estado das PRs muda de verdade (PR nova, push novo, CI terminou, mergeable virou) — nunca em intervalo fixo às cegas. Sem `CronCreate`, sem `/loop`.
 
 **Uso:**

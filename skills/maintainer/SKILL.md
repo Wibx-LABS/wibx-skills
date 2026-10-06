@@ -1,8 +1,9 @@
 ---
 name: maintainer
 description: >-
-  Faz o papel de mantenedor dos repositórios da org Wibx-LABS (org fixa, nunca outra) numa
-  varredura determinística: lê as PRs abertas dos repos configurados via gh, classifica cada uma (verde, CI pendente, conflito, CI vermelho,
+  Faz o papel de mantenedor dos repositórios das orgs da allowlist da config (`orgs`; sem ela,
+  só Wibx-LABS; nunca org fora da lista) numa varredura determinística: lê as PRs abertas dos
+  repos configurados via gh, classifica cada uma (verde, CI pendente, conflito, CI vermelho,
   segurar), mergeia sozinho só o que é seguro, e comenta na PR instruindo quem a abriu (humano
   ou agente) sobre o próximo passo. Uma passada por invocação; monitoramento contínuo é o modo
   `watch` (Monitor orientado a evento, nunca cron/`/loop`).
@@ -38,24 +39,29 @@ gera mais conflito. O maintainer mergeia na ordem certa e diz a cada PR travada 
 | `dry` | Classifica e reporta. Zero merge, zero comentário. **Use assim na primeira vez** |
 | `go` | Pula a confirmação. Forma usada dentro do watch |
 | `watch` | Arma monitoramento contínuo via `Monitor` (evento, não cron). Ver seção própria |
-| `<repo>` | Varre só esse repo da org, ignora a config. Nome curto, sem `owner/` |
+| `<repo>` | Varre só esse repo, ignora a lista de repos da config. Nome curto = org padrão; `owner/repo` só com owner da allowlist |
 
 Combináveis: `/maintainer dry wibx-skills`.
 
 Modo contínuo: `/maintainer watch` (ou `watch <repo>`). **Nunca `/loop` nem `CronCreate` para
 isso** — ver seção "Modo watch".
 
-## Org fixa
+## Orgs permitidas (allowlist fechada)
 
-**`Wibx-LABS`. Hardcoded.** Todo slug é `Wibx-LABS/<repo>`, montado pelo skill, nunca digitado.
+A allowlist é o campo `orgs` da config. **Sem o campo, ela é `["Wibx-LABS"]`** (o comportamento
+de antes). A primeira org da lista é a **org padrão**: nome curto `<repo>`, na config ou no
+argumento, vira `<org padrão>/<repo>`. Todo slug é montado pelo skill, nunca digitado à mão.
 
-Se o argumento vier com `owner/` (ex. `outra-org/repo`), aceitar **apenas** se o owner for
-`Wibx-LABS` (comparação case-insensitive, slug de GitHub não diferencia caixa). Qualquer outro
-owner: recusar a passada inteira com `Fora da org Wibx-LABS: <slug>. Nada foi feito.` e parar.
-Mesma regra para entradas da config — slug fora da org é ignorado e reportado, não varrido.
+Slug com `owner/` (no argumento ou numa entrada `repo` da config) só é aceito se o owner estiver
+na allowlist (comparação case-insensitive, slug de GitHub não diferencia caixa). Argumento com
+owner de fora: recusar a passada inteira com `Fora das orgs permitidas: <slug>. Nada foi feito.`
+e parar. Entrada da config com owner de fora: ignorada e reportada, não varrida.
 
-Este skill mergeia e comenta sozinho. A trava de org é o que garante que ele nunca faça isso
-num repo de terceiro por typo ou config velha.
+Este skill mergeia e comenta sozinho. A allowlist é o que garante que ele nunca faça isso num
+repo de terceiro por typo ou config velha: org nova só entra editando `orgs`, de propósito.
+
+Repo com o mesmo nome em duas orgs da lista (ex. `devkit`): use o slug completo na entrada. Nome
+curto sempre resolve para a org padrão, nunca "procura" nas outras.
 
 ## Precondição
 
@@ -70,15 +76,17 @@ Falhou, para e diz exatamente o que falta. Não tenta contornar.
 `~/.claude/maintainer/repos.json`:
 
 ```json
-{ "repos": [
+{ "orgs": ["Wibx-LABS", "outra-org"],
+  "repos": [
   { "repo": "wibx-skills", "merge": "squash" },
-  { "repo": "outro-repo", "merge": "squash",
+  { "repo": "outra-org/outro-repo", "merge": "squash",
     "require_label": "rotina",
-    "hold_paths": [".github/workflows/", "deploy/", "migrations/"] }
+    "hold_paths": [".github/", "**/migrations/**", "**/Dockerfile*"] }
 ] }
 ```
 
-`repo` é o nome curto dentro de `Wibx-LABS`. `merge` ∈ `squash` | `merge` | `rebase`.
+`orgs` é a allowlist (seção acima); ausente = `["Wibx-LABS"]`. `repo` é o nome curto (org padrão)
+ou `owner/nome` com owner da allowlist. `merge` ∈ `squash` | `merge` | `rebase`.
 
 Dois campos opcionais, para repos onde o dono definiu política de merge autônomo. O skill é o
 MECANISMO; qual label e quais paths são a POLÍTICA de cada repo — ela mora no repo dono (seu
@@ -88,20 +96,26 @@ CLAUDE.md/convenções) e a instância entra aqui no `repos.json` da máquina:
   autor NÃO distingue agente de humano — rotinas agendadas e o dono podem usar a MESMA conta gh.
   Quem abre PR elegível a auto-merge a rotula; PR verde sem o label cai em `HOLD` →
   **Aguardando você**, marcada `sem label <require_label>`.
-- **`hold_paths`**: PR cujo diff toca QUALQUER caminho com um destes prefixos nunca auto-mergeia,
-  verde ou não — cai em `HOLD` → **Aguardando você**, marcada `toca caminho protegido: <path>`.
-  Mudança de gate/deploy/schema sempre espera humano.
+- **`hold_paths`**: PR cujo diff toca QUALQUER caminho que case com uma destas entradas nunca
+  auto-mergeia, verde ou não — cai em `HOLD` → **Aguardando você**, marcada
+  `toca caminho protegido: <path>`. Mudança de gate/deploy/schema sempre espera humano.
+  Entrada **sem `*`** é prefixo do caminho (`.github/` pega tudo embaixo). Entrada **com `*`** é
+  glob contra o caminho inteiro: `*` não cruza `/`, `**` cruza qualquer número de diretórios,
+  inclusive zero (`**/Dockerfile*` pega `Dockerfile` na raiz e `a/b/Dockerfile.dev`; `**` sozinho
+  pega todo arquivo, para repo onde nada auto-mergeia). Na dúvida se casa, trate como casando.
 
-Se o arquivo não existe, criar com `repos: []` e perguntar quais entrar, sugerindo os de:
+Se o arquivo não existe, criar com `repos: []` (sem `orgs`, isto é, só Wibx-LABS) e perguntar
+quais entrar, sugerindo os de cada org da allowlist:
 
 ```bash
-gh repo list Wibx-LABS --limit 50 --no-archived --json name --jq '.[].name'
+gh repo list <org> --limit 50 --no-archived --json name --jq '.[].name'
 ```
 
 Se existe, mostrar a lista e deixar editar/adicionar via `AskUserQuestion` — **exceto** com o
 arg `go`, que não pergunta nada.
 
-Com um `<repo>` no argumento, a config é ignorada e o método de merge é `squash`.
+Com um `<repo>` no argumento, a lista `repos` da config é ignorada (a allowlist `orgs` continua
+valendo) e o método de merge é `squash`.
 
 ## Passada, por repo
 
@@ -254,7 +268,7 @@ cada N minutos mesmo quando nada mudou — barulho e chamada de API desperdiçad
    ```bash
    declare -A prev
    while true; do
-     for slug in Wibx-LABS/repo1 Wibx-LABS/repo2; do
+     for slug in Wibx-LABS/repo1 outra-org/repo2; do   # slugs já resolvidos pela allowlist
        cur=$(gh pr list --repo "$slug" --state open --limit 50 \
          --json number,headRefOid,title,mergeable,statusCheckRollup \
          --jq 'sort_by(.number) | .[] | "\(.number):\(.headRefOid[0:7]):\(.mergeable):\([.statusCheckRollup[].conclusion // .statusCheckRollup[].status] | join(","))"' \
@@ -311,8 +325,9 @@ Em modo `dry`, a coluna Ação mostra o que *seria* feito: `mergearia`, `comenta
 
 Nada aqui é simplificável.
 
-- **Nunca tocar em repo fora de `Wibx-LABS`.** Nem ler, nem comentar, nem mergear. Slug de fora
-  aborta a passada.
+- **Nunca tocar em repo de org fora da allowlist `orgs`** (ausente = só `Wibx-LABS`). Nem ler,
+  nem comentar, nem mergear. Slug de fora no argumento aborta a passada; na config, é ignorado e
+  reportado. Nunca acrescentar org à allowlist por conta própria: isso é edição do dono.
 - Nunca mergear com `mergeable != MERGEABLE`. Nunca mergear draft. Nunca passar por cima de
   `CHANGES_REQUESTED`. Nunca mergear PR sem nenhum check verde — ausência de CI não é sinal
   verde, é ausência de sinal.
