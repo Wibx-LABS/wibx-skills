@@ -59,6 +59,18 @@ def alpha_circle_webp(path: Path, threshold: int = 14) -> str:
     return base64.b64encode(buf.getvalue()).decode()
 
 
+MIME = {".webp": "image/webp", ".gif": "image/gif", ".png": "image/png"}
+
+
+def raw_data_uri(path: Path) -> str:
+    """Data URI com os BYTES originais do arquivo (WebP, GIF ou PNG, animado ou não). Sem Pillow.
+    Embutir os bytes sem reprocessar: PIL achata a animação (lição E11). Outra extensão: ValueError."""
+    ext = path.suffix.lower()
+    if ext not in MIME:
+        raise ValueError(f"raw_data_uri: extensão não suportada: {ext or '(sem extensão)'}")
+    return f"data:{MIME[ext]};base64," + base64.b64encode(path.read_bytes()).decode()
+
+
 def project_parts(root: Path) -> dict:
     f = root / "parts.py"
     if not f.exists():
