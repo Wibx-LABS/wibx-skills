@@ -1,0 +1,47 @@
+/* S-DUEL: "um minuto de operação" (Ethereum x Nossa rede lado a lado, simulação animada).
+   Autocontido no deck Wibx: só usa tokens do deck.src.html (--green, --black, --black-l, --white, --white-l, --white-d);
+   o que faltava (cartão do lado, hairlines) está definido aqui, com prefixo duel-. Texto só em Clash Display (lições D4);
+   cores só do Manual (D1) ou rgba() de cores do Manual. */
+.s-duel { --duel-hair: rgba(255,255,255,0.08); --duel-hair-2: rgba(255,255,255,0.16); }
+.s-duel .head { right: 520px; }
+.duel-clock { position: absolute; right: 128px; top: 118px; text-align: right; }
+.duel-clock span { display: block; font-family: 'Clash Display', sans-serif; font-size: 12.5px; letter-spacing: 0.16em; color: var(--white-d); }
+.duel-clock b { font-family: 'Clash Display', sans-serif; font-weight: 500; font-size: 56px; color: var(--white); letter-spacing: 0.02em; font-variant-numeric: tabular-nums; }
+.duel-side { position: absolute; top: 262px; width: 800px; height: 612px; background: var(--black-l); border: 1px solid var(--duel-hair); border-radius: 28px; }
+.duel-side.eth { left: 128px; }
+.duel-side.wbx { right: 128px; border-color: rgba(34,255,123,0.42); background: rgba(34,255,123,0.05); }
+.duel-core { padding: 34px 40px; }
+.duel-id { display: flex; align-items: center; gap: 16px; height: 56px; }
+.eth-logo svg { height: 52px; width: auto; color: var(--white); display: block; }
+.wbx-logo svg { height: 52px; width: auto; display: block; }
+.duel-name { font-weight: 600; font-size: 40px; color: var(--white); letter-spacing: -0.02em; }
+.duel-tag { margin-left: auto; font-family: 'Clash Display', sans-serif; font-size: 12px; letter-spacing: 0.12em; color: var(--white-d); border: 1px solid var(--duel-hair-2); border-radius: 8px; padding: 6px 10px; }
+.duel-tag.g { color: var(--green); border-color: rgba(34,255,123,0.45); }
+.duel-sub { font-family: 'Clash Display', sans-serif; font-size: 15px; color: var(--white-d); margin-top: 14px; }
+.duel-track { position: relative; width: 700px; height: 176px; margin: 40px 0 0 10px; }
+.duel-axis { position: absolute; left: 0; right: 0; bottom: 0; height: 30px; border-top: 1px solid var(--duel-hair-2); }
+.duel-axis span { position: absolute; top: 8px; transform: translateX(-50%); font-family: 'Clash Display', sans-serif; font-size: 12px; color: var(--white-d); white-space: nowrap; }
+.duel-blk { position: absolute; bottom: 44px; width: 56px; height: 56px; border-radius: 14px; background: var(--black-l); border: 1.5px solid rgba(255,255,255,0.35); z-index: 1; }
+.duel-blk .fill { position: absolute; left: 0; right: 0; bottom: 0; border-radius: 0 0 12px 12px; background: rgba(255,255,255,0.35); }
+.wbx .duel-blk { border-color: var(--green); }
+.wbx .duel-blk .fill { height: 100%; border-radius: 12px; background: var(--green); }
+/* Corrente entre blocos: centralizada na altura do bloco (bottom 44 + 56/2 - 8) */
+.duel-link { position: absolute; bottom: 64px; height: 16px; overflow: hidden; }
+.duel-blk .n { position: absolute; top: -28px; left: 50%; transform: translateX(-50%); font-family: 'Clash Display', sans-serif; font-size: 13px; color: var(--white-d); white-space: nowrap; }
+.wbx .duel-blk .n { color: var(--green); }
+.duel-blk .st { position: absolute; top: -10px; right: -10px; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; }
+.duel-blk .st svg { width: 14px; height: 14px; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.duel-blk .st.pend { background: var(--black-l); border: 1px solid rgba(255,255,255,0.35); }
+.duel-blk .st.pend svg { stroke: var(--white-d); }
+.duel-blk .st.fin { background: var(--green); }
+.duel-blk .st.fin svg { stroke: var(--black); }
+.duel-ctrs { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 34px; padding-top: 22px; border-top: 1px solid var(--duel-hair); }
+.duel-ctr .k { font-family: 'Clash Display', sans-serif; font-size: 12.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--white-d); }
+.duel-ctr .v { font-weight: 600; font-size: 64px; line-height: 1; letter-spacing: -0.03em; color: var(--white); margin-top: 10px; font-variant-numeric: tabular-nums; }
+.duel-ctr .v.g { color: var(--green); }
+.duel-ctr .note { font-size: 15px; color: var(--white-d); margin-top: 8px; }
+.duel-vs { position: absolute; left: 924px; top: 532px; width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center; background: var(--black); border: 1px solid var(--duel-hair-2); font-weight: 600; font-size: 22px; color: var(--white-d); z-index: 2; }
+.duel-sum { position: absolute; left: 128px; right: 128px; top: 896px; font-size: 26px; color: var(--white-l); }
+.duel-sum b { color: var(--green); font-weight: 500; }
+.duel-src { position: absolute; left: 128px; right: 128px; top: 944px; font-family: 'Clash Display', sans-serif; font-size: 12px; letter-spacing: 0.02em; color: var(--white-d); line-height: 1.3; }
+

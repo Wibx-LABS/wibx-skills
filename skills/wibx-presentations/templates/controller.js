@@ -147,7 +147,8 @@ class SlidePresentation {
     /* Hook de slide: animação sob medida (data-hook="nome" -> window.deckHooks.nome(slide, gsap)).
        Deve devolver as timelines em loop (são mortas ao trocar de slide). Sem GSAP: quadro final do HTML.
        Contrato (lições C3): aplicar o estado inicial de forma SÍNCRONA antes de criar a timeline (nada de
-       reset só dentro de timeline com delay) e não pôr data-r em elemento que o hook anima. */
+       reset só dentro de timeline com delay) e não pôr data-r em elemento que o hook anima.
+       Exemplo pronto: hook "duel" (confronto lado a lado com simulação) em templates/duel-hook.js. */
     const hook = slide.dataset.hook && (window.deckHooks || {})[slide.dataset.hook];
     if (hook) (hook(slide, g) || []).forEach(t => this.loops.push(t));
 
