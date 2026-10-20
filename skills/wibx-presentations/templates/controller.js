@@ -65,7 +65,8 @@ class SlidePresentation {
     const n = String(i + 1).padStart(2, '0');
     document.getElementById('count').textContent = `${n} / ${String(this.slides.length).padStart(2, '0')}`;
     document.getElementById('progress').style.width = `${((i + 1) / this.slides.length) * 100}%`;
-    history.replaceState(null, '', `#${i + 1}`);
+    // em visualizadores com sandbox (iframe srcdoc) o history é bloqueado: o deck segue sem o #número
+    try { history.replaceState(null, '', `#${i + 1}`); } catch (e) { /* sem endereço por slide */ }
     this.animate(this.slides[i]);
   }
 
@@ -103,6 +104,10 @@ class SlidePresentation {
           el.removeAttribute('marker-end');
           tl.call(() => el.setAttribute('marker-end', mk), null, at + dur * 0.96);
         }
+      } else if (el.classList.contains('grow')) {
+        /* Barra cresce a partir da base (esquerda; data-grow="y" = de baixo para cima) */
+        const y = el.dataset.grow === 'y';
+        tl.fromTo(el, y ? { scaleY: 0, transformOrigin: '50% 100%' } : { scaleX: 0, transformOrigin: '0% 50%' }, y ? { scaleY: 1, duration: 0.9 } : { scaleX: 1, duration: 0.9 }, at);
       } else if (el.classList.contains('pop')) {
         tl.fromTo(el, { autoAlpha: 0, scale: 0.88, transformOrigin: '50% 50%' }, { autoAlpha: 1, scale: 1, duration: 0.8 }, at);
       } else if (el.classList.contains('fade')) {
@@ -138,6 +143,13 @@ class SlidePresentation {
           .set(o, { p: 0, onComplete: place });
       this.loops.push(loop);
     });
+
+    /* Hook de slide: animação sob medida (data-hook="nome" -> window.deckHooks.nome(slide, gsap)).
+       Deve devolver as timelines em loop (são mortas ao trocar de slide). Sem GSAP: quadro final do HTML.
+       Contrato (lições C3): aplicar o estado inicial de forma SÍNCRONA antes de criar a timeline (nada de
+       reset só dentro de timeline com delay) e não pôr data-r em elemento que o hook anima. */
+    const hook = slide.dataset.hook && (window.deckHooks || {})[slide.dataset.hook];
+    if (hook) (hook(slide, g) || []).forEach(t => this.loops.push(t));
 
     slide.querySelectorAll('[data-count]').forEach(el => {
       const target = Number(el.dataset.count);
