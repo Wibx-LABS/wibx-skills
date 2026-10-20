@@ -3,13 +3,19 @@
      apthtmlQA.run()                       -> lista de problemas por slide ("[]" = ok)
      apthtmlQA.labelsInCircles(sel, circles, labels, gap)
        sel: seletor do <svg>; circles: {k:[cx,cy,r]}; labels: [[texto, k_do_próprio]]
-   Regras em references/licoes.md (B2, B3, B4, B8, B9, D4, A1).
+   Regras em references/licoes.md (B2, B3, B4, B8, B9, D4, A1, A9).
+   Decoração proposital: data-qa-ignore no elemento (ver IGNORE).
    Sem Claude in Chrome: scripts/qa_headless.mjs roda este mesmo arquivo num Chromium local (lições E9). */
 window.apthtmlQA = (() => {
   const W = 1920, H = 1080;
   const BRAND_FONT = 'Clash Display'; // família única do Manual da Marca Wibx (D4)
   const rel = (r, sr, k) => ({ l: (r.left - sr.left) / k, t: (r.top - sr.top) / k, r: (r.right - sr.left) / k, b: (r.bottom - sr.top) / k });
   const inter = (a, b) => Math.max(0, Math.min(a.r, b.r) - Math.max(a.l, b.l)) * Math.max(0, Math.min(a.b, b.b) - Math.max(a.t, b.t));
+
+  // Decoração proposital que vaza ou se sobrepõe (mãozinha que toca, holofote, logo sangrando):
+  // marque com data-qa-ignore (o próprio elemento e tudo dentro dele fica fora do QA).
+  const IGNORE = '[data-qa-ignore], .tap, .tap-hand, .grain';
+  const ignored = el => !!el.closest(IGNORE);
 
   function checkSlide(s, n) {
     const out = [];
@@ -19,13 +25,19 @@ window.apthtmlQA = (() => {
     // B*: fora do palco
     s.querySelectorAll('*').forEach(el => {
       if (el.closest('svg') && el.tagName !== 'svg') return;
+      if (ignored(el)) return;
       const r = el.getBoundingClientRect(); if (!r.width || !r.height) return;
       const q = rel(r, sr, k);
       if (q.r > W + 1 || q.b > H + 1 || q.l < -1 || q.t < -1) out.push(`${n}: fora do palco .${name(el)} (${Math.round(q.r)}x${Math.round(q.b)})`);
     });
     // B2: texto maior que a caixa (overflow horizontal)
     s.querySelectorAll('div,p,h1,h2,h3,span').forEach(el => {
-      if (el.closest('svg')) return;
+      if (el.closest('svg') || ignored(el)) return;
+      // filho decorativo ignorado (ex.: mãozinha) não conta como estouro do texto
+      if (el.querySelector(IGNORE)) return;
+      // Só elementos com TEXTO PRÓPRIO (filhos absolutos posicionados de propósito não contam)
+      const ownText = [...el.childNodes].some(c => c.nodeType === 3 && c.textContent.trim());
+      if (!ownText) return;
       if (el.scrollWidth > el.clientWidth + 2 && getComputedStyle(el).display !== 'inline' && el.clientWidth > 0)
         out.push(`${n}: texto estoura a caixa .${name(el)} (${el.scrollWidth}>${el.clientWidth})`);
     });
@@ -33,14 +45,16 @@ window.apthtmlQA = (() => {
     s.querySelectorAll('h1,h2,.h1,.h2,.display,.statement').forEach(el => {
       const lh = parseFloat(getComputedStyle(el).lineHeight) || parseFloat(getComputedStyle(el).fontSize);
       const lines = Math.round(el.getBoundingClientRect().height / k / lh);
-      // .statement = frase manifesto (até 4 linhas); título em coluna estreita: 3; título largo: 2
-      const max = el.classList.contains('statement') ? 4 : el.getBoundingClientRect().width / k <= 720 ? 3 : 2;
+      // .statement = frase manifesto (até 4 linhas); título em coluna estreita: 3; título largo: 2.
+      // Exceção declarada e intencional (ex.: nome do produto na capa): data-max-lines="N" no elemento.
+      const max = el.dataset.maxLines ? Number(el.dataset.maxLines)
+        : el.classList.contains('statement') ? 4 : el.getBoundingClientRect().width / k <= 720 ? 3 : 2;
       if (lines > max) out.push(`${n}: título com ${lines} linhas (máx ${max}): "${el.textContent.trim().slice(0, 40)}"`);
     });
     // B4: blocos posicionados se sobrepondo (filhos diretos do slide + filhos de .head/.copy-col)
     const blocks = [...s.children].filter(el => {
       const cs = getComputedStyle(el);
-      return cs.position === 'absolute' && cs.pointerEvents !== 'none' && el.getBoundingClientRect().width && !el.classList.contains('connectors');
+      return cs.position === 'absolute' && cs.pointerEvents !== 'none' && el.getBoundingClientRect().width && !el.classList.contains('connectors') && !ignored(el);
     });
     for (let i = 0; i < blocks.length; i++) for (let j = i + 1; j < blocks.length; j++) {
       const a = rel(blocks[i].getBoundingClientRect(), sr, k), b = rel(blocks[j].getBoundingClientRect(), sr, k);
@@ -57,7 +71,7 @@ window.apthtmlQA = (() => {
       const fy = rel(foot.getBoundingClientRect(), sr, k).t;
       const hit = [];
       s.querySelectorAll('*').forEach(el => {
-        if (el === foot || foot.contains(el) || el.contains(foot) || (el.closest('svg') && el.tagName !== 'svg')) return;
+        if (el === foot || foot.contains(el) || el.contains(foot) || (el.closest('svg') && el.tagName !== 'svg') || ignored(el)) return;
         const cs = getComputedStyle(el);
         if (cs.display === 'inline' || cs.pointerEvents === 'none') return;
         const r = el.getBoundingClientRect(); if (!r.height) return;
@@ -69,13 +83,14 @@ window.apthtmlQA = (() => {
     // B9: conteúdo maior que a caixa na vertical (texto que vaza por baixo do painel).
     // Folga de 12px: descendente de letra (ç, g, q) passa alguns px da caixa de linha e não é layout quebrado.
     s.querySelectorAll('div,section > *').forEach(el => {
-      if (el.closest('svg') || el.classList.contains('slide')) return;
+      if (el.closest('svg') || el.classList.contains('slide') || ignored(el)) return;
       if (el.clientHeight > 0 && el.scrollHeight > el.clientHeight + 12) out.push(`${n}: .${name(el)} estoura na vertical (${el.scrollHeight}>${el.clientHeight})`);
     });
     // D4: texto fora da família do manual (pre/code/kbd herdam monospace do navegador)
     const bad = new Set();
     s.querySelectorAll('*').forEach(el => {
       if (el.closest('svg') && el.tagName !== 'text' && el.tagName !== 'tspan') return;
+      if (ignored(el)) return;
       const own = [...el.childNodes].some(c => c.nodeType === 3 && c.textContent.trim());
       if (own && !getComputedStyle(el).fontFamily.includes(BRAND_FONT)) bad.add(`${el.tagName.toLowerCase()} (${getComputedStyle(el).fontFamily.slice(0, 40)})`);
     });
@@ -114,6 +129,36 @@ window.apthtmlQA = (() => {
     return res;
   }
 
-  return { run, labelsInCircles, checkSlide };
+  // A9: todo <text> de um nó de diagrama (g com rect/oval/losango) fica dentro da própria forma.
+  // Retângulo: folga 6px lateral, 3px vertical. Oval (rx >= h/2): distância à "pílula" com folga 4px.
+  // Losango (polygon de 4 pontos): |dx|/half + |dy|/half <= 0.97. Uso: apthtmlQA.textInShapes('svg g.pop')
+  function textInShapes(groupSel = 'svg g.pop') {
+    const out = [];
+    document.querySelectorAll(groupSel).forEach(g => {
+      const rects = g.querySelectorAll(':scope > rect'), poly = g.querySelector(':scope > polygon');
+      let test;
+      if (poly) {
+        const p = poly.getAttribute('points').trim().split(/\s+/).map(q => q.split(',').map(Number));
+        if (p.length !== 4) return;
+        const cx = p[0][0], cy = p[1][1], half = p[1][0] - cx;
+        test = (x, y) => Math.abs(x - cx) / half + Math.abs(y - cy) / half <= 0.97;
+      } else if (rects.length) {
+        const r = rects[rects.length - 1];
+        const x = +r.getAttribute('x'), y = +r.getAttribute('y'), w = +r.getAttribute('width'), h = +r.getAttribute('height'), rx = +r.getAttribute('rx') || 0;
+        if (rx >= h / 2 - 1) {
+          const cx = x + w / 2, cy = y + h / 2, R = h / 2, sw = w / 2 - R;
+          test = (px, py) => { const dx = Math.max(0, Math.abs(px - cx) - sw); return dx * dx + (py - cy) ** 2 <= (R - 4) ** 2; };
+        } else test = (px, py) => px >= x + 6 && px <= x + w - 6 && py >= y + 3 && py <= y + h - 3;
+      } else return;
+      g.querySelectorAll('text').forEach(t => {
+        const b = t.getBBox();
+        const ok = [[b.x, b.y], [b.x + b.width, b.y], [b.x, b.y + b.height], [b.x + b.width, b.y + b.height]].every(([x, y]) => test(x, y));
+        if (!ok) out.push(`texto fora da forma: "${t.textContent}"`);
+      });
+    });
+    return out;
+  }
+
+  return { run, labelsInCircles, checkSlide, textInShapes };
 })();
 'apthtmlQA pronto: apthtmlQA.run()';
