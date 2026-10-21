@@ -31,12 +31,18 @@ Referência de tipo (regras de layout, orçamento de nós): `vendor/diagram-desi
 | plataforma de dados | datalake · medallion · dp-integration · high-level-vertical |
 | regra passo a passo / segurança | policy-trace-animated · queue-animated · paved-road-animated |
 
+## Padrões de slide próprios (fora da galeria)
+
+| Padrão | Use para | Arquivos |
+|---|---|---|
+| **Confronto** ("um minuto de operação") | nós × concorrente (performance, custo, tempo): dois painéis lado a lado com logos, linha do tempo compartilhada, blocos surgindo no instante real e ligados por **corrente** que se revela do bloco anterior ao novo, contadores ao vivo (processadas + número de blocos), frase-resumo com multiplicador | `templates/duel-slide.html`, `templates/duel.css`, `templates/duel-hook.js` (hook `data-hook="duel"`) |
+
 ## Receitas de animação (controller.js: `data-seq`, `.draw`, `.pop`, `.fade`)
 
 - **R-FLUXO** (arquitetura, fluxos, processos): zonas `.fade` seq 0 → nós `.pop` na ordem do fluxo → conectores `.draw` com o mesmo seq do nó de destino (ponta aparece na chegada) → rótulos `.fade` → legenda por último. Opcional: pacotes de dados no caminho principal com `data-packet` em **todos** os conectores desse caminho (o controller segue o path real, inclusive cotovelos; lições A7).
 - **R-SEQ** (sequência): atores e linhas de vida `.fade` seq 0 → cada mensagem `.draw` em seq crescente, de cima para baixo → fragmentos alt/opt `.fade` junto da 1ª mensagem interna.
 - **R-HIER** (tree, org, pyramid, layers, nested): raiz/camada base primeiro, depois nível a nível (seq = profundidade); pirâmide de baixo para cima; nested de fora para dentro.
-- **R-BARRA** (bar, waterfall, gantt, marimekko): eixos `.draw` seq 0 → barras com `scaleY` a partir da base (`transform-origin` na linha de base; use `.pop` com origem ajustada ou tween próprio) em stagger da esquerda para a direita; waterfall em sequência cumulativa; valores `.fade` ao fim de cada barra.
+- **R-BARRA** (bar, waterfall, gantt, marimekko): eixos `.draw` seq 0 → barras com classe `.grow` (horizontal cresce da esquerda; `data-grow="y"` cresce de baixo), cada uma com seu `data-seq` (sem ele a barra não anima), em stagger; waterfall em sequência cumulativa; valores `.fade` ao fim de cada barra.
 - **R-LINHA** (line, slopegraph, bump, ridgeline, streamgraph): eixos → cada série `.draw` (stroke) com seq por série, a focal por último → pontos `.pop` → rótulos.
 - **R-PONTO** (scatter, bubble, beeswarm, heatmap, treemap): eixos/grade → pontos/células `.pop` em stagger (heatmap por linha; treemap do maior para o menor) → foco destacado por último.
 - **R-RADIAL** (radar, polar, venn, loop): grade/círculos `.draw` → preenchimentos `.fade` → polígono/fatia focal `.pop` → rótulos. Loop: arcos no sentido horário + `.flow` contínuo.

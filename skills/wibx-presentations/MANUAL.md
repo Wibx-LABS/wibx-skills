@@ -13,6 +13,9 @@ Builds agency-grade, single-file HTML decks in the official Wibx Brand Manual (g
 - **Automatic QA**: dashes, leftover placeholders, duplicate ids, off-palette colors, SVG accessibility, overflow, overlapping blocks, long titles.
 - **Edit mode** in the delivered file (press E), Ctrl+S downloads the edited HTML.
 - **Lessons log** of real mistakes, so the same error is not repeated.
+- **PDF export checked in the Mac Preview engine**: Chrome headless export, then contact sheets rendered by Quartz (the engine behind Preview), so dark boxes and scaled patterns show up before the client opens the file.
+- **Confronto pattern** for "us × competitor": two panels side by side with logos, one shared simulated clock, blocks appearing at their real time, live counters and a closing multiplier.
+- **Spinning 3D object** (coin, product, logo) as a transparent animated WebP, rendered from the .blend file (best), from frames or from a video.
 
 ---
 
@@ -27,3 +30,6 @@ Gera decks HTML de arquivo único, em nível de agência, no Manual da Marca ofi
 - **QA automático**: travessões, placeholders esquecidos, ids duplicados, cor fora da paleta, acessibilidade dos SVGs, texto estourando, blocos sobrepostos, títulos longos.
 - **Modo edição** no arquivo entregue (tecla E), Ctrl+S baixa o HTML editado.
 - **Registro de lições** com erros reais, para o mesmo erro não voltar.
+- **Export de PDF conferido no motor do Preview do Mac**: PDF pelo Chrome headless e folhas de contato renderizadas pelo Quartz (o motor do Preview), para retângulo escuro e padrão ampliado aparecerem antes de o cliente abrir o arquivo.
+- **Padrão Confronto** para "nós × concorrente": dois painéis lado a lado com logos, o mesmo relógio simulado, blocos surgindo no instante real, contadores ao vivo e o multiplicador no fim.
+- **Objeto 3D girando** (moeda, produto, logo) em WebP animado com fundo transparente, a partir do .blend (melhor), de quadros ou de vídeo.

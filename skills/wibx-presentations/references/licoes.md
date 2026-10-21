@@ -1,7 +1,7 @@
 # Lições aprendidas (erros reais, corrigidos com o usuário)
 
 Origem: deck Cash Management / WiBX (2026-09-23), via pacote apthtml. Itens E5 a E7 do porte para esta skill (2026-09-24).
-A9, a 2ª ocorrência da B5, C3, D5 a D7, E8, E10 a E18 e as seções F a H vêm da versão de out/2026 do pacote apthtml (decks de tokenização, cashback, proposta comercial e Melhor Dia 2K27), trazidas em 2026-10-20 com IDs que não colidem com os daqui.
+A9, a 2ª ocorrência da B5, C3, D5 a D7, E8, E10 a E18 e as seções F a H vêm do pacote creativecode (Matheus DOMM, out/2026; decks de tokenização, cashback, proposta comercial e Melhor Dia 2K27), trazidas em 2026-10-20 com IDs que não colidem com os daqui. A frase da A4 do creativecode (o self-check do diagram-design reprova o deck inteiro) foi fundida na A4.
 Cada item: o que aconteceu, por que, a regra, e como verificar. Leia antes da Fase 4.
 
 ---

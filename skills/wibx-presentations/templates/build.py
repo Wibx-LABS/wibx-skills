@@ -12,6 +12,7 @@ Substitui no fonte:
   %%SYMBOL%%          mesmo SVG recortado só no símbolo (viewBox 0 0 221.49 221.49)
   %%<NOME>%%          qualquer chave de PARTS em <projeto>/parts.py (opcional), p.ex. SVG gerado
                       por diagrams.py ou imagem com alfa via alpha_circle_webp()
+                      ou WebP/GIF animado com os bytes originais via raw_data_uri()
 Numera <span class="pg">NN</span> com o índice real do slide (lições E4) e falha se sobrar placeholder.
 Fontes vêm da CDN da Fontshare (link no deck.src.html); nada de woff2 embutido.
 """
