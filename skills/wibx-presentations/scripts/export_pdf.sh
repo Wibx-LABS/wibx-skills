@@ -3,6 +3,7 @@
 # do Preview do Mac (Quartz via pdfseparate + sips). Ver references/licoes.md E17 e E10.
 #
 # uso: export_pdf.sh <Deck.html> [páginas...]
+#   saída: 0 ok; 2 Chrome não encontrado; 3 PDF gerado mas folha de conferência NÃO gerada (falta Pillow no python3 do PATH)
 #   sem páginas: confere todas. Saída: <Deck>.pdf ao lado do HTML e folhas em $TMPDIR/apthtml-pdf/sheetN.png
 #
 # Pré-requisitos no deck: @page { size: 1920px 1080px; margin: 0 } e o @media print sem backdrop-filter,
@@ -28,6 +29,10 @@ rm -f "$OUT"/pg-*(N)
 pdfseparate "$PDF" "$OUT/pg-%02d.pdf"
 for f in "$OUT"/pg-*.pdf; do sips -s format png "$f" --out "${f%.pdf}.png" >/dev/null 2>&1; rm "$f"; done
 
+python3 -c 'import PIL' 2>/dev/null || {
+  echo "PDF gerado, mas a folha de conferência Quartz (lições E17) foi PULADA: Pillow não está instalado no python3 do PATH ($(command -v python3)). Instale com: python3 -m pip install Pillow" >&2
+  exit 3
+}
 python3 - "$OUT" "$@" <<'PY'
 import sys, glob
 from PIL import Image

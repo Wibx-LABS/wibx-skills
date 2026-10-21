@@ -3,7 +3,7 @@
    o que faltava (cartão do lado, hairlines) está definido aqui, com prefixo duel-. Texto só em Clash Display (lições D4);
    cores só do Manual (D1) ou rgba() de cores do Manual. */
 .s-duel { --duel-hair: rgba(255,255,255,0.08); --duel-hair-2: rgba(255,255,255,0.16); }
-.s-duel .head { right: 520px; }
+.s-duel .head { right: 520px; top: 96px; } /* sobe 16px: o h2 termina em y=250 e os painéis começam em 262 */
 .duel-clock { position: absolute; right: 128px; top: 118px; text-align: right; }
 .duel-clock span { display: block; font-family: 'Clash Display', sans-serif; font-size: 12.5px; letter-spacing: 0.16em; color: var(--white-d); }
 .duel-clock b { font-family: 'Clash Display', sans-serif; font-weight: 500; font-size: 56px; color: var(--white); letter-spacing: 0.02em; font-variant-numeric: tabular-nums; }
