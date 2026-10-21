@@ -7,8 +7,9 @@
 #   sem páginas: confere todas. Saída: <Deck>.pdf ao lado do HTML e folhas em $TMPDIR/apthtml-pdf/sheetN.png
 #
 # Pré-requisitos no deck: @page { size: 1920px 1080px; margin: 0 } e o @media print sem backdrop-filter,
-# drop-shadow e box-shadow com blur (o Quartz desenha retângulo escuro). Animações: o export liga
-# reduced-motion, então o quadro 0 de cada animação é o que vai para o PDF (deixe-o como a pose principal).
+# drop-shadow e box-shadow com blur (o Quartz desenha retângulo escuro). Animações: no PDF sai o estado base
+# de cada slide (sem .slide.active): deixe-o na pose final visível, nunca esconda o elemento no estado base nem
+# dependa de .visible; animação de entrada só sob .slide.active.
 set -e
 HTML=${1:?uso: export_pdf.sh Deck.html [páginas...]}
 shift

@@ -35,9 +35,6 @@ window.apthtmlQA = (() => {
       if (el.closest('svg') || ignored(el)) return;
       // filho decorativo ignorado (ex.: mãozinha) não conta como estouro do texto
       if (el.querySelector(IGNORE)) return;
-      // Só elementos com TEXTO PRÓPRIO (filhos absolutos posicionados de propósito não contam)
-      const ownText = [...el.childNodes].some(c => c.nodeType === 3 && c.textContent.trim());
-      if (!ownText) return;
       if (el.scrollWidth > el.clientWidth + 2 && getComputedStyle(el).display !== 'inline' && el.clientWidth > 0)
         out.push(`${n}: texto estoura a caixa .${name(el)} (${el.scrollWidth}>${el.clientWidth})`);
     });
