@@ -1,0 +1,80 @@
+  <section class="slide s-duel" data-sec="Performance" data-hook="duel">
+    <div class="head">
+      <p class="eyebrow" data-r>Comparativo de performance.</p>
+      <h2 data-r style="margin-top:20px">Um minuto de operação</h2>
+    </div>
+    <!-- Relógio da simulação (compartilhado pelos dois lados) -->
+    <div class="duel-clock" data-r><span>RELÓGIO SIMULADO</span><b>01:00</b></div>
+
+    <!-- LADO ETHEREUM -->
+    <div class="duel-side eth" data-r data-tx="265" data-final="768" data-first="12" data-every="12"><div class="duel-core">
+      <div class="duel-id"><span class="eth-logo">%%ETH_LOGO%%</span><span class="duel-name">Ethereum</span><span class="duel-tag">REDE PÚBLICA</span></div>
+      <p class="duel-sub">bloco a cada 12 s · irreversível após 12 min 48 s</p>
+      <div class="duel-track">
+        <!-- Correntes: ligam cada bloco ao anterior (revelação da esquerda para a direita antes do bloco novo) -->
+        <svg class="duel-link" data-to="24" style="left:142px;width:80px" aria-hidden="true"><rect width="100%" height="100%" fill="url(#duel-chain-eth)"/></svg>
+        <svg class="duel-link" data-to="36" style="left:282px;width:80px" aria-hidden="true"><rect width="100%" height="100%" fill="url(#duel-chain-eth)"/></svg>
+        <svg class="duel-link" data-to="48" style="left:422px;width:80px" aria-hidden="true"><rect width="100%" height="100%" fill="url(#duel-chain-eth)"/></svg>
+        <svg class="duel-link" data-to="60" style="left:562px;width:80px" aria-hidden="true"><rect width="100%" height="100%" fill="url(#duel-chain-eth)"/></svg>
+        <div class="duel-blk" data-t="12" style="left:84px"><span class="n">265</span><i class="fill" style="height:7%"></i><span data-qa-ignore class="st pend"><svg><use href="#i-clock"/></svg></span></div>
+        <div class="duel-blk" data-t="24" style="left:224px"><span class="n">265</span><i class="fill" style="height:7%"></i><span data-qa-ignore class="st pend"><svg><use href="#i-clock"/></svg></span></div>
+        <div class="duel-blk" data-t="36" style="left:364px"><span class="n">265</span><i class="fill" style="height:7%"></i><span data-qa-ignore class="st pend"><svg><use href="#i-clock"/></svg></span></div>
+        <div class="duel-blk" data-t="48" style="left:504px"><span class="n">265</span><i class="fill" style="height:7%"></i><span data-qa-ignore class="st pend"><svg><use href="#i-clock"/></svg></span></div>
+        <div class="duel-blk" data-t="60" style="left:644px"><span class="n">265</span><i class="fill" style="height:7%"></i><span data-qa-ignore class="st pend"><svg><use href="#i-clock"/></svg></span></div>
+        <div class="duel-axis"><span style="left:0">0 s</span><span style="left:175px">15 s</span><span style="left:350px">30 s</span><span style="left:525px">45 s</span><span style="left:700px">60 s</span></div>
+      </div>
+      <div class="duel-ctrs">
+        <div class="duel-ctr"><div class="k">Transações processadas</div><div class="v" data-proc>1.325</div></div>
+        <div class="duel-ctr"><div class="k">Número de blocos</div><div class="v" data-blocks>5</div><div class="note">1 bloco a cada 12 s</div></div>
+      </div>
+    </div></div>
+
+    <div class="duel-vs" data-r data-qa-ignore>VS</div>
+
+    <!-- LADO NOSSA REDE -->
+    <div class="duel-side wbx" data-r data-tx="4000" data-final="0" data-first="7" data-every="7"><div class="duel-core">
+      <div class="duel-id"><span class="wbx-logo">%%LOGO%%</span><span class="duel-name">Tokenization</span><span class="duel-tag g">CHAIN DEDICADA</span></div>
+      <p class="duel-sub">bloco a cada 7 s · irreversível no próprio bloco (IBFT 2.0)</p>
+      <div class="duel-track">
+        <svg class="duel-link" data-to="14" style="left:84px;width:21px" aria-hidden="true"><rect width="100%" height="100%" fill="url(#duel-chain-wbx)"/></svg>
+        <svg class="duel-link" data-to="21" style="left:165px;width:22px" aria-hidden="true"><rect width="100%" height="100%" fill="url(#duel-chain-wbx)"/></svg>
+        <svg class="duel-link" data-to="28" style="left:247px;width:22px" aria-hidden="true"><rect width="100%" height="100%" fill="url(#duel-chain-wbx)"/></svg>
+        <svg class="duel-link" data-to="35" style="left:329px;width:21px" aria-hidden="true"><rect width="100%" height="100%" fill="url(#duel-chain-wbx)"/></svg>
+        <svg class="duel-link" data-to="42" style="left:410px;width:22px" aria-hidden="true"><rect width="100%" height="100%" fill="url(#duel-chain-wbx)"/></svg>
+        <svg class="duel-link" data-to="49" style="left:492px;width:22px" aria-hidden="true"><rect width="100%" height="100%" fill="url(#duel-chain-wbx)"/></svg>
+        <svg class="duel-link" data-to="56" style="left:574px;width:21px" aria-hidden="true"><rect width="100%" height="100%" fill="url(#duel-chain-wbx)"/></svg>
+        <div class="duel-blk" data-t="7" style="left:26px"><span class="n">4.000</span><i class="fill"></i><span data-qa-ignore class="st fin"><svg><use href="#i-check"/></svg></span></div>
+        <div class="duel-blk" data-t="14" style="left:107px"><span class="n">4.000</span><i class="fill"></i><span data-qa-ignore class="st fin"><svg><use href="#i-check"/></svg></span></div>
+        <div class="duel-blk" data-t="21" style="left:189px"><span class="n">4.000</span><i class="fill"></i><span data-qa-ignore class="st fin"><svg><use href="#i-check"/></svg></span></div>
+        <div class="duel-blk" data-t="28" style="left:271px"><span class="n">4.000</span><i class="fill"></i><span data-qa-ignore class="st fin"><svg><use href="#i-check"/></svg></span></div>
+        <div class="duel-blk" data-t="35" style="left:352px"><span class="n">4.000</span><i class="fill"></i><span data-qa-ignore class="st fin"><svg><use href="#i-check"/></svg></span></div>
+        <div class="duel-blk" data-t="42" style="left:434px"><span class="n">4.000</span><i class="fill"></i><span data-qa-ignore class="st fin"><svg><use href="#i-check"/></svg></span></div>
+        <div class="duel-blk" data-t="49" style="left:516px"><span class="n">4.000</span><i class="fill"></i><span data-qa-ignore class="st fin"><svg><use href="#i-check"/></svg></span></div>
+        <div class="duel-blk" data-t="56" style="left:597px"><span class="n">4.000</span><i class="fill"></i><span data-qa-ignore class="st fin"><svg><use href="#i-check"/></svg></span></div>
+        <div class="duel-axis"><span style="left:0">0 s</span><span style="left:175px">15 s</span><span style="left:350px">30 s</span><span style="left:525px">45 s</span><span style="left:700px">60 s</span></div>
+      </div>
+      <div class="duel-ctrs">
+        <div class="duel-ctr"><div class="k">Transações processadas</div><div class="v g" data-proc>32.000</div></div>
+        <div class="duel-ctr"><div class="k">Número de blocos</div><div class="v g" data-blocks>8</div><div class="note">1 bloco a cada 7 s</div></div>
+      </div>
+    </div></div>
+
+    <!-- Ícones usados pelos blocos (#i-clock = pendente, #i-check = final). Um só destes por deck (ids únicos, lições A5) -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    </svg>
+
+    <!-- Padrão da corrente (elo oval + barra de ligação), um por lado -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <defs>
+        <pattern id="duel-chain-eth" width="20" height="16" patternUnits="userSpaceOnUse"><rect x="1" y="3" width="12" height="10" rx="5" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2"/><line x1="11" y1="8" x2="21" y2="8" stroke="rgba(255,255,255,0.45)" stroke-width="3" stroke-linecap="round"/></pattern>
+        <pattern id="duel-chain-wbx" width="20" height="16" patternUnits="userSpaceOnUse"><rect x="1" y="3" width="12" height="10" rx="5" fill="none" stroke="#22ff7b" stroke-width="2"/><line x1="11" y1="8" x2="21" y2="8" stroke="#22ff7b" stroke-width="3" stroke-linecap="round"/></pattern>
+      </defs>
+    </svg>
+
+    <!-- Sem data-r: quem revela a frase é o hook "duel", no fim da simulação (um só dono por elemento) -->
+    <p class="duel-sum">No mesmo minuto, a Nossa rede encadeia <b>8 blocos contra 5</b> e processa <b>24x mais transações</b>, todas irreversíveis em 7 s.</p>
+    <p class="duel-src" data-r>Simulação de 1 minuto em velocidade 5x. Ethereum: média real de set/2026 (Chainspect: ~265 tx/bloco, bloco de 12 s, finalidade de 12 min 48 s). Nossa rede: capacidade máxima por chain (4.000 tx/bloco, bloco de 7 s, IBFT 2.0).</p>
+    <footer class="foot"><span class="sym">%%SYMBOL%%</span><span class="sec">Performance</span><span class="pg">05</span></footer>
+  </section>

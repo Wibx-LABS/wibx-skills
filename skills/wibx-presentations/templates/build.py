@@ -12,6 +12,7 @@ Substitui no fonte:
   %%SYMBOL%%          mesmo SVG recortado só no símbolo (viewBox 0 0 221.49 221.49)
   %%<NOME>%%          qualquer chave de PARTS em <projeto>/parts.py (opcional), p.ex. SVG gerado
                       por diagrams.py ou imagem com alfa via alpha_circle_webp()
+                      ou WebP/GIF animado com os bytes originais via raw_data_uri()
 Numera <span class="pg">NN</span> com o índice real do slide (lições E4) e falha se sobrar placeholder.
 Fontes vêm da CDN da Fontshare (link no deck.src.html); nada de woff2 embutido.
 """
@@ -57,6 +58,18 @@ def alpha_circle_webp(path: Path, threshold: int = 14) -> str:
     buf = io.BytesIO()
     im.save(buf, "WEBP", quality=86, method=6)
     return base64.b64encode(buf.getvalue()).decode()
+
+
+MIME = {".webp": "image/webp", ".gif": "image/gif", ".png": "image/png"}
+
+
+def raw_data_uri(path: Path) -> str:
+    """Data URI com os BYTES originais do arquivo (WebP, GIF ou PNG, animado ou não). Sem Pillow.
+    Embutir os bytes sem reprocessar: PIL achata a animação (lição E11). Outra extensão: ValueError."""
+    ext = path.suffix.lower()
+    if ext not in MIME:
+        raise ValueError(f"raw_data_uri: extensão não suportada: {ext or '(sem extensão)'}")
+    return f"data:{MIME[ext]};base64," + base64.b64encode(path.read_bytes()).decode()
 
 
 def project_parts(root: Path) -> dict:
