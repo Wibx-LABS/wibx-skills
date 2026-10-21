@@ -10,14 +10,20 @@ uso:
   no tamanho --size (quadrado). --step 2 = um quadro a cada dois (60 fps da cena -> 30 fps no deck).
 - Monta o WebP animado; embutir os BYTES no build (raw_data_uri de templates/build.py).
 - --still: renderiza também uma pose parada (para o PDF ou para outros slides).
-Requer Blender na mesma versão (ou mais nova) do arquivo: `brew install --cask blender`.
+Requer Blender na mesma versão (ou mais nova) do arquivo: `scripts/setup_3d.sh --install blend`.
+Procura `BLENDER`, depois `blender` no PATH (o cask do Homebrew cria o wrapper em /opt/homebrew/bin),
+depois /Applications/Blender.app (instalado pelo .dmg, sem nada no PATH).
 Tempo: EEVEE ~5 s por quadro a 640px num Mac M; 100 quadros ~9 min (rode em segundo plano).
 """
 import argparse
 import glob
 import os
+import shutil
 import subprocess
+import sys
 import tempfile
+
+BLENDER = os.environ.get("BLENDER") or shutil.which("blender") or "/Applications/Blender.app/Contents/MacOS/Blender"
 
 RENDER = r'''
 import bpy, sys
@@ -43,7 +49,7 @@ print("RANGE", sc.frame_start, sc.frame_end, sc.render.fps)
 def blender(blend, script, *args):
     with tempfile.NamedTemporaryFile("w", suffix=".py", delete=False) as f:
         f.write(script)
-    p = subprocess.run(["blender", "--disable-autoexec", "-b", blend, "--python", f.name, "--", *args], capture_output=True, text=True)
+    p = subprocess.run([BLENDER, "--disable-autoexec", "-b", blend, "--python", f.name, "--", *args], capture_output=True, text=True)
     os.unlink(f.name)
     return p.stdout
 
@@ -59,6 +65,8 @@ def main():
     ap.add_argument("--still", nargs=2, metavar=("FRAME", "PNG"))
     ap.add_argument("--frames-dir", help="reaproveita PNGs já renderizados (pula o render)")
     a = ap.parse_args()
+    if not shutil.which(BLENDER):
+        sys.exit(f"Blender não encontrado ({BLENDER}): rode scripts/setup_3d.sh --install blend ou defina BLENDER=<caminho>")
 
     rng = [l.split() for l in blender(a.blend, INFO).splitlines() if l.startswith("RANGE")][0]
     start = a.start or int(rng[1]); end = a.end or int(rng[2])

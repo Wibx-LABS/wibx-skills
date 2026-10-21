@@ -26,6 +26,7 @@ Caminhos abaixo são relativos à pasta desta skill.
 | `scripts/extract_svg.py` | Tira o SVG de um modelo com ids prefixados (e marcação de animação) |
 | `scripts/export_pdf.sh` | PDF pelo Chrome headless + conferência no Quartz, o motor do Preview do Mac (`pdfseparate` + `sips`, folhas de contato) |
 | `scripts/{blender,frames,video}_to_webp.py` | Objeto 3D girando em WebP animado com alfa, a partir do `.blend` (melhor), de quadros PNG/PSD ou de vídeo sobre fundo preto (último recurso) |
+| `scripts/setup_3d.sh` | Confere as ferramentas do 3D (venv, ffmpeg, Blender) e, com `--install blend\|frames\|video`, instala só o que aquele caminho precisa |
 | `templates/duel-*` | Padrão Confronto ("nós × concorrente"): `duel-slide.html` (o `<section>`), `duel.css`, `duel-hook.js` (hook `duel`) |
 | `templates/check_verbatim.py` | Copiado para o projeto: confere se todo texto visível do deck é literal de `<projeto>/source/proposta.txt` |
 | `vendor/ai-website-cloner/` | AI Website Cloner (JCodesMore, MIT): método para observar, medir e comparar um site citado como referência (Fase 0.5) |
@@ -104,11 +105,12 @@ Deck Wibx usa o **Manual da Marca** (escopo de decks da skill `wibx-brand`), nun
 ### Objeto 3D (moeda, produto, logo girando)
 
 1. Pergunte PRIMEIRO pelo arquivo 3D, na ordem `.blend` > quadros PNG/PSD > vídeo (lições H10). Giro 2D (`rotateY` numa imagem chapada) foi rejeitado (lições E11).
-2. Converta com o script do tipo e os parâmetros das lições H9 e H10: `scripts/blender_to_webp.py` (chama `blender` do PATH), `scripts/frames_to_webp.py` ou `scripts/video_to_webp.py` (`ffmpeg`; último recurso: `--thresh 4 --size 640 --q 80`). Rode com o Python do venv `~/.venvs/apthtml` (Pillow, numpy, psd-tools); se o venv, o Blender ou o ffmpeg faltarem, peça OK ao usuário antes de instalar. Saída em `<projeto>/assets/`, nunca na pasta da skill.
-3. Folha de contato com TODOS os quadros sobre fundo claro (ex.: Wibx Green), mostrada ao usuário antes de embutir: mordida e calombo só aparecem assim (lições H9).
-4. Embuta com `raw_data_uri` no `parts.py` (`from pathlib import Path` e `from build import raw_data_uri`; `PARTS = {"MOEDA": raw_data_uri(Path(__file__).parent / "assets/moeda.webp")}` e `<img src="%%MOEDA%%">` no fonte). Nunca reprocesse com PIL: achata a animação.
-5. Objeto e moldura/brilho no MESMO wrapper: translação no wrapper, giro só no objeto (lições C1).
-6. Objeto sozinho, sem base nem camada translúcida atrás (lições H4).
+2. Ferramentas: rode `scripts/setup_3d.sh` (só confere; saída 0 = pronto, 1 = falta algo). Se faltar, peça OK ao usuário naquele momento e rode `scripts/setup_3d.sh --install <blend|frames|video>`, que instala só o que o caminho precisa (Homebrew para Blender e ffmpeg; saída 2 = sem Homebrew).
+3. Converta com o script do tipo e os parâmetros das lições H9 e H10: `scripts/blender_to_webp.py` (usa o `blender` do PATH ou, sem ele, o `/Applications/Blender.app`; outro lugar: `BLENDER=<caminho>`), `scripts/frames_to_webp.py` ou `scripts/video_to_webp.py` (`ffmpeg`; último recurso: `--thresh 4 --size 640 --q 80`). Rode com o Python do venv `~/.venvs/apthtml/bin/python`. Saída em `<projeto>/assets/`, nunca na pasta da skill.
+4. Folha de contato com TODOS os quadros sobre fundo claro (ex.: Wibx Green), mostrada ao usuário antes de embutir: mordida e calombo só aparecem assim (lições H9).
+5. Embuta com `raw_data_uri` no `parts.py` (`from pathlib import Path` e `from build import raw_data_uri`; `PARTS = {"MOEDA": raw_data_uri(Path(__file__).parent / "assets/moeda.webp")}` e `<img src="%%MOEDA%%">` no fonte). Nunca reprocesse com PIL: achata a animação.
+6. Objeto e moldura/brilho no MESMO wrapper: translação no wrapper, giro só no objeto (lições C1).
+7. Objeto sozinho, sem base nem camada translúcida atrás (lições H4).
 
 ## Fase 4: Geração e QA (obrigatório, nesta ordem)
 
