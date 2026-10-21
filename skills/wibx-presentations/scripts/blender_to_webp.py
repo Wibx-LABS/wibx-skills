@@ -11,8 +11,8 @@ uso:
 - Monta o WebP animado; embutir os BYTES no build (raw_data_uri de templates/build.py).
 - --still: renderiza também uma pose parada (para o PDF ou para outros slides).
 Requer Blender na mesma versão (ou mais nova) do arquivo: `scripts/setup_3d.sh --install blend`.
-O cask do Homebrew só instala o Blender.app (sem `blender` no PATH): o script acha o app sozinho;
-em outro lugar, `BLENDER=<caminho>`.
+Procura `BLENDER`, depois `blender` no PATH (o cask do Homebrew cria o wrapper em /opt/homebrew/bin),
+depois /Applications/Blender.app (instalado pelo .dmg, sem nada no PATH).
 Tempo: EEVEE ~5 s por quadro a 640px num Mac M; 100 quadros ~9 min (rode em segundo plano).
 """
 import argparse

@@ -8,7 +8,7 @@
 #        frames  venv             (frames_to_webp.py)
 #        video   ffmpeg + venv    (video_to_webp.py)
 # venv: ~/.venvs/apthtml (APTHTML_VENV muda o caminho), versões fixas medidas em 2026-10-21 no Python 3.14.
-# Blender e ffmpeg vêm do Homebrew; o cask do Blender só instala o Blender.app (o blender_to_webp.py o acha).
+# Blender e ffmpeg vêm do Homebrew (o cask do Blender cria o wrapper `blender` em /opt/homebrew/bin).
 # saída: 0 = pronto; 1 = falta algo ou a instalação falhou; 2 = sem Homebrew; 3 = uso errado
 set -e
 VENV=${APTHTML_VENV:-$HOME/.venvs/apthtml}
