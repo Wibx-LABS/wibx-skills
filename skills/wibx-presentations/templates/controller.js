@@ -150,7 +150,7 @@ class SlidePresentation {
        reset só dentro de timeline com delay) e não pôr data-r em elemento que o hook anima.
        Exemplo pronto: hook "duel" (confronto lado a lado com simulação) em templates/duel-hook.js. */
     const hook = slide.dataset.hook && (window.deckHooks || {})[slide.dataset.hook];
-    if (hook) (hook(slide, g) || []).forEach(t => this.loops.push(t));
+    if (hook) [].concat(hook(slide, g) || []).forEach(t => this.loops.push(t));
 
     slide.querySelectorAll('[data-count]').forEach(el => {
       const target = Number(el.dataset.count);

@@ -43,7 +43,7 @@ print("RANGE", sc.frame_start, sc.frame_end, sc.render.fps)
 def blender(blend, script, *args):
     with tempfile.NamedTemporaryFile("w", suffix=".py", delete=False) as f:
         f.write(script)
-    p = subprocess.run(["blender", "-b", blend, "--python", f.name, "--", *args], capture_output=True, text=True)
+    p = subprocess.run(["blender", "--disable-autoexec", "-b", blend, "--python", f.name, "--", *args], capture_output=True, text=True)
     os.unlink(f.name)
     return p.stdout
 
