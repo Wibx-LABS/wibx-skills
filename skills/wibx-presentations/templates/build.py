@@ -16,6 +16,8 @@ Substitui no fonte:
 Numera <span class="pg">NN</span> com o índice real do slide (lições E4) e falha se sobrar placeholder.
 Fontes vêm da CDN da Fontshare (link no deck.src.html); nada de woff2 embutido.
 """
+from __future__ import annotations  # `str | None` roda no Python 3.9 do macOS (/usr/bin/python3)
+
 import base64
 import importlib.util
 import re
