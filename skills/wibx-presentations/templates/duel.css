@@ -21,6 +21,7 @@
 .duel-track { position: relative; width: 700px; height: 176px; margin: 40px 0 0 10px; }
 .duel-axis { position: absolute; left: 0; right: 0; bottom: 0; height: 30px; border-top: 1px solid var(--duel-hair-2); }
 .duel-axis span { position: absolute; top: 8px; transform: translateX(-50%); font-family: 'Clash Display', sans-serif; font-size: 12px; color: var(--white-d); white-space: nowrap; }
+.duel-axis span:last-child { transform: translateX(-100%); } /* último rótulo termina na borda da pista: centrado, estouraria 12px à direita */
 .duel-blk { position: absolute; bottom: 44px; width: 56px; height: 56px; border-radius: 14px; background: var(--black-l); border: 1.5px solid rgba(255,255,255,0.35); z-index: 1; }
 .duel-blk .fill { position: absolute; left: 0; right: 0; bottom: 0; border-radius: 0 0 12px 12px; background: rgba(255,255,255,0.35); }
 .wbx .duel-blk { border-color: var(--green); }
