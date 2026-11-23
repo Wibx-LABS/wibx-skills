@@ -1,6 +1,6 @@
 ---
 name: tandera-audit
-description: Auditar e scorar qualquer site para GEO/AEO readiness (visibilidade em LLMs) com a metodologia Olho de Tandera. Acionar quando pedir para auditar site, avaliar GEO/AEO, checar robots.txt/schema/llms.txt, verificar prontidão para AI search, ou gerar relatório técnico de visibilidade em IA. Para MEDIR presença real em LLMs use tandera-sov; para ESCREVER conteúdo citável use tandera-conteudo.
+description: Auditar e scorar qualquer site para GEO/AEO readiness (visibilidade em LLMs) com a metodologia Olho de Tandera. Acionar quando pedir para auditar site, avaliar GEO/AEO, checar robots.txt/schema/llms.txt, verificar prontidão para AI search, ou gerar relatório técnico de visibilidade em IA. Para MEDIR presença real em LLMs use tandera-sov; para ESCREVER conteúdo citável use tandera-conteudo; para CORRIGIR o SEO técnico página a página no código use seo-geo.
 ---
 
 # Tandera Audit — auditoria técnica GEO/AEO
