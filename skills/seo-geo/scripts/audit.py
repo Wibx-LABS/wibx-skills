@@ -91,6 +91,10 @@ def audit_page(name, html, seen):
     f = []
     add = lambda lvl, msg: f.append((lvl, name, msg))
 
+    if "noindex" in p.meta.get("robots", ""):
+        # fora do índice por decisão: checar SEO aqui só gera ruído
+        add("INFO", "noindex — checagens de SEO puladas (confirme que é intencional)")
+        return f
     if not p.lang:
         add("ERROR", "<html> sem atributo lang")
     if not p.title:
@@ -102,8 +106,6 @@ def audit_page(name, html, seen):
         add("ERROR", "sem meta description")
     elif not 50 <= len(d) <= 160:
         add("WARN", f"meta description com {len(d)} chars (ideal 50–160)")
-    if "noindex" in p.meta.get("robots", ""):
-        add("WARN", "meta robots noindex — página fora do índice (intencional?)")
     if p.h1 != 1:
         add("ERROR", f"{p.h1} <h1> (deve ser exatamente 1)")
     for prev, cur in zip(p.headings, p.headings[1:]):

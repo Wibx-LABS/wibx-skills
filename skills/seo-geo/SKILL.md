@@ -130,5 +130,9 @@ Escopo padrão: P0 + P1 técnicos.
 - **Canonical do en apontando para o pt** faz a versão en sumir do índice.
 - **`FAQPage` com texto ausente da página** viola as diretrizes do Google.
 - **`noindex` em paginação ou draft** pode ser intencional. Pergunte antes de remover.
+- **Entregável de cliente em `public/`** (brandbook, proposta, protótipo): não é página do
+  site, então não otimize. Aplique `<meta name="robots" content="noindex, nofollow">`, tire
+  do sitemap e não bloqueie no robots.txt, porque o crawler precisa ler o `noindex`.
+  Avise que `noindex` não é controle de acesso: a URL continua pública para quem a tiver.
 - **Title >60 chars** é WARN. Encurte quando houver termo útil sendo cortado, não por
   causa do número.
